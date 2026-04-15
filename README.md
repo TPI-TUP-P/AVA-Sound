@@ -35,9 +35,31 @@ Realizamos una API de una plataforma web enfocada en artistas independientes, pe
 > [!WARNING]
 > El UML puede cambiar en base a futuras restricciones o cambios que se nos sugieran.
 
-<p aling="center">
+<p align="center">
     <img src="https://github.com/TPI-TUP-P/AVA-Sound/blob/main/StaticSource/TPP4.png" width="800">
 </p>
+
+## Arquitectura
+
+El proyecto está estructurado siguiendo el patrón **Clean Architecture**, separando responsabilidades en distintas capas para mejorar la mantenibilidad, escalabilidad y testeo.
+
+### Capas del proyecto
+
+- **Domain**
+  - Entidades principales del negocio
+  - Interfaces
+- **Application**
+  - Casos de uso
+  - Lógica de negocio
+  - DTOs
+- **Infrastructure**
+  - Acceso a datos
+  - Implementaciones de interfaces
+  - Configuración de base de datos
+- **API**
+  - Controladores
+  - Endpoints
+  - Configuración de la aplicación
 
 ## INFORMACION EXTRA
 
