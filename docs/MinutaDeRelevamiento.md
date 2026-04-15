@@ -1,33 +1,32 @@
-# 📄 Minuta de Relevamiento  
-## Sistema de Streaming Musical (tipo Spotify)
-
+# AVA Sound  
 ---
 
-## 1. 📌 Información General
+
+##  Información General
 - **Nombre del proyecto:** AVA Sound  
-- **Participantes:** Sosa Agustin, Volpe Andres, Barthelemi Tomas  
+- **Participantes:** Sosa Agustín, Volpe Andrés, Barthelemy Tomás  
 - **Profesores:** Emiliano Falabrini, Melina Bueno 
 - **Objetivo del relevamiento:**  
   Identificar y documentar los requerimientos funcionales y no funcionales para el desarrollo de una aplicación web de música, donde artistas y usuarios interactúan mediante contenido musical.
 
----
 
-## 2. 🎯 Objetivo del Sistema
+
+##  Objetivo del Sistema
 Desarrollar una plataforma web que permita:
 - Reproducir música  
 - Gestionar artistas, canciones y álbumes  
 - Permitir interacción de usuarios mediante reseñas y listas personales  
 
----
 
-## 3. 👥 Actores del Sistema
+
+##  Actores del Sistema
 - **Usuario:** persona que consume contenido musical  
 - **Artista:** usuario con permisos para subir contenido  
 - **Administrador:** gestiona el sistema  
 
----
 
-## 4. 📋 Requerimientos Funcionales (RF)
+
+##  Requerimientos Funcionales (RF)
 
 - **Registro y gestión de usuarios**  
   - Cuenta con nombre, apellido, email y contraseña.  
@@ -55,9 +54,9 @@ Desarrollar una plataforma web que permita:
   - Canción más escuchada, género preferido y totales por período.  
   - También se ofrecen estadísticas globales de la comunidad.  
 
----
 
-## 5. ⚙️ Requerimientos No Funcionales (RNF)
+
+##  Requerimientos No Funcionales (RNF)
 
 - **RNF1:** El sistema debe ser accesible desde navegador web  
 - **RNF2:** La interfaz debe ser intuitiva y fácil de usar  
@@ -66,9 +65,9 @@ Desarrollar una plataforma web que permita:
 - **RNF5:** El sistema debe permitir múltiples usuarios simultáneamente  
 - **RNF6:** Debe garantizar alta disponibilidad del sistema  
 
----
 
-## 6. 📊 Reglas de Negocio
+
+##  Reglas de Negocio
 
 - **RN1:** Solo los artistas pueden subir canciones y álbumes  
 - **RN2:** Un usuario puede crear múltiples listas  
@@ -76,9 +75,9 @@ Desarrollar una plataforma web que permita:
 - **RN4:** Un usuario puede guardar canciones de cualquier artista  
 - **RN5:** Las reseñas deben estar asociadas a un usuario  
 
----
 
-## 7. 🧩 Entidades Identificadas
+
+##  Entidades Identificadas
 
 - Usuario  
 - Info usuario
@@ -88,9 +87,9 @@ Desarrollar una plataforma web que permita:
 - Lista de reproducción  
 - Critica  
 
----
 
-## 8. 🔗 Relaciones Principales
+
+##  Relaciones Principales
 
 
 - **Usuario → InfoUsuario**  
@@ -125,12 +124,11 @@ Desarrollar una plataforma web que permita:
   Relación: **N : N**  
   Una lista incluye varias canciones; una canción puede estar en varias listas. 
 
----
 
 
 
-## 9. 📝 Conclusión
+
+##  Conclusión
 
 AVA-Sound es una plataforma de streaming musical inspirada en Spotify que permite a los usuarios consumir contenido musical y actuar como artistas independientes, subiendo y gestionando sus propias canciones y álbumes. Combina experiencia de escucha personalizada con herramientas de creación de contenido, interacción social mediante reseñas, y estadísticas personales y globales.
 
----
