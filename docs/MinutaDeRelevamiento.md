@@ -72,7 +72,7 @@ Desarrollar una plataforma web que permita:
 
 - **RN1:** Solo los artistas pueden subir canciones y álbumes  
 - **RN2:** Un usuario puede crear múltiples listas  
-- **RN3:** Una canción puede pertenecer a uno o más álbumes (opcional según diseño)  
+- **RN3:** Una canción puede pertenecer a uno o más álbumes/listas
 - **RN4:** Un usuario puede guardar canciones de cualquier artista  
 - **RN5:** Las reseñas deben estar asociadas a un usuario  
 
