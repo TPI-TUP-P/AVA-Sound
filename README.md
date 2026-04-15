@@ -7,7 +7,7 @@
 ### Proyecto Programacion IV
 
 **PROFESORES**
-Emiliano Falabrini, Melina Bueno
+Emiliano Falabrini, Melina Bueno. <br>
 **INTEGRANTES**
 Sosa Agustin, Andres Volpe, Barthelemy Tomás
 
