@@ -4,14 +4,12 @@
   <img src="https://github.com/TPI-TUP-P/AVA-Sound/blob/main/StaticSource/logo.png.webp" width="600">
 </p>
 
-> [!NOTE]
->
-> ### Proyecto para la catedra Programacion IV<br>
->
-> **PROFESORES**<br>
-> Emiliano Falabrini, Melina Bueno<br>
-> **INTEGRANTES**<br>
-> Sosa Agustin, Andres Volpe, Barthelemy Tomás<br>
+### Proyecto Programacion IV
+
+**PROFESORES**
+Emiliano Falabrini, Melina Bueno
+**INTEGRANTES**
+Sosa Agustin, Andres Volpe, Barthelemy Tomás
 
 ## ESTADO ACTUAL
 
