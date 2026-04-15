@@ -30,3 +30,7 @@ para artistas independientes o emergentes.
 <p aling="center">
     <img src="https://github.com/TPI-TUP-P/AVA-Sound/blob/main/StaticSource/TPP4.png" width="800">
 </p>
+
+## INFORMACION EXTRA
+
+![Commit Streak](https://streak-stats.demolab.com?user=https://github.com/TPI-TUP-P&theme=dark&hide_border=true&border_radius=8)
