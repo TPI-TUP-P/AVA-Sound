@@ -56,7 +56,7 @@ El proyecto está estructurado siguiendo el patrón **Clean Architecture**, sepa
   - Acceso a datos
   - Implementaciones de interfaces
   - Configuración de base de datos
-- **API**
+- **Web**
   - Controladores
   - Endpoints
   - Configuración de la aplicación
