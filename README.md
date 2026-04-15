@@ -25,5 +25,5 @@ para artistas independientes o emergentes.
 ## UML
 
 <p aling="center">
-    <img src="https://github.com/TPI-TUP-P/AVA-Sound/blob/main/StaticSource/TPP4.png" width="600">
+    <img src="https://github.com/TPI-TUP-P/AVA-Sound/blob/main/StaticSource/TPP4.png" width="800">
 </p>
