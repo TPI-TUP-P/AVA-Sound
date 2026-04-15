@@ -11,8 +11,15 @@ Emiliano Falabrini, Melina Bueno.<br>
 **INTEGRANTES**<br>
 Sosa Agustin, Andres Volpe, Barthelemy Tomás<br>
 **Descripcion Del Proyecto**<br>
-Realizamos una API de una platoforma web, para la escucha de musica,publicacion y calificacion de la misma, con la finalidad de que este enfocada
-para artistas independientes o emergentes.
+Realizamos una API de una plataforma web enfocada en artistas independientes, permitiéndoles publicar su música, recibir feedback de la comunidad y ganar visibilidad sin depender de grandes discográficas.
+
+## Funcionalidades
+
+- Reproduccion de musica.
+- Publicacion de Canciones.
+- Sistema de calificacion y comentarios.
+- Perfiles de usuarios y artista.
+- Busqueda por genero, artista, cancion.
 
 ## ESTADO ACTUAL
 
@@ -21,11 +28,12 @@ para artistas independientes o emergentes.
 ## TECNOLOGIA USADA
 
 ![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![Entity Framework](https://img.shields.io/badge/Entity%20Framework-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 
 ## UML
 
 > [!WARNING]
-> El UML puede cambiar en base a futuras restriccion o cambios que se nos sugieran.
+> El UML puede cambiar en base a futuras restricciones o cambios que se nos sugieran.
 
 <p aling="center">
     <img src="https://github.com/TPI-TUP-P/AVA-Sound/blob/main/StaticSource/TPP4.png" width="800">
