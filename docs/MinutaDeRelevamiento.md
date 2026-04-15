@@ -101,7 +101,7 @@ Desarrollar una plataforma web que permita:
   Un artista puede subir múltiples canciones.
 
 - **Usuario → ListaReproducción**  
-  Relación: **1 : N**  
+  Relación: **N : N**  
   Un usuario puede crear varias listas de reproducción.
 
 - **Usuario → Crítica**  
