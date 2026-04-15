@@ -21,3 +21,12 @@ para artistas independientes o emergentes.
 ## TECNOLOGIA USADA
 
 ![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+
+## UML
+
+> [!WARNING]
+> El UML puede cambiar en base a futuras restriccion o cambios que se nos sugieran.
+
+<p aling="center">
+    <img src="https://github.com/TPI-TUP-P/AVA-Sound/blob/main/StaticSource/TPP4.png" width="800">
+</p>
