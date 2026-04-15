@@ -33,4 +33,4 @@ para artistas independientes o emergentes.
 
 ## INFORMACION EXTRA
 
-![Commit Streak](https://streak-stats.demolab.com?user=https://github.com/TPI-TUP-P&theme=dark&hide_border=true&border_radius=8)
+![Commit Streak](https://streak-stats.demolab.com?user=TPI-TUP-P&theme=dark&hide_border=true&border_radius=8)
