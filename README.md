@@ -10,7 +10,7 @@
 Emiliano Falabrini, Melina Bueno.<br>
 **INTEGRANTES**<br>
 Sosa Agustin, Andres Volpe, Barthelemy Tomás<br>
-**Descripcion Del Proyecto**
+**Descripcion Del Proyecto**<br>
 Realizamos una API de una platoforma web, para la escucha de musica,publicacion y calificacion de la misma, con la finalidad de que este enfocada
 para artistas independientes o emergentes.
 
