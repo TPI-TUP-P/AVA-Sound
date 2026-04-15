@@ -33,4 +33,9 @@ para artistas independientes o emergentes.
 
 ## INFORMACION EXTRA
 
-![Commit Streak](https://streak-stats.demolab.com?user=TPI-TUP-P&theme=dark&hide_border=true&border_radius=8)
+![Activity](https://img.shields.io/github/commit-activity/m/TPI-TUP-P/AVA-Sound?style=for-the-badge)
+![Contributors](https://img.shields.io/github/contributors/TPI-TUP-P/AVA-Sound?style=for-the-badge)
+![Last Commit](https://img.shields.io/github/last-commit/TPI-TUP-P/AVA-Sound?style=for-the-badge)
+![Progress](https://img.shields.io/badge/progress-651%1-blue?style=for-the-badge)
+![Issues](https://img.shields.io/github/issues/TPI-TUP-P/AVA-Sound?style=for-the-badge)
+![PRs](https://img.shields.io/github/issues-pr/TPI-TUP-P/AVA-Sound?style=for-the-badge)
