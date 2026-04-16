@@ -36,7 +36,7 @@ Realizamos una API de una plataforma web enfocada en artistas independientes, pe
 > El UML puede cambiar en base a futuras restricciones o cambios que se nos sugieran.
 
 <p align="center">
-    <img src="https://github.com/TPI-TUP-P/AVA-Sound/blob/main/StaticSource/TPP4.png" width="800">
+    <img src="https://github.com/TPI-TUP-P/AVA-Sound/blob/main/StaticSource/TP4.png" width="800">
 </p>
 
 ## Arquitectura
