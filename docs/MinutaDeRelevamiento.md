@@ -102,7 +102,7 @@ Desarrollar una plataforma web que permita:
 
 - **Usuario → ListaReproducción**  
   Relación: **N : N**  
-  Un usuario puede crear varias listas de reproducción.
+  Un usuario puede crear varias listas de reproducción y una lista de reproduccion pertenece a muchos usuarios.
 
 - **Usuario → Crítica**  
   Relación: **1 : N**  
