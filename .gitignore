@@ -220,6 +220,8 @@ csx/
 ecf/
 rcf/
 
+*.lscache
+
 # Windows Store app package directories and files
 AppPackages/
 BundleArtifacts/
@@ -476,6 +478,7 @@ $RECYCLE.BIN/
 *.msix
 *.msm
 *.msp
+
 
 # Windows shortcuts
 *.lnk
