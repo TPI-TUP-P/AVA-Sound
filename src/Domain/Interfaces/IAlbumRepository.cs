@@ -3,7 +3,7 @@ using Domain.Entities;
 namespace Domain.Interfaces;
 
 
-public interface IAlbum
+public interface IAlbumRepository
 {
    Task<Album?> GetById(Guid id);
    Task<List<Album>> GetAll();
