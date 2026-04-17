@@ -12,10 +12,10 @@ public class User
 
     public DateTime DateRegister { get; private set;}
 
-    public UserRole Role { get; private set;}
+    public string? Role { get; private set;}
 
 
-    public User(string? name, string? surname, string? email, string? password, bool isArtista,UserRole role)
+    public User(string? name, string? surname, string? email, string? password, bool isArtista,string? role)
     {
         ValidateProperties(name, surname, email, password, isArtista, role);
         Id = Guid.NewGuid();
@@ -29,31 +29,28 @@ public class User
         
     }
 
-    private void ValidateProperties(string? name, string? surname, string? email, string? password, bool isArtista,UserRole role)
+    private void ValidateProperties(string? name, string? surname, string? email, string? password, bool isArtista, string? role)
     {
         if(string.IsNullOrWhiteSpace(name))
             throw new Exception("el nombre es obligatorio");
-        if(name.Length<3)
-            throw new Exception("el nombre debe contener minimo 3 caracteres");
+        
         if (string.IsNullOrWhiteSpace(surname))
             throw new Exception("El apellido es obligatorio");
-        if (surname.Length < 3)
-            throw new Exception("El apellido debe tener al menos 3 caracteres");
+        
         if (string.IsNullOrWhiteSpace(email))
             throw new Exception("El email es obligatorio");
-        if (!email.Contains("@") || !email.Contains("."))
-            throw new Exception("El email no tiene un formato válido");
+        
         if (string.IsNullOrWhiteSpace(password))
             throw new Exception("La contraseña es obligatoria");
-        if (password.Length < 6)
-            throw new Exception("La contraseña debe tener al menos 6 caracteres");
+
+        if (!isArtista)
+            throw new Exception("el tipo de usuario es obligatorio");
+
+        if (string.IsNullOrWhiteSpace(role))
+            throw new Exception("el rol de usuario es obligatorio");
+        
 
     }
         
-    public enum UserRole
-    {
-        User = 0,
-        Admin = 1
-    }
 
 } 
