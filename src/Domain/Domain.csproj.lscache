@@ -57,8 +57,12 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 
 [sourceFiles]
 Class1.cs
-Entities/Statistic.cs
-Interfaces/IStatistic.cs
+Entities/
+ Album.cs
+ Statistic.cs
+Interfaces/
+ IAlbum.cs
+ IStatistic.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  Domain.AssemblyInfo.cs
