@@ -15,7 +15,7 @@ public class User
     public string? Role { get; private set;}
 
 
-    public User(string? name, string? surname, string? email, string? password, bool isArtista,string? role)
+    public User(string name, string surname, string email, string password, bool isArtista,string role)
     {
         ValidateProperties(name, surname, email, password, isArtista, role);
         Id = Guid.NewGuid();
