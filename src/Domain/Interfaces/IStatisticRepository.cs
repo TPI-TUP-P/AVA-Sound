@@ -2,7 +2,7 @@ using Domain.Entities;
 
 namespace Domain.Interfaces;
 
-public interface IStatistic
+public interface IStatisticRepository
 {
    Task<Statistic?> GetById(Guid id);
    Task<List<Statistic>> GetAll();
