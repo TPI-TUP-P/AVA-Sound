@@ -24,7 +24,7 @@ public class Review
         dateCreated = datecreated;
     }
 
-    public void ValidateProperties(Guid iduser, Guid idsong, string comment, DateTime datecreated)
+    private void ValidateProperties(Guid iduser, Guid idsong, string comment, DateTime datecreated)
     {
         if (iduser == Guid.Empty)
         {
