@@ -5,7 +5,6 @@ public class Statistic
 {
   public  Guid Id { get; private set; }
   public  Guid IdUser { get;private set; }
-    
    public Guid SongTop {get;private set;}
    public string? FavoriteGender {get;private set;}
    public int TotalReproductions {get;private set;}
@@ -16,7 +15,7 @@ public class Statistic
     public  Statistic (Guid id, Guid idUser, Guid songTop, string? favoriteGender, int totalReproductions)
     {
         
-        validateProperties(idUser, songTop, favoriteGender, totalReproductions);
+        ValidateProperties(idUser, songTop, favoriteGender, totalReproductions);
         Id = id;
         IdUser = idUser;
         SongTop = songTop;
@@ -24,7 +23,7 @@ public class Statistic
         TotalReproductions = totalReproductions;
     }
 
-    private void validateProperties( Guid idUser, Guid songTop, string? favoriteGender, int totalReproductions)
+    private void ValidateProperties( Guid idUser, Guid songTop, string? favoriteGender, int totalReproductions)
     {
             if(idUser == Guid.Empty)
         {
