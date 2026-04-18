@@ -15,9 +15,9 @@ public class Song
     public int Views {get; set;}
 
 
-    public Song( Guid idArtist, Guid idAlbum, string title, string gender, string duration, string audioBig, DateTime dateUpload, int views)
+    public Song( Guid idArtist, Guid idAlbum, string title, string gender, string duration, string audioBig, int views)
     {
-        ValidateProperties(idArtist, idAlbum, title, gender, duration, audioBig, dateUpload, views);
+        ValidateProperties(idArtist, idAlbum, title, gender, duration, audioBig, views);
         Id = Guid.NewGuid();
         IdArtist=idArtist;
         IdAlbum=idAlbum;
@@ -25,35 +25,32 @@ public class Song
         Gender=gender;
         Duration=duration;
         AudioBig=audioBig;
-        DateUpload=dateUpload;
+        DateUpload=DateTime.Now;
         Views=views;
     }
 
-    private void ValidateProperties(Guid idArtist, Guid idAlbum, string title, string gender, string duration, string audioBig, DateTime dateUpload, int views)
+    private void ValidateProperties(Guid idArtist, Guid idAlbum, string title, string gender, string duration, string audioBig, int views)
     {
         if (idArtist == Guid.Empty)
-            throw new Exception("El artista es obligatorio");
+            throw new Exception("artist is required");
 
         if (idAlbum == Guid.Empty)
-            throw new Exception("El álbum es obligatorio");
+            throw new Exception("album is required");
 
         if (string.IsNullOrWhiteSpace(title))
-            throw new Exception("El título es obligatorio");
+            throw new Exception("title is required");
 
         if (string.IsNullOrWhiteSpace(gender))
-            throw new Exception("El género es obligatorio");
+            throw new Exception("gender is required");
 
         if (string.IsNullOrWhiteSpace(duration))
-            throw new Exception("La duración es obligatoria");
+            throw new Exception("duration is required");
 
         if (string.IsNullOrWhiteSpace(audioBig))
-            throw new Exception("El archivo de audio es obligatorio");
-
-        if (dateUpload == default)
-            throw new Exception("La fecha de subida es obligatoria");
+            throw new Exception("Audio file is required");
 
         if (views < 0)
-            throw new Exception("Las vistas no pueden ser negativas");
+            throw new Exception("Views cannot be negative");
     }
 
 
