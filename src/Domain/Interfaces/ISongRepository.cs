@@ -5,6 +5,5 @@ public interface ISongRepository
     Task<Song?> GetById(Guid id);
     Task Add(Song song);
     Task Update(Song song);
-    Task<List<Song>> GetAll();
     Task Delete(Guid id);
 }
