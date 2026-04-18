@@ -17,7 +17,7 @@ public class User
 
     public User(string name, string surname, string email, string password, bool isArtista,string role)
     {
-        ValidateProperties(name, surname, email, password, isArtista, role);
+        ValidateProperties(name, surname, email, password, role);
         Id = Guid.NewGuid();
         Name = name;
         Surname = surname;
@@ -29,25 +29,22 @@ public class User
         
     }
 
-    private void ValidateProperties(string? name, string? surname, string? email, string? password, bool isArtista, string? role)
+    private void ValidateProperties(string? name, string? surname, string? email, string? password, string? role)
     {
         if(string.IsNullOrWhiteSpace(name))
-            throw new Exception("el nombre es obligatorio");
+            throw new Exception("name is required");
         
         if (string.IsNullOrWhiteSpace(surname))
-            throw new Exception("El apellido es obligatorio");
+            throw new Exception("surname is required");
         
         if (string.IsNullOrWhiteSpace(email))
-            throw new Exception("El email es obligatorio");
+            throw new Exception("email is required");
         
         if (string.IsNullOrWhiteSpace(password))
-            throw new Exception("La contraseña es obligatoria");
-
-        if (!isArtista)
-            throw new Exception("el tipo de usuario es obligatorio");
+            throw new Exception("password is required");
 
         if (string.IsNullOrWhiteSpace(role))
-            throw new Exception("el rol de usuario es obligatorio");
+            throw new Exception("user role is required");
         
 
     }
