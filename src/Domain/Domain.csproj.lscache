@@ -2,12 +2,10 @@ version=1
 
 # This file caches language service data to improve the performance of C# Dev Kit.
 # It is not intended for manual editing. It can safely be deleted and will be
-# regenerated automatically.
+# regenerated automatically. For more information, see https://aka.ms/lscache
 #
-# To exclude from version control, add *.lscache to your .gitignore file.
-#
-# To disable caching, add the following to your VS Code settings:
-#   "dotnet.projectsystem.enableLanguageServiceCache": false
+# To control where cache files are stored, use the following VS Code setting:
+#   "dotnet.projectsystem.cacheInProjectFolder": true
 
 [project]
 language=C#
@@ -59,10 +57,21 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 Class1.cs
 Entities/
  Album.cs
+ InfoUser.cs
+ ReproductionsList.cs
+ Review.cs
+ Song.cs
  Statistic.cs
+ User.cs
 Interfaces/
  IAlbumRepository.cs
+ IInfoUser.cs
+ IRepository.cs
+ IReproductionsListRepository.cs
+ IReviewRepository.cs
+ ISongRepository.cs
  IStatisticRepository.cs
+ IUserRepository.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  Domain.AssemblyInfo.cs
