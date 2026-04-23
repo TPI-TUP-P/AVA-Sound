@@ -1,4 +1,5 @@
 // using Microsoft.AspNetCore.Components;
+using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,25 +13,28 @@ namespace Web.Controllers;
 
 public class AlbumController : ControllerBase
 {
-    
-    
+    private readonly IAlbumService _albumService;
 
-    private static readonly List<Album> _albums = new();
-
+    public AlbumController(IAlbumService albumService)
+    {
+        _albumService = albumService;
+    }
+    
 
     [HttpGet]
     public ActionResult <List<Album>> GetAll()
     {
-        return Ok(new List<Album>());        
+       return Ok(_albumService.GetAll()); 
+              
     }
 
 
-    [HttpPost]
-    public ActionResult Create(Album album)
+    [HttpPost ]
+    public ActionResult Create([FromBody] Album album)
     {
-        _albums.Add(album);
+        _albumService.Create(album);
 
-        return Ok(album);
+        return CreatedAtAction(nameof(album), new { id = album.Id }, album );
     }
     
 }
