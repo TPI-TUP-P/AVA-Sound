@@ -58,6 +58,10 @@ public class AlbumRepository : IAlbumRepository
     public Task<Album> GetById(Guid id)
     {
         var album = _albums.FirstOrDefault(a=> a.Id == id);
+        if (album == null)
+        {
+            throw new Exception("Album not found");
+        }
         return Task.FromResult(album);
 
     }
