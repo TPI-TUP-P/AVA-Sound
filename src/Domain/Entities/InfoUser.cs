@@ -2,20 +2,21 @@ namespace Domain.Entities;
 
 public class InfoUser
 {
-    public Guid IdInfo { get; private set; }
+    public Guid Id { get; private set; }
 
     public Guid IdUser { get; private set; }
 
     public string? ProfilePicture { get; set; }
 
     public string? Biography { get; set; }
-
     public string? Country { get; set; }
+
+    private InfoUser(){}
 
     public InfoUser(Guid iduser, string profilepicture, string biography, string country)
     {
         ValidateProperties(iduser, profilepicture, biography, country);
-        IdInfo = Guid.NewGuid();
+        Id = Guid.NewGuid();
         IdUser = iduser;
         ProfilePicture = profilepicture;
         Biography = biography;

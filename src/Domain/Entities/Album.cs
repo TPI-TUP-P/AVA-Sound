@@ -11,6 +11,11 @@ public class Album
     public string? FrontPage {get;set;}
     public string? Description {get;set;}
 
+
+    private Album(){}
+
+
+
     public Album(Guid idArtist, string? title, DateTime releasteDate, string? frontPage, string? description)
     {
         ValidateProperties(idArtist, title, releasteDate, frontPage, description);

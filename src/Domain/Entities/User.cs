@@ -14,6 +14,8 @@ public class User
 
     public string? Role { get; private set;}
 
+    private User(){}
+
 
     public User(string name, string surname, string email, string password, bool isArtista,string role)
     {

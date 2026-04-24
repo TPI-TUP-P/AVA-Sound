@@ -14,6 +14,8 @@ public class Song
     public DateTime DateUpload {get; set;}
     public int Views {get; set;}
 
+    private Song(){}
+
 
     public Song( Guid idArtist, Guid idAlbum, string title, string gender, string duration, string audioBig, int views)
     {

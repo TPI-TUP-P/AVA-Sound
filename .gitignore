@@ -220,6 +220,11 @@ csx/
 ecf/
 rcf/
 
+# SQLite databases
+*.db
+*.db-shm
+*.db-wal
+
 *.lscache
 
 # Windows Store app package directories and files
