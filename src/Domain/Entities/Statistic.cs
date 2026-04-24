@@ -10,6 +10,7 @@ public class Statistic
    public int TotalReproductions {get;private set;}
 
 
+    private Statistic(){}
 
 
     public  Statistic (Guid id, Guid idUser, Guid songTop, string? favoriteGender, int totalReproductions)

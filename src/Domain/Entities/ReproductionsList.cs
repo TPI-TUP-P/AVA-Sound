@@ -11,8 +11,10 @@ public class ReproductionsList
     public bool IsPublic {get; private set;}
     public DateTime Creation {get; private set;}
     // public string? SoundList {get; set;}
-    public List<Song> Songs { get; private set; }
+    public List<Song> Songs { get; private set; } = new();
 
+
+    private ReproductionsList(){}
 
     public ReproductionsList(Guid idUser, string name, string description, bool isPublic)
     {
