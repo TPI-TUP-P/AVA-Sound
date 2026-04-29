@@ -57,14 +57,18 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 Class1.cs
 Interfaces/
  IAlbumService.cs
+ IInfoUserService.cs
  IReproductionListService.cs
+ IReviewService.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  Application.AssemblyInfo.cs
  Application.GlobalUsings.g.cs
 Services/
  AlbumService.cs
+ InfoUserService.cs
  ReproductionListService.cs
+ ReviewService.cs
 
 [metadataReferences]
 ../Domain/obj/Debug/net10.0/ref/Domain.dll

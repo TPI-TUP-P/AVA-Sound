@@ -1,63 +1,64 @@
 namespace Infrastructure.Data.Repositories;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 public class AlbumRepository : IAlbumRepository
 {
-    private static List<Album> _albums = new();
-    public Task<List<Album>> GetAll()
+    private readonly ApplicationContext _context;
+
+    public AlbumRepository(ApplicationContext context)
     {
-        return Task.FromResult(_albums);
+        _context = context;
     }
+    // private static List<Album> _albums = new();
+ public async Task<List<Album>> GetAll()
+{
+    return await _context.Albums.ToListAsync();
+}
+    public async Task Update(Album album)
+{
+    var existing = await _context.Albums.FindAsync(album.Id);
 
+    if (existing == null)
+        return;
 
-    public void  Update(Album album)
-    {
-        var existingAlbum = _albums.FirstOrDefault(a=> a.Id == album.Id);
-        if (existingAlbum != null)
-        {
-            _albums.Remove(existingAlbum);
-        }
-        else
-        {
-            _albums.Add(album);
-        }
-    }
+    existing.Title = album.Title;
+    existing.Description = album.Description;
+    existing.ReleasteDate = album.ReleasteDate;
+    existing.FrontPage = album.FrontPage;
 
+    await _context.SaveChangesAsync();
+}
 
     public Task AddSong(Guid id)
     {
         return Task.CompletedTask;
     }
 
-    public Task Delete(Guid id)
+    public async Task Delete(Guid id)
     {
-        var album = _albums.FirstOrDefault(a => a.Id == id);
+        var album =await _context.Albums.FindAsync(id);
         if (album != null)
         {
-            _albums.Remove(album);
+            _context.Albums.Remove(album);
         }
-        return Task.CompletedTask;
+        await _context.SaveChangesAsync();
+        
     }
 
-    async Task IRepository<Album>.Update(Album album)
+    public async Task Create(Album album)
     {
-        Update(album);
-        await Task.CompletedTask;
-    }
-    
-
-    public Task Create(Album album)
-    {
-        _albums.Add(album);
-        return Task.CompletedTask; 
+        var albumCreated = await _context.Albums.AddAsync(album);
+        await _context.SaveChangesAsync();
+         
     }
 
 
 
     public Task<Album> GetById(Guid id)
     {
-        var album = _albums.FirstOrDefault(a=> a.Id == id);
+        var album = _context.Albums.FirstOrDefault(a=> a.Id == id);
         if (album == null)
         {
             throw new Exception("Album not found");
