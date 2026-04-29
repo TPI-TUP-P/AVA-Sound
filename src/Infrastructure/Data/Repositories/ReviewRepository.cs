@@ -2,28 +2,55 @@ namespace Infrastructure.Data.Repositories;
 
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
 
 public class ReviewRepository : IReviewRepository
 {
-    public Task<Review> GetBySong(Guid id)
-    {
-        return
-    }
-    public void GetById(Guid id)
-    {
+    private readonly ApplicationContext _context;
 
-    }
-    public void Update()
+    public ReviewRepository(ApplicationContext context)
     {
-
+        _context = context;
     }
-
-    public void Create()
+    public async Task<List<Review>> GetBySong(Guid Id)
     {
+        return await _context.Reviews
+        .Where(r => r.idSong == Id)
+        .ToListAsync();
 
     }
-    public void Delete()
+    public async Task<Review> GetById(Guid Id)
     {
+        return await _context.Reviews.FirstAsync(r => r.id == Id);
 
+    }
+    public async Task Update(Review review)
+    {
+        var existing = await _context.Reviews.FindAsync(review.id);
+
+        if (existing is null)
+        {
+            return;
+        }
+        existing.Comment = review.Comment;
+        await _context.SaveChangesAsync();
+    }
+
+
+
+    public async Task Create(Review review)
+    {
+        await _context.Reviews.AddAsync(review);
+        await _context.SaveChangesAsync();
+    }
+    public async Task Delete(Guid Id)
+    {
+        var review = await _context.Reviews.FindAsync(Id);
+        if (review != null)
+        {
+            _context.Reviews.Remove(review);
+        }
+        await _context.SaveChangesAsync();
     }
 }

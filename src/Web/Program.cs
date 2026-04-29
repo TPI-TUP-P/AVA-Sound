@@ -30,7 +30,7 @@ builder.Services.AddScoped<IAlbumService, AlbumService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IInfoUserService, InfoUserService>();
-// builder.Services.AddScoped<IInfoUserRepository, IInfoUserRepository();
+builder.Services.AddScoped<IInfoUserRepository, InfoUserRepository>();
 var app = builder.Build();
 
 
