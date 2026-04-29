@@ -61,7 +61,9 @@ Data/
   20260424005428_InitialMigration.cs
   20260424005428_InitialMigration.Designer.cs
   ApplicationContextModelSnapshot.cs
- Repositories/AlbumRepository.cs
+ Repositories/
+  AlbumRepository.cs
+  ReviewRepository.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  Infrastructure.AssemblyInfo.cs

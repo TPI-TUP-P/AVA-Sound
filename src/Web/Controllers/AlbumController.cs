@@ -19,13 +19,25 @@ public class AlbumController : ControllerBase
     {
         _albumService = albumService;
     }
+
+    [HttpGet("{id}")]
+public ActionResult<Album> GetById(Guid id)
+{
+    var album = _albumService.GetById(id);
+
+    if (album == null)
+        return NotFound();
+
+    return Ok(album);
+}
     
 
     [HttpGet]
-    public ActionResult <List<Album>> GetAll()
+    public async Task<ActionResult <List<Album>>> GetAll()
     {
-       return Ok(_albumService.GetAll()); 
-              
+       
+        var albums = await _albumService.GetAll();
+            return Ok(albums);
     }
 
 
@@ -34,7 +46,7 @@ public class AlbumController : ControllerBase
     {
         _albumService.Create(album);
 
-        return CreatedAtAction(nameof(album), new { id = album.Id }, album );
+        return CreatedAtAction(nameof(GetById), new { id = album.Id }, album );
     }
     
 }
