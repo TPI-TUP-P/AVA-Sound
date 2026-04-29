@@ -16,10 +16,10 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 
-var connection = new SqliteConnection("Data Source=AVA_Sound.db" );
+var connection = new SqliteConnection("Data Source=AVA_Sound.db");
 connection.Open();
 
-using(var command = connection.CreateCommand())
+using (var command = connection.CreateCommand())
 {
     command.CommandText = "PRAGMA journal_mode = DELETE ";
     command.ExecuteNonQuery();
@@ -27,6 +27,10 @@ using(var command = connection.CreateCommand())
 builder.Services.AddDbContext<ApplicationContext>(DbContextOptions => DbContextOptions.UseSqlite(connection));
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
 builder.Services.AddScoped<IAlbumService, AlbumService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IInfoUserService, InfoUserService>();
+// builder.Services.AddScoped<IInfoUserRepository, IInfoUserRepository();
 var app = builder.Build();
 
 
@@ -34,7 +38,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    
+
     app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/openapi/v1.json", "My API V1");
