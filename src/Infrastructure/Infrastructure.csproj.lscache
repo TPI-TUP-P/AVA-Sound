@@ -63,6 +63,7 @@ Data/
   ApplicationContextModelSnapshot.cs
  Repositories/
   AlbumRepository.cs
+  InfoUserRepository.cs
   ReviewRepository.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs

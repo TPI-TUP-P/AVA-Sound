@@ -55,6 +55,9 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 
 [sourceFiles]
 Class1.cs
+DTOs/Album/
+ CreateAlbumDto.cs
+ UpdateAlbumDto.cs
 Interfaces/
  IAlbumService.cs
  IInfoUserService.cs
