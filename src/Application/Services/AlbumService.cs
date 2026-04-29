@@ -1,3 +1,4 @@
+using Application.DTOs.Album;
 using Application.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -32,21 +33,35 @@ public class AlbumService : IAlbumService
         return _album.GetAll();
     }
 
-    public Task Create(Album album)
+    public Task Create(CreateAlbumDto albumDto)
     {
-        if (album == null)
+        if (albumDto == null)
         {
             throw new Exception("El album esta vacio");
         }
-        return _album.Create(album);
+        return _album.Create(new Album(
+            albumDto.IdArtist,
+            albumDto.Title,
+            albumDto.ReleaseDate,
+            albumDto.FrontPage,
+            albumDto.Description
+        ));
+        
 
 
     }
 
 
-    public Task Update(Album album)
+    public Task Update(UpdateAlbumDto albumDto)
     {
-        return _album.Update(album);
+        return _album.Update(new Album (
+            albumDto.IdArtist,
+            albumDto.Title,
+            albumDto.ReleaseDate,
+            albumDto.FrontPage,
+            albumDto.Description
+            
+        ));
     }
 
     public Task Delete(Guid Id)
