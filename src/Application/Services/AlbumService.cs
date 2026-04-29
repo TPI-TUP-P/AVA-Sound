@@ -14,18 +14,18 @@ public class AlbumService : IAlbumService
     }
 
 
-    public Task<Album> GetById(Guid id)
+    public Task<Album> GetById(Guid Id)
     {
 
 
-        if (id == Guid.Empty)
+        if (Id == Guid.Empty)
         {
             throw new Exception("Id es vacio");
         }
 
 
 
-        return _album.GetById(id);
+        return _album.GetById(Id);
     }
     public Task<List<Album>> GetAll()
     {
@@ -49,8 +49,8 @@ public class AlbumService : IAlbumService
         return _album.Update(album);
     }
 
-    public Task Delete(Guid id)
+    public Task Delete(Guid Id)
     {
-        return _album.Delete(id);
+        return _album.Delete(Id);
     }
 }

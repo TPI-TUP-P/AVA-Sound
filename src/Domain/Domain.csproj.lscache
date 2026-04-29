@@ -65,7 +65,7 @@ Entities/
  User.cs
 Interfaces/
  IAlbumRepository.cs
- IInfoUser.cs
+ IInfoUserRepository.cs
  IRepository.cs
  IReproductionsListRepository.cs
  IReviewRepository.cs
