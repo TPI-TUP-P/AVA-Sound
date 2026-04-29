@@ -101,16 +101,20 @@ Desarrollar una plataforma web que permita:
   Un artista puede subir múltiples canciones.
 
 - **Usuario → ListaReproducción**  
-  Relación: **N : N**  
-  Un usuario puede crear varias listas de reproducción y una lista de reproduccion pertenece a muchos usuarios.
+  Relación: **1 : N**  
+  Un usuario puede crear varias listas de reproducción.
 
 - **Usuario → Crítica**  
   Relación: **1 : N**  
   Un usuario puede escribir múltiples reseñas.
 
 - **Usuario → Estadística**  
-  Relación: **1 : N**  
+  Relación: **1 : 1**  
   Un usuario acumula estadísticas en distintos períodos.
+
+  - **Usuario → Album**  
+  Relación: **1 : N**  
+  Un usuario puede crear varios albums.
 
 - **Álbum → Canción**  
   Relación: **1 : N**  

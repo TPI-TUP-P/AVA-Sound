@@ -22,4 +22,28 @@ public class ReviewController : ControllerBase
     {
         return Ok(_reviewService.GetBySong(Id));
     }
+
+    [HttpPost]
+    public async Task<ActionResult> Create([FromBody] Review review)
+    {
+        await _reviewService.Create(review);
+        return Ok();
+    }
+
+    [HttpDelete("{Id}")]
+
+    public async Task<ActionResult> Delete(Guid Id)
+    {
+        await _reviewService.Delete(Id);
+
+        return Ok();
+    }
+    [HttpPatch]
+
+    public async Task<ActionResult<InfoUser>> Update([FromBody] Review review)
+    {
+        await _reviewService.Update(review);
+        return Ok();
+    }
+
 }
