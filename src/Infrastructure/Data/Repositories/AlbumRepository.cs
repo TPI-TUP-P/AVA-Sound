@@ -31,9 +31,9 @@ public class AlbumRepository : IAlbumRepository
     await _context.SaveChangesAsync();
 }
 
-    public Task AddSong(Guid id)
-    {
-        return Task.CompletedTask;
+    public async Task AddSong(Guid id)
+    {   
+        
     }
 
     public async Task Delete(Guid id)
@@ -51,20 +51,19 @@ public class AlbumRepository : IAlbumRepository
     {
         var albumCreated = await _context.Albums.AddAsync(album);
         await _context.SaveChangesAsync();
-         
+                
     }
 
 
 
-    public Task<Album> GetById(Guid id)
+    public async Task<Album> GetById(Guid id)
     {
-        var album = _context.Albums.FirstOrDefault(a=> a.Id == id);
-        if (album == null)
+        var album =await _context.Albums.FindAsync(id);
+        if(album == null)
         {
-            throw new Exception("Album not found");
+            throw new KeyNotFoundException($"Album with ID {id} not found.");
         }
-        return Task.FromResult(album);
-
+       return album;
     }
 
     
