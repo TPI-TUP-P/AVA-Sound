@@ -71,7 +71,7 @@ public ActionResult<Album> GetById(Guid id)
 
 
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
 
     public async Task<ActionResult> Delete(Guid id)
     {
