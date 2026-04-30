@@ -16,19 +16,22 @@ public class AlbumRepository : IAlbumRepository
 {
     return await _context.Albums.ToListAsync();
 }
-    public async Task Update(Album album)
+    public async Task<Album> Update(Album album)
 {
     var existing = await _context.Albums.FindAsync(album.Id);
 
     if (existing == null)
-        return;
-
+    {
+        throw new KeyNotFoundException($"El album con el ID {album.Id} no fue encontrado.");
+    }
+    
     existing.Title = album.Title;
     existing.Description = album.Description;
     existing.ReleasteDate = album.ReleasteDate;
     existing.FrontPage = album.FrontPage;
 
     await _context.SaveChangesAsync();
+    return album;
 }
 
     public async Task AddSong(Guid id)
@@ -47,11 +50,12 @@ public class AlbumRepository : IAlbumRepository
         
     }
 
-    public async Task Create(Album album)
+    public async Task<Album> Create(Album album)
     {
-        var albumCreated = await _context.Albums.AddAsync(album);
+         await _context.Albums.AddAsync(album);
         await _context.SaveChangesAsync();
-                
+        return album;
+    
     }
 
 
@@ -61,7 +65,7 @@ public class AlbumRepository : IAlbumRepository
         var album =await _context.Albums.FindAsync(id);
         if(album == null)
         {
-            throw new KeyNotFoundException($"Album with ID {id} not found.");
+            throw new KeyNotFoundException($"El album con el ID {id} no fue encontrado.");
         }
        return album;
     }

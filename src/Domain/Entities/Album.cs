@@ -4,8 +4,8 @@ namespace Domain.Entities;
 
 public class Album
 {
-   public Guid Id {get; private set;}
-    public Guid IdArtist {get; private set;}
+   public Guid Id {get;  init;}
+    public Guid IdArtist {get; init;}
     public string? Title {get; set;}
     public DateTime ReleasteDate {get; set;}
     public string? FrontPage {get;set;}

@@ -1,10 +1,9 @@
-namespace Application.DTOs.Album;
+namespace Application.DTOs.Album.Request;
 
 
-public class UpdateAlbumDto
+public class UpdateRequest
 {
     
-    public Guid IdArtist { get; set; }
     public string? Title { get; set; }
     public DateTime ReleaseDate { get; set; }
     public string? FrontPage { get; set; }
