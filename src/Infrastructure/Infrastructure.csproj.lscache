@@ -60,6 +60,8 @@ Data/
  Migrations/
   20260424005428_InitialMigration.cs
   20260424005428_InitialMigration.Designer.cs
+  20260430183506_updateIdFieldAlbum.cs
+  20260430183506_updateIdFieldAlbum.Designer.cs
   ApplicationContextModelSnapshot.cs
  Repositories/
   AlbumRepository.cs
