@@ -59,13 +59,16 @@ public class AlbumService : IAlbumService
         {
             throw new Exception("El album esta vacio");
         }
-        var albumCreated=await  _album.Create(new Album(
+
+        var albumData =new Album(
             albumDto.IdArtist,
             albumDto.Title,
             albumDto.ReleaseDate,
             albumDto.FrontPage,
             albumDto.Description
-        ));
+        );
+
+        var albumCreated=await  _album.Create(albumData);
 
 
         return new CreateResponse
