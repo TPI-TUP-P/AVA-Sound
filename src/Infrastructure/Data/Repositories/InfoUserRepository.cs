@@ -18,10 +18,11 @@ public class InfoUserRepository : IInfoUserRepository
         return await _context.InfoUsers.FirstAsync(i => i.IdUser == Id);
     }
 
-    public async Task Create(InfoUser infouser)
+    public async Task<InfoUser> Create(InfoUser infouser)
     {
         await _context.InfoUsers.AddAsync(infouser);
         await _context.SaveChangesAsync();
+        return infouser;
     }
 
     public async Task Delete(Guid Id)
@@ -34,16 +35,18 @@ public class InfoUserRepository : IInfoUserRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task Update(InfoUser infouser)
+    public async Task<InfoUser> Update(InfoUser infouser)
     {
         var existing = await _context.InfoUsers.FindAsync(infouser.Id);
         if (existing is null)
         {
-            return;
+            throw new KeyNotFoundException($"La información del usuario con el ID {infouser.Id} no fue encontrada.");
         }
         existing.ProfilePicture = infouser.ProfilePicture;
         existing.Biography = infouser.Biography;
         existing.Country = infouser.Country;
         await _context.SaveChangesAsync();
+        return infouser;
+    
     }
 }

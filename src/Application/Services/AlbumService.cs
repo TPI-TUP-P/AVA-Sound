@@ -59,13 +59,16 @@ public class AlbumService : IAlbumService
         {
             throw new Exception("El album esta vacio");
         }
-        var albumCreated=await  _album.Create(new Album(
+
+        var albumData =new Album(
             albumDto.IdArtist,
             albumDto.Title,
             albumDto.ReleaseDate,
             albumDto.FrontPage,
             albumDto.Description
-        ));
+        );
+
+        var albumCreated=await  _album.Create(albumData);
 
 
         return new CreateResponse
@@ -96,11 +99,25 @@ public class AlbumService : IAlbumService
             throw new Exception("El album esta vacio");
         }
 
+        if(albumDto.Title != null)
+        {
+            
           existingAlbum.Title = albumDto.Title;
-          existingAlbum.ReleasteDate=  albumDto.ReleaseDate;
-           existingAlbum.FrontPage= albumDto.FrontPage;
-           existingAlbum.Description= albumDto.Description;
+                  }
 
+        if(albumDto.ReleaseDate != null)
+        {
+            
+            existingAlbum.ReleasteDate = albumDto.ReleaseDate;
+        }
+        if(albumDto.FrontPage != null)
+        {
+           existingAlbum.FrontPage= albumDto.FrontPage;
+        }
+        if(albumDto.Description != null)
+        {
+           existingAlbum.Description= albumDto.Description;
+        }
 
 
         await _album.Update(

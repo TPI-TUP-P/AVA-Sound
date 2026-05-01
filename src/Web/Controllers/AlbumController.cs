@@ -44,34 +44,34 @@ public ActionResult<Album> GetById(Guid id)
     [HttpPost ]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest albumDto)
     {
-        var albumCreated = await _albumService.Create(albumDto);
+       return await _albumService.Create(albumDto);
 
-        return new CreateResponse {
-            Title = albumCreated.Title,
-            ReleasteDate = albumCreated.ReleasteDate,
-            FrontPage = albumCreated.FrontPage,
-            Description = albumCreated.Description
-        };
+        // return new CreateResponse {
+        //     Title = albumCreated.Title,
+        //     ReleasteDate = albumCreated.ReleasteDate,
+        //     FrontPage = albumCreated.FrontPage,
+        //     Description = albumCreated.Description
+        // };
         
     }
     
     [HttpPut("{id}")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid id ,[FromBody]  UpdateRequest albumDto)
     {
-       var albumUpdated = await _albumService.Update(id,albumDto);
-    return new UpdateResponse
-    {
-        Title = albumUpdated.Title,
-        ReleasteDate = albumUpdated.ReleasteDate,
-        FrontPage = albumUpdated.FrontPage,
-        Description = albumUpdated.Description
+       return await _albumService.Update(id,albumDto);
+    // return new UpdateResponse
+    // {
+    //     Title = albumUpdated.Title,
+    //     ReleasteDate = albumUpdated.ReleasteDate,
+    //     FrontPage = albumUpdated.FrontPage,
+    //     Description = albumUpdated.Description
 
-    };
+    // };
     }
 
 
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
 
     public async Task<ActionResult> Delete(Guid id)
     {
