@@ -10,4 +10,12 @@ public class GetAllResponse
 
 
 
+    public GetAllResponse(Guid id, string? title, DateTime releasteDate, string? frontPage)
+    {
+        Id = id;
+        Title = title;
+        ReleasteDate = releasteDate;
+        FrontPage = frontPage;
+    }
+    
 }
