@@ -24,11 +24,18 @@ using (var command = connection.CreateCommand())
     command.CommandText = "PRAGMA journal_mode = DELETE ";
     command.ExecuteNonQuery();
 }
+
 builder.Services.AddDbContext<ApplicationContext>(DbContextOptions => DbContextOptions.UseSqlite(connection));
+
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
 builder.Services.AddScoped<IAlbumService, AlbumService>();
+
+builder.Services.AddScoped<IStatisticRepository, StatisticRepository>();
+builder.Services.AddScoped<IStatisticService, StatisticService>();
+
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+
 builder.Services.AddScoped<IInfoUserService, InfoUserService>();
 builder.Services.AddScoped<IInfoUserRepository, InfoUserRepository>();
 var app = builder.Build();

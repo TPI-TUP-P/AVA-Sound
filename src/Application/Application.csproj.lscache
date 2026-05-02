@@ -63,11 +63,20 @@ DTOs/Album/Response/
  GetAllReponse.cs
  GetByIdResponse.cs
  UpdateResponse.cs
+DTOs/Statistics/Request/
+ CreateRequest.cs
+ UpdateRequest.cs
+DTOs/Statistics/Response/
+ CreateResponse.cs
+ GetAllResponse.cs
+ GetByIdResponse.cs
+ UpdateResponse.cs
 Interfaces/
  IAlbumService.cs
  IInfoUserService.cs
  IReproductionListService.cs
  IReviewService.cs
+ IStatisticService.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  Application.AssemblyInfo.cs
@@ -77,6 +86,7 @@ Services/
  InfoUserService.cs
  ReproductionListService.cs
  ReviewService.cs
+ StatisticService.cs
 
 [metadataReferences]
 ../Domain/obj/Debug/net10.0/ref/Domain.dll
