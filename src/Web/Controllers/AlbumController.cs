@@ -24,7 +24,7 @@ public class AlbumController : ControllerBase
     }
 
     [HttpGet("{id}")]
-public ActionResult<Album> GetById(Guid id)
+public ActionResult<GetByIdResponse> GetById(Guid id)
 {
     var album = _albumService.GetById(id);
 
@@ -33,7 +33,7 @@ public ActionResult<Album> GetById(Guid id)
     
 
     [HttpGet]
-    public async Task<ActionResult <List<Album>>> GetAll()
+    public async Task<ActionResult <List<GetAllResponse>>> GetAll()
     {
        
         var albums = await _albumService.GetAll();
@@ -46,12 +46,7 @@ public ActionResult<Album> GetById(Guid id)
     {
        return await _albumService.Create(albumDto);
 
-        // return new CreateResponse {
-        //     Title = albumCreated.Title,
-        //     ReleasteDate = albumCreated.ReleasteDate,
-        //     FrontPage = albumCreated.FrontPage,
-        //     Description = albumCreated.Description
-        // };
+   
         
     }
     
@@ -59,14 +54,7 @@ public ActionResult<Album> GetById(Guid id)
     public async Task<ActionResult<UpdateResponse>> Update(Guid id ,[FromBody]  UpdateRequest albumDto)
     {
        return await _albumService.Update(id,albumDto);
-    // return new UpdateResponse
-    // {
-    //     Title = albumUpdated.Title,
-    //     ReleasteDate = albumUpdated.ReleasteDate,
-    //     FrontPage = albumUpdated.FrontPage,
-    //     Description = albumUpdated.Description
-
-    // };
+ 
     }
 
 

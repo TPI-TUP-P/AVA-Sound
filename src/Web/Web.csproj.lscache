@@ -60,6 +60,7 @@ Controllers/
  InfoUserController.cs
  ReproductionListController.cs
  ReviewController.cs
+ StatisticController.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  Web.AssemblyInfo.cs
