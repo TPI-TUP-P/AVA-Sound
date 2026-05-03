@@ -1,6 +1,8 @@
 namespace Application.Interfaces;
 
 using Domain.Entities;
+using Application.DTOs.Album.Request;
+using Application.DTOs.Album.Response;
 
 public interface IInfoUserService
 {
