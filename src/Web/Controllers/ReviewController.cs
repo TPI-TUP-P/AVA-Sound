@@ -1,7 +1,8 @@
 using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-
+using Application.DTOs.Review.Request;
+using Application.DTOs.Review.Response;
 namespace Web.Controllers;
 
 [Route("api/review")]
@@ -18,15 +19,15 @@ public class ReviewController : ControllerBase
 
     [HttpGet("{Id}")]
 
-    public ActionResult<List<Review>> GetBySong([FromRoute] Guid Id)
+    public ActionResult<List<GetBySongResponse>> GetBySong([FromRoute] Guid Id)
     {
         return Ok(_reviewService.GetBySong(Id));
     }
 
     [HttpPost]
-    public async Task<ActionResult> Create([FromBody] Review review)
+    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest reviewDto)
     {
-        await _reviewService.Create(review);
+        await _reviewService.Create(reviewDto);
         return Ok();
     }
 
@@ -40,9 +41,9 @@ public class ReviewController : ControllerBase
     }
     [HttpPatch]
 
-    public async Task<ActionResult<InfoUser>> Update([FromBody] Review review)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest reviewDto)
     {
-        await _reviewService.Update(review);
+        await _reviewService.Update(Id, reviewDto);
         return Ok();
     }
 
