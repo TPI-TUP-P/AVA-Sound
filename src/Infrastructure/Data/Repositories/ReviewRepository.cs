@@ -25,24 +25,26 @@ public class ReviewRepository : IReviewRepository
         return await _context.Reviews.FirstAsync(r => r.id == Id);
 
     }
-    public async Task Update(Review review)
+    public async Task<Review> Update(Review review)
     {
         var existing = await _context.Reviews.FindAsync(review.id);
 
         if (existing is null)
         {
-            return;
+            throw new KeyNotFoundException($"La reseña con el ID {review.id} no fue encontrada.");
         }
         existing.Comment = review.Comment;
         await _context.SaveChangesAsync();
+        return review;
     }
 
 
 
-    public async Task Create(Review review)
+    public async Task<Review> Create(Review review)
     {
         await _context.Reviews.AddAsync(review);
         await _context.SaveChangesAsync();
+        return review;
     }
     public async Task Delete(Guid Id)
     {

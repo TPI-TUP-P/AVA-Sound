@@ -3,11 +3,12 @@ namespace Domain.Entities;
 
 public class Statistic
 {
-  public  Guid Id { get; private set; }
-  public  Guid IdUser { get;private set; }
-   public Guid SongTop {get;private set;}
-   public string? FavoriteGender {get;private set;}
-   public int TotalReproductions {get;private set;}
+  public  Guid Id { get; init; }
+  public  Guid IdUser { get; init; }
+   public Guid SongTop {get; set;}
+   public string? FavoriteGender {get; set;}
+   
+   public int TotalReproductions {get; set;}
 
 
     private Statistic(){}

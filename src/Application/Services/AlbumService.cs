@@ -31,26 +31,26 @@ public class AlbumService : IAlbumService
         }
         
         return new GetByIdResponse
-        {
-            Id = album.Id,
-            IdArtist = album.IdArtist,
-            Title = album.Title,
-            ReleasteDate = album.ReleasteDate,
-            FrontPage = album.FrontPage,
-            Description = album.Description
-        };
+        (
+           album.Id,
+            album.IdArtist,
+            album.Title,
+            album.ReleasteDate,
+             album.FrontPage,
+            album.Description
+        );
 
     }
     public async Task<List<GetAllResponse>> GetAll()
     {
         var albums =await _album.GetAll();
         return albums.Select(album => new GetAllResponse
-        {
-            Id = album.Id,
-            Title = album.Title,
-            ReleasteDate = album.ReleasteDate,
-            FrontPage = album.FrontPage,
-        }).ToList();
+        (
+            album.Id,
+            album.Title,
+            album.ReleasteDate,
+            album.FrontPage
+        )).ToList();
     }
 
     public async Task<CreateResponse> Create(CreateRequest albumDto)
@@ -59,25 +59,27 @@ public class AlbumService : IAlbumService
         {
             throw new Exception("El album esta vacio");
         }
-        var albumCreated=await  _album.Create(new Album(
+
+        var albumData =new Album(
             albumDto.IdArtist,
             albumDto.Title,
             albumDto.ReleaseDate,
             albumDto.FrontPage,
             albumDto.Description
-        ));
+        );
+
+        var albumCreated=await  _album.Create(albumData);
 
 
-        return new CreateResponse
-        {
-            Title = albumCreated.Title,
-            ReleasteDate = albumCreated.ReleasteDate,
-            FrontPage = albumCreated.FrontPage,
-            Description = albumCreated.Description
+        return new CreateResponse (
 
-        };
-        
-
+            albumCreated.IdArtist,
+            albumCreated.Title,
+            albumCreated.ReleasteDate,
+            albumCreated.FrontPage,
+            albumCreated.Description
+        );
+    
 
 
     }
@@ -96,11 +98,25 @@ public class AlbumService : IAlbumService
             throw new Exception("El album esta vacio");
         }
 
+        if(albumDto.Title != null)
+        {
+            
           existingAlbum.Title = albumDto.Title;
-          existingAlbum.ReleasteDate=  albumDto.ReleaseDate;
-           existingAlbum.FrontPage= albumDto.FrontPage;
-           existingAlbum.Description= albumDto.Description;
+                  }
 
+        if(albumDto.ReleaseDate != default)
+        {
+            
+            existingAlbum.ReleasteDate = albumDto.ReleaseDate;
+        }
+        if(albumDto.FrontPage != null)
+        {
+           existingAlbum.FrontPage= albumDto.FrontPage;
+        }
+        if(albumDto.Description != null)
+        {
+           existingAlbum.Description= albumDto.Description;
+        }
 
 
         await _album.Update(
@@ -108,16 +124,17 @@ public class AlbumService : IAlbumService
         );
 
         return new UpdateResponse
-        {
-            Id = existingAlbum.Id,
-            IdArtist = existingAlbum.IdArtist,
-            Title = existingAlbum.Title,
-            ReleasteDate = existingAlbum.ReleasteDate,
-            FrontPage = existingAlbum.FrontPage,
-            Description = existingAlbum.Description
+        (
+            
+            existingAlbum.Id,
+            existingAlbum.IdArtist,
+            existingAlbum.Title,
+            existingAlbum.ReleasteDate,
+            existingAlbum.FrontPage,
+            existingAlbum.Description
             
 
-        };
+        );
     }
 
     public Task Delete(Guid Id)
