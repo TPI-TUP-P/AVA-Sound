@@ -1,11 +1,13 @@
 namespace Application.Interfaces;
 
-using Domain.Entities;
+using Application.DTOs.Review.Request;
+using Application.DTOs.Review.Response;
+
 
 public interface IReviewService
 {
-    Task<List<Review>> GetBySong(Guid Id);
-    Task Create(Review review);
-    Task Update(Review review);
+    Task<List<GetBySongResponse>> GetBySong(Guid Id);
+    Task<CreateResponse> Create(CreateRequest reviewDto);
+    Task<UpdateResponse> Update(Guid Id, UpdateRequest reviewDto);
     Task Delete(Guid id);
 }
