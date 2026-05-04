@@ -4,27 +4,27 @@ namespace Domain.Entities;
 
 public class Review
 {
-    public Guid id { get; private set; }
+    public Guid Id { get; private set; }
 
-    public Guid idUser { get; private set; }
+    public Guid IdUser { get; private set; }
 
-    public Guid idSong { get; private set; }
+    public Guid IdSong { get; private set; }
 
     public string? Comment { get; set; }
 
-    public DateTime dateCreated { get; set; }
+    public DateTime DateCreated { get; set; }
 
-    private Review(){}
+    private Review() { }
 
 
     public Review(Guid iduser, Guid idsong, string comment, DateTime datecreated)
     {
         ValidateProperties(iduser, idsong, comment, datecreated);
-        id = Guid.NewGuid();
-        idUser = iduser;
-        idSong = idsong;
+        Id = Guid.NewGuid();
+        IdUser = iduser;
+        IdSong = idsong;
         Comment = comment;
-        dateCreated = datecreated;
+        DateCreated = datecreated;
     }
 
     private void ValidateProperties(Guid iduser, Guid idsong, string comment, DateTime datecreated)
