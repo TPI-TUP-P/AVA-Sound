@@ -2,6 +2,8 @@ using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
+using Application.DTOs.InfoUser.Request;
+using Application.DTOs.InfoUser.Response;
 namespace Web.Controllers;
 
 [Route("api/infoUser")]
@@ -16,24 +18,20 @@ public class InfoUserController : ControllerBase
         _infouservice = infouserservice;
     }
     [HttpGet("{Id}")]
-    public async Task<ActionResult<InfoUser>> GetById(Guid Id)
+    public async Task<ActionResult<GetByIdResponse>> GetById(Guid Id)
     {
         return Ok(await _infouservice.GetById(Id));
     }
 
     [HttpPatch]
-    public async Task<ActionResult<InfoUser>> Update([FromBody] InfoUser infouser)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest infouserDto)
     {
-        await _infouservice.Update(infouser);
-
-        return Ok();
+        return Ok(await _infouservice.Update(Id, infouserDto));
     }
     [HttpPost]
-    public ActionResult Create([FromBody] InfoUser infouser)
+    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest infouserDto)
     {
-        _infouservice.Create(infouser);
-
-        return CreatedAtAction(nameof(infouser), new { id = infouser.Id }, infouser);
+        return await _infouservice.Create(infouserDto);
     }
 
     [HttpDelete("{Id}")]
