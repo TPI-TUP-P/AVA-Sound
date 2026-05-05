@@ -19,7 +19,7 @@ public class InfoUserService : IInfoUserService
     {
         if (Id == Guid.Empty)
         {
-            throw new Exception("id cannot be null");
+            throw new ArgumentException("Id cannot be empty");
         }
 
         var infouser = await _InfoUser.GetById(Id);
@@ -68,7 +68,7 @@ public class InfoUserService : IInfoUserService
     {
         if (Id == Guid.Empty)
         {
-            throw new Exception("empty id");
+            throw new ArgumentException("Id cannot be empty");
         }
         var existingInfo = await _InfoUser.GetById(Id);
         if (infouserDto.Biography != null && infouserDto.Country != null && infouserDto.ProfilePicture != null)
@@ -91,7 +91,7 @@ public class InfoUserService : IInfoUserService
     {
         if (Id == Guid.Empty)
         {
-            throw new Exception("empty id.");
+            throw new ArgumentException("Id cannot be empty");
         }
         return _InfoUser.Delete(Id);
     }
