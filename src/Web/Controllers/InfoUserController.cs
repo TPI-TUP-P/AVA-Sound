@@ -23,7 +23,7 @@ public class InfoUserController : ControllerBase
         return Ok(await _infouservice.GetById(Id));
     }
 
-    [HttpPatch]
+    [HttpPatch("{Id}")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest infouserDto)
     {
         return Ok(await _infouservice.Update(Id, infouserDto));
@@ -40,6 +40,6 @@ public class InfoUserController : ControllerBase
     {
         await _infouservice.Delete(Id);
 
-        return Ok();
+        return NoContent();
     }
 }
