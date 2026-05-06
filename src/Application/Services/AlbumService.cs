@@ -9,7 +9,8 @@ namespace Application.Services;
 public class AlbumService : IAlbumService
 {
     private IAlbumRepository _album;
-    public AlbumService(IAlbumRepository album)
+
+    public AlbumService(IAlbumRepository album )
     {
         _album = album;
 
@@ -147,4 +148,17 @@ public class AlbumService : IAlbumService
         
         return _album.Delete(Id);
     }
+
+
+
+// Este metodo no se puede completar porque falta el ABM de song 
+
+    // public Task AddSong(Guid id, Song song)
+    // {
+    //     var album = _album.GetById(id);
+
+    //     _album.AddSong(song);
+
+
+    // }
 }
