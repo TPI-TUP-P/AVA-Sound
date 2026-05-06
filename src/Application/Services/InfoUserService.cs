@@ -34,7 +34,7 @@ public class InfoUserService : IInfoUserService
         ;
     }
 
-    public async Task<CreateResponse> Create(CreateRequest infouserDto)
+    public async Task<CreateResponse> Create(CreateRequest infouserDto, CancellationToken cancellationToken)
     {
         if (infouserDto == null)
         {
@@ -54,7 +54,7 @@ public class InfoUserService : IInfoUserService
             infouserDto.Biography,
             infouserDto.Country
         );
-        var infouserCreated = await _InfoUser.Create(newInfoUser);
+        var infouserCreated = await _InfoUser.Create(newInfoUser, cancellationToken);
         return new CreateResponse
         {
             IdUser = infouserCreated.IdUser,

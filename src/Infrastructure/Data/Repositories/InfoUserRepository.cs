@@ -18,10 +18,10 @@ public class InfoUserRepository : IInfoUserRepository
         return await _context.InfoUsers.FirstAsync(i => i.IdUser == Id);
     }
 
-    public async Task<InfoUser> Create(InfoUser infouser)
+    public async Task<InfoUser> Create(InfoUser infouser, CancellationToken cancellationToken)
     {
-        await _context.InfoUsers.AddAsync(infouser);
-        await _context.SaveChangesAsync();
+        await _context.InfoUsers.AddAsync(infouser, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
         return infouser;
     }
 
@@ -47,6 +47,6 @@ public class InfoUserRepository : IInfoUserRepository
         existing.Country = infouser.Country;
         await _context.SaveChangesAsync();
         return infouser;
-    
+
     }
 }

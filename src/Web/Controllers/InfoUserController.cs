@@ -29,9 +29,9 @@ public class InfoUserController : ControllerBase
         return Ok(await _infouservice.Update(Id, infouserDto));
     }
     [HttpPost]
-    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest infouserDto)
+    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest infouserDto, CancellationToken cancellationToken)
     {
-        return await _infouservice.Create(infouserDto);
+        return await _infouservice.Create(infouserDto, cancellationToken);
     }
 
     [HttpDelete("{Id}")]

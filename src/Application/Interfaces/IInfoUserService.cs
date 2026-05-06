@@ -9,7 +9,7 @@ public interface IInfoUserService
 {
     Task<GetByIdResponse> GetById(Guid Id);
 
-    Task<CreateResponse> Create(CreateRequest infouserDto);
+    Task<CreateResponse> Create(CreateRequest infouserDto, CancellationToken cancellationToken);
 
     Task<UpdateResponse> Update(Guid Id, UpdateRequest infouserDto);
 

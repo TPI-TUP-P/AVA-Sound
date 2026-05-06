@@ -19,17 +19,17 @@ public class AlbumService : IAlbumService
     public async Task<GetByIdResponse> GetById(Guid Id)
     {
         if (Id == Guid.Empty)
-                {
-                    throw new Exception("Id es vacio");
-                }
+        {
+            throw new Exception("Id es vacio");
+        }
 
         var album = await _album.GetById(Id);
 
-        if(album == null)
+        if (album == null)
         {
             throw new Exception("El album no existe");
         }
-        
+
         return new GetByIdResponse
         (
            album.Id,
@@ -43,7 +43,7 @@ public class AlbumService : IAlbumService
     }
     public async Task<List<GetAllResponse>> GetAll()
     {
-        var albums =await _album.GetAll();
+        var albums = await _album.GetAll();
         return albums.Select(album => new GetAllResponse
         (
             album.Id,
@@ -53,14 +53,14 @@ public class AlbumService : IAlbumService
         )).ToList();
     }
 
-    public async Task<CreateResponse> Create(CreateRequest albumDto)
+    public async Task<CreateResponse> Create(CreateRequest albumDto, CancellationToken cancellationToken)
     {
         if (albumDto == null)
         {
             throw new Exception("El album esta vacio");
         }
 
-        var albumData =new Album(
+        var albumData = new Album(
             albumDto.IdArtist,
             albumDto.Title,
             albumDto.ReleaseDate,
@@ -68,10 +68,10 @@ public class AlbumService : IAlbumService
             albumDto.Description
         );
 
-        var albumCreated=await  _album.Create(albumData);
+        var albumCreated = await _album.Create(albumData, cancellationToken);
 
 
-        return new CreateResponse (
+        return new CreateResponse(
 
             albumCreated.IdArtist,
             albumCreated.Title,
@@ -79,7 +79,7 @@ public class AlbumService : IAlbumService
             albumCreated.FrontPage,
             albumCreated.Description
         );
-    
+
 
 
     }
@@ -92,30 +92,30 @@ public class AlbumService : IAlbumService
         {
             throw new Exception("El album no existe");
         }
-        
+
         if (albumDto == null)
         {
             throw new Exception("El album esta vacio");
         }
 
-        if(albumDto.Title != null)
+        if (albumDto.Title != null)
         {
-            
-          existingAlbum.Title = albumDto.Title;
-                  }
 
-        if(albumDto.ReleaseDate != default)
+            existingAlbum.Title = albumDto.Title;
+        }
+
+        if (albumDto.ReleaseDate != default)
         {
-            
+
             existingAlbum.ReleasteDate = albumDto.ReleaseDate;
         }
-        if(albumDto.FrontPage != null)
+        if (albumDto.FrontPage != null)
         {
-           existingAlbum.FrontPage= albumDto.FrontPage;
+            existingAlbum.FrontPage = albumDto.FrontPage;
         }
-        if(albumDto.Description != null)
+        if (albumDto.Description != null)
         {
-           existingAlbum.Description= albumDto.Description;
+            existingAlbum.Description = albumDto.Description;
         }
 
 
@@ -125,14 +125,14 @@ public class AlbumService : IAlbumService
 
         return new UpdateResponse
         (
-            
+
             existingAlbum.Id,
             existingAlbum.IdArtist,
             existingAlbum.Title,
             existingAlbum.ReleasteDate,
             existingAlbum.FrontPage,
             existingAlbum.Description
-            
+
 
         );
     }
@@ -140,11 +140,11 @@ public class AlbumService : IAlbumService
     public Task Delete(Guid Id)
     {
 
-        if(Id == Guid.Empty)
+        if (Id == Guid.Empty)
         {
             throw new Exception("Id es vacio");
         }
-        
+
         return _album.Delete(Id);
     }
 }

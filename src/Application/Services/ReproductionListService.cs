@@ -13,7 +13,7 @@ public class ReproductionListService : IReproductionListService
         return Task.FromResult(list);
     }
 
-    public Task<ReproductionsList> Create(ReproductionsList list)
+    public Task<ReproductionsList> Create(ReproductionsList list, CancellationToken cancellationToken)
     {
         _lists.Add(list);
         return Task.FromResult(list);

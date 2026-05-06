@@ -25,9 +25,9 @@ public class ReviewController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest reviewDto)
+    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest reviewDto, CancellationToken cancellationToken)
     {
-        await _reviewService.Create(reviewDto);
+        await _reviewService.Create(reviewDto, cancellationToken);
         return Ok();
     }
 
