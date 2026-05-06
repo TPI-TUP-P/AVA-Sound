@@ -33,7 +33,7 @@ public class ReviewService : IReviewService
         }).ToList();
     }
 
-    public async Task<CreateResponse> Create(CreateRequest reviewDto)
+    public async Task<CreateResponse> Create(CreateRequest reviewDto, CancellationToken cancellationToken)
     {
         if (reviewDto is null)
         {
@@ -56,7 +56,7 @@ public class ReviewService : IReviewService
             reviewDto.DateCreated
         );
 
-        var reviewCreated = await _review.Create(review);
+        var reviewCreated = await _review.Create(review, cancellationToken);
         return new CreateResponse
         {
             IdUser = reviewCreated.IdUser,

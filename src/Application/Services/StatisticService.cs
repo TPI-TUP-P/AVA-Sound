@@ -24,7 +24,7 @@ public class StatisticService : IStatisticService
             statistic.FavoriteGender,
             statistic.TotalReproductions
         )).ToList();
-        
+
     }
 
 
@@ -37,7 +37,7 @@ public class StatisticService : IStatisticService
 
         var statistic = await _statistic.GetById(Id);
 
-        if(statistic == null)
+        if (statistic == null)
         {
             throw new Exception("La estadística no existe");
         }
@@ -50,13 +50,13 @@ public class StatisticService : IStatisticService
             statistic.SongTop,
             statistic.FavoriteGender,
             statistic.TotalReproductions
-            
+
         );
     }
 
 
 
-    public async Task<CreateResponse> Create(CreateRequest statisticDto)
+    public async Task<CreateResponse> Create(CreateRequest statisticDto, CancellationToken cancellationToken)
     {
         if (statisticDto == null)
         {
@@ -71,20 +71,20 @@ public class StatisticService : IStatisticService
             statisticDto.FavoriteGender,
             statisticDto.TotalReproductions
         );
-        
 
 
 
-        var statisticCreated = await _statistic.Create(statisticData);
 
-        return new CreateResponse (
+        var statisticCreated = await _statistic.Create(statisticData, cancellationToken);
+
+        return new CreateResponse(
             statisticCreated.Id,
             statisticCreated.IdUser,
             statisticCreated.SongTop,
             statisticCreated.FavoriteGender,
             statisticCreated.TotalReproductions
         );
-    
+
 
     }
 
@@ -119,30 +119,30 @@ public class StatisticService : IStatisticService
     //         existingStatistic.FavoriteGender,
     //         existingStatistic.TotalReproductions
     //     );
-        
-        
+
+
     //     }
 
 
-public async Task<UpdateResponse> Update(Guid Id, UpdateRequest statisticDto)
+    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest statisticDto)
     {
         var existingAlbum = await _statistic.GetById(Id);
         if (existingAlbum == null)
         {
             throw new Exception("El album no existe");
         }
-        
+
         if (statisticDto == null)
         {
             throw new Exception("El album esta vacio");
         }
 
-       
+
         existingAlbum.SongTop = statisticDto.SongTop;
         existingAlbum.FavoriteGender = statisticDto.FavoriteGender;
         existingAlbum.TotalReproductions = statisticDto.TotalReproductions;
 
-        
+
         await _statistic.Update(
 
             existingAlbum
@@ -156,13 +156,13 @@ public async Task<UpdateResponse> Update(Guid Id, UpdateRequest statisticDto)
             existingAlbum.SongTop,
             existingAlbum.FavoriteGender,
             existingAlbum.TotalReproductions
-            
+
         );
     }
 
     public async Task Delete(Guid Id)
     {
-        if(Id == Guid.Empty)
+        if (Id == Guid.Empty)
         {
             throw new Exception("Id es vacio");
         }

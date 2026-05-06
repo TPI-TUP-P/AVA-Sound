@@ -27,9 +27,9 @@ public class ReproductionListController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> Create(ReproductionsList list)
+    public async Task<ActionResult> Create(ReproductionsList list, CancellationToken cancellationToken)
     {
-        var result = await _service.Create(list);
+        var result = await _service.Create(list, cancellationToken);
         return Ok(result);
     }
 
