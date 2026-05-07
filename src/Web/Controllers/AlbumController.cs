@@ -58,6 +58,23 @@ public ActionResult<GetByIdResponse> GetById(Guid id)
     }
 
 
+    [HttpPost("{id}/add-song/{idSong}")]
+    public async Task<ActionResult<GetByIdResponse>> AddSong(Guid id, Guid idSong)
+    {
+        try
+        {
+            var result = await _albumService.AddSong(id, idSong);
+            return Ok(result);
+        }
+       
+        catch(Exception ex)
+        {
+            return this.StatusCode(500, ex.Message);
+        }
+    }
+
+
+
 
     [HttpDelete("{id}")]
 

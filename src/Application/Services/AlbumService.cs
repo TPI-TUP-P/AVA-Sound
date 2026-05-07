@@ -39,6 +39,7 @@ public class AlbumService : IAlbumService
             album.ReleasteDate,
              album.FrontPage,
             album.Description
+            , album.Songs
         );
 
     }
@@ -67,6 +68,7 @@ public class AlbumService : IAlbumService
             albumDto.ReleaseDate,
             albumDto.FrontPage,
             albumDto.Description
+        
         );
 
         var albumCreated=await  _album.Create(albumData);
@@ -150,6 +152,25 @@ public class AlbumService : IAlbumService
     }
 
 
+
+    public async Task<GetByIdResponse> AddSong(Guid id, Guid idSong)
+    {   
+        var album = await _album.GetById(id);
+        album.AddSong(idSong);
+        await _album.Update(album);
+        return new GetByIdResponse
+        (
+            album.Id,
+            album.IdArtist,
+            album.Title,
+            album.ReleasteDate,
+            album.FrontPage,
+            album.Description
+            , album.Songs
+            
+        );
+
+    }
 
 // Este metodo no se puede completar porque falta el ABM de song 
 

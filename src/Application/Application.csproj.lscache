@@ -63,6 +63,20 @@ DTOs/Album/Response/
  GetAllReponse.cs
  GetByIdResponse.cs
  UpdateResponse.cs
+DTOs/InfoUser/Request/
+ CreateRequest.cs
+ UpdateRequest.cs
+DTOs/InfoUser/Response/
+ CreateResponse.cs
+ GetByIdResponse.cs
+ UpdateResponse.cs
+DTOs/Review/Request/
+ CreateRequest.cs
+ UpdateRequest.cs
+DTOs/Review/Response/
+ CreateResponse.cs
+ GetBySong.cs
+ UpdateResponse.cs
 DTOs/Statistics/Request/
  CreateRequest.cs
  UpdateRequest.cs

@@ -34,9 +34,10 @@ public class AlbumRepository : IAlbumRepository
     return album;
 }
 
-    public async Task AddSong(Guid id)
+    public async Task<Album> AddSong(Guid id)
     {   
-        
+        var album =await _context.Albums.FindAsync(id);
+        return album;
     }
 
     public async Task Delete(Guid id)

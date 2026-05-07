@@ -11,7 +11,10 @@ public class GetByIdResponse
     public string? FrontPage {get;set;}
     public string? Description {get;set;}
 
-    public GetByIdResponse(Guid id, Guid idArtist, string? title, DateTime releasteDate, string? frontPage, string? description)
+    public IReadOnlyCollection<Guid> Songs {get;}
+   
+
+    public GetByIdResponse(Guid id, Guid idArtist, string? title, DateTime releasteDate, string? frontPage, string? description, IReadOnlyCollection<Guid> songs)
     {
         Id = id;   
         IdArtist = idArtist;
@@ -19,6 +22,9 @@ public class GetByIdResponse
         ReleasteDate = releasteDate;
         FrontPage = frontPage;
         Description = description;
+        Songs = songs;
+    }
+       
         
-        }
+        
 }
