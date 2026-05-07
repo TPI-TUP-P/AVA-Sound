@@ -63,6 +63,9 @@ Entities/
  Song.cs
  Statistic.cs
  User.cs
+Exceptions/
+ DomainException.cs
+ SongAlredyExistAlbum.cs
 Interfaces/
  IAlbumRepository.cs
  IInfoUserRepository.cs

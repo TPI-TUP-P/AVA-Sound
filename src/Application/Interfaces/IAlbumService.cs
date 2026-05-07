@@ -11,6 +11,8 @@ public interface IAlbumService
     Task<CreateResponse> Create(CreateRequest albumDto);
     Task<UpdateResponse>  Update(Guid Id,UpdateRequest albumDto);
     Task Delete(Guid id);
+    
+    Task<GetByIdResponse> AddSong(Guid id, Guid idSong);
 }
 
 
