@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 using Domain.Entities;
+using Application.DTOs.ReproductionList.Request;
+using Application.DTOs.ReproductionList.Response;
 
 namespace Web.Controllers;
 
@@ -8,70 +10,50 @@ namespace Web.Controllers;
 [Route("api/reproduction-list")]
 public class ReproductionListController : ControllerBase
 {
-    private readonly IReproductionListService _service;
+    private readonly IReproductionListService _reproductionListservice;
 
-    public ReproductionListController(IReproductionListService service)
+    public ReproductionListController(IReproductionListService reproductionListservice)
     {
-        _service = service;
+        _reproductionListservice = reproductionListservice;
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ReproductionsList>> GetById(Guid id)
+    public ActionResult<ReproductionsList> GetById(Guid id)
+{
+    var reproductionList = _reproductionListservice.GetById(id);
+
+    return Ok(reproductionList);
+}
+
+    [HttpPost]
+    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest reproductionListDto)
     {
-        var list = await _service.GetById(id);
-
-        if (list == null)
-            return NotFound(new { message = "List not found" });
-
+        var list = await _reproductionListservice.Create(reproductionListDto);
         return Ok(list);
     }
 
-    [HttpPost]
-    public async Task<ActionResult> Create(ReproductionsList list)
-    {
-        var result = await _service.Create(list);
-        return Ok(result);
-    }
-
     [HttpPost("{id}/add-song")]
-    public async Task<ActionResult> AddSong(Guid id, Song song)
+    public async Task<ActionResult> AddSong(Guid listId, Guid songId)
     {
-        try
-        {
-            var result = await _service.AddSong(id, song);
-            return Ok(result);
-        }
-        catch (Exception)
-        {
-            return BadRequest(new { message = "Song not found" });
-        }
+        
+        await _reproductionListservice.AddSong(listId, songId);
+        return Ok("cancion agregada a la lista");
+        
+        
     }
 
     [HttpPost("{id}/remove-song")]
-    public async Task<ActionResult> DeleteSong(Guid id, Song song)
+    public async Task<ActionResult> RemoveSong(Guid listId, Guid songId)
     {
-        try
-        {
-            var result = await _service.DeleteSong(id, song);
-            return Ok(result);
-        }
-        catch (Exception)
-        {
-            return BadRequest(new { message = "Song not found" });
-        }
+            await _reproductionListservice.RemoveSong(listId, songId);
+            return Ok("cancion eliminada de la lista");
+        
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id)
     {
-        try
-        {
-            await _service.Delete(id);
-            return NoContent();
-        }
-        catch (Exception)
-        {
-            return NotFound(new { message = "List not found" });
-        }
+        await _reproductionListservice.Delete(id);
+        return Ok("lista borrada");
     }
 }
