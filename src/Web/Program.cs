@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<IReproductionListService, ReproductionListService>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -38,6 +38,9 @@ builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
 builder.Services.AddScoped<IInfoUserService, InfoUserService>();
 builder.Services.AddScoped<IInfoUserRepository, InfoUserRepository>();
+
+builder.Services.AddScoped<IReproductionListService, ReproductionListService>();
+builder.Services.AddScoped<IReproductionsListRepository, ReproductionsListRepository>();
 var app = builder.Build();
 
 
