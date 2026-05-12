@@ -16,7 +16,7 @@ public class Album
 
     private readonly List<Guid> _songs = new();
 
-    public IReadOnlyCollection<Guid> Songs => _songs.AsReadOnly();
+    public IReadOnlyCollection<Guid> Songs => _songs;
     
 
 
@@ -35,17 +35,18 @@ public class Album
         ReleasteDate = releasteDate;
         FrontPage = frontPage;
         Description = description;
-        
+
 
     }
 
 public void AddSong (Guid IdSong)
     {
-    if (_songs.Contains(IdSong))        {
+    if (_songs.Contains(IdSong))   {
             throw new SongAlredyExistAlbumExcepction(IdSong);
         }
 
         _songs.Add(IdSong);
+
 
     }
 

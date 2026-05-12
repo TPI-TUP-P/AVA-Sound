@@ -11,7 +11,8 @@ public class GetByIdResponse
     public string? FrontPage {get;set;}
     public string? Description {get;set;}
 
-    public IReadOnlyCollection<Guid> Songs {get;}
+    public IReadOnlyCollection<Guid> Songs { get; init; }
+    
    
 
     public GetByIdResponse(Guid id, Guid idArtist, string? title, DateTime releasteDate, string? frontPage, string? description, IReadOnlyCollection<Guid> songs)
@@ -23,6 +24,7 @@ public class GetByIdResponse
         FrontPage = frontPage;
         Description = description;
         Songs = songs;
+        
     }
        
         

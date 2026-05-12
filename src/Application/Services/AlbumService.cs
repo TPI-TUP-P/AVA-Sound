@@ -39,7 +39,7 @@ public class AlbumService : IAlbumService
             album.ReleasteDate,
              album.FrontPage,
             album.Description
-            , album.Songs
+            , album.Songs.ToList()
         );
 
     }
@@ -157,7 +157,8 @@ public class AlbumService : IAlbumService
     {   
         var album = await _album.GetById(id);
         album.AddSong(idSong);
-        await _album.Update(album);
+    
+        
         return new GetByIdResponse
         (
             album.Id,
@@ -165,10 +166,11 @@ public class AlbumService : IAlbumService
             album.Title,
             album.ReleasteDate,
             album.FrontPage,
-            album.Description
-            , album.Songs
-            
+            album.Description, 
+            album.Songs
         );
+
+
 
     }
 
