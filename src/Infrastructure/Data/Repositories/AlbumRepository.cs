@@ -34,10 +34,13 @@ public class AlbumRepository : IAlbumRepository
     return album;
 }
 
-    public async Task<Album> AddSong(Guid id)
+    public async Task<Album> AddSong(Guid id, Guid idSong)
     {   
-        var album =await _context.Albums.FindAsync(id);
+        var album = await _context.Albums.FindAsync(id);
+        album.AddSong(idSong);
+        await _context.SaveChangesAsync();
         return album;
+        
     }
 
     public async Task Delete(Guid id)
