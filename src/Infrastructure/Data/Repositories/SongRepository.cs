@@ -15,23 +15,23 @@ public class SongRepository : ISongRepository
 
     public async Task<Song> GetById(Guid id)
     {
-        var song= await _context.Songs.FindAsync(id);
-        if (song==null)
-             throw new KeyNotFoundException($"La cancion con el ID {id} no fue encontrado.");
+        var song = await _context.Songs.FindAsync(id);
+        if (song == null)
+            throw new KeyNotFoundException($"La cancion con el ID {id} no fue encontrado.");
 
         return song;
     }
 
 
     public async Task<List<Song>> GetAll()
-{
-    return await _context.Songs
-        .OrderByDescending(s => s.DateUpload)
-        .Take(30)
-        .ToListAsync();
-}
+    {
+        return await _context.Songs
+            .OrderByDescending(s => s.DateUpload)
+            .Take(30)
+            .ToListAsync();
+    }
 
-    public async Task<Song> Create(Song song)
+    public async Task<Song> Create(Song song, CancellationToken cancellationToken)
     {
         _context.Songs.Add(song);
         await _context.SaveChangesAsync();

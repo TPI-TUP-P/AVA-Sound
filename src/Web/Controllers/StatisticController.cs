@@ -23,36 +23,36 @@ public class StatisticController : ControllerBase
     }
 
     [HttpGet("{id}")]
-public ActionResult<GetByIdResponse> GetById(Guid id)
-{
-    var album = _statisticService.GetById(id);
+    public ActionResult<GetByIdResponse> GetById(Guid id)
+    {
+        var album = _statisticService.GetById(id);
 
-    return Ok(album);
-}
-    
+        return Ok(album);
+    }
+
 
     [HttpGet]
-    public async Task<ActionResult <List<GetAllResponse>>> GetAll()
+    public async Task<ActionResult<List<GetAllResponse>>> GetAll()
     {
-       
+
         var albums = await _statisticService.GetAll();
         return Ok(albums);
     }
 
 
     [HttpPost]
-    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest statisticDto)
+    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest statisticDto, CancellationToken cancellationToken)
     {
 
-       return await _statisticService.Create(statisticDto);
-       
+        return await _statisticService.Create(statisticDto, cancellationToken);
+
     }
-    
+
     [HttpPut("{id}")]
-    public async Task<ActionResult<UpdateResponse>> Update(Guid id ,[FromBody]  UpdateRequest statisticDto)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest statisticDto)
     {
-       return await _statisticService.Update(id,statisticDto);
- 
+        return await _statisticService.Update(id, statisticDto);
+
     }
 
 
@@ -61,8 +61,8 @@ public ActionResult<GetByIdResponse> GetById(Guid id)
 
     public async Task<ActionResult> Delete(Guid id)
     {
-        
-        await  _statisticService.Delete(id);
+
+        await _statisticService.Delete(id);
         return NoContent();
     }
 

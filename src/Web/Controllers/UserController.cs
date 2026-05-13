@@ -15,14 +15,14 @@ public class UserController : ControllerBase
 
     public UserController(IUserService userService)
     {
-        _userService=userService;
+        _userService = userService;
     }
 
     [HttpGet("{id}")]
 
     public ActionResult<GetByIdResponse> GetById(Guid Id)
     {
-        var user=_userService.GetById(Id);
+        var user = _userService.GetById(Id);
         return Ok(user);
     }
 
@@ -30,14 +30,14 @@ public class UserController : ControllerBase
 
     public async Task<ActionResult<List<GetAllResponse>>> GetAll()
     {
-        var users=await _userService.GetAll();
+        var users = await _userService.GetAll();
         return Ok(users);
     }
 
     [HttpPost]
-    public async Task<ActionResult<CreateResponse>> Create( [FromBody] CreateRequest userDto)
+    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest userDto, CancellationToken cancellationToken)
     {
-        var user= await _userService.Create(userDto);
+        var user = await _userService.Create(userDto, cancellationToken);
         return Ok(user);
     }
 

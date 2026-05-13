@@ -15,23 +15,23 @@ public class UserRepository : IUserRepository
 
     public async Task<User> GetById(Guid id)
     {
-        var user= await _context.Users.FindAsync(id);
-        if (user==null)
-             throw new Exception($"El usuario con el ID {id} no fue encontrado.");
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+            throw new Exception($"El usuario con el ID {id} no fue encontrado.");
 
         return user;
     }
 
 
     public async Task<List<User>> GetAll()
-{
-    return await _context.Users
-        .OrderByDescending(s => s.DateRegister)
-        .Take(30)
-        .ToListAsync();
-}
+    {
+        return await _context.Users
+            .OrderByDescending(s => s.DateRegister)
+            .Take(30)
+            .ToListAsync();
+    }
 
-    public async Task<User> Create(User user)
+    public async Task<User> Create(User user, CancellationToken cancellationToken)
     {
         _context.Users.Add(user);
         await _context.SaveChangesAsync();

@@ -15,16 +15,16 @@ public class ReproductionsListRepository : IReproductionsListRepository
 
     public async Task<ReproductionsList> GetById(Guid id)
     {
-        var lista= await _context.ReproductionsLists.FindAsync(id);
-            // .Include(r => r.Songs)
-            // .FirstOrDefaultAsync(r => r.Id == id);
-        if (lista==null)
-             throw new KeyNotFoundException($"La lista con el ID {id} no fue encontrado.");
+        var lista = await _context.ReproductionsLists.FindAsync(id);
+        // .Include(r => r.Songs)
+        // .FirstOrDefaultAsync(r => r.Id == id);
+        if (lista == null)
+            throw new KeyNotFoundException($"La lista con el ID {id} no fue encontrado.");
 
         return lista;
     }
 
-    public async Task<ReproductionsList> Create(ReproductionsList list)
+    public async Task<ReproductionsList> Create(ReproductionsList list, CancellationToken cancellationToken)
     {
         _context.ReproductionsLists.Add(list);
         await _context.SaveChangesAsync();
