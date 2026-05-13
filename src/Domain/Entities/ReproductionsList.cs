@@ -6,8 +6,8 @@ public class ReproductionsList
 {
     public Guid Id {get; private set;}
     public Guid IdUser {get; private set;}
-    public string? Name {get; private set;}
-    public string? Description {get; private set;}
+    public string Name {get; private set;}=null!;
+    public string Description {get; private set;}=null!;
     public bool IsPublic {get; private set;}
     public DateTime Creation {get; private set;}
     // public string? SoundList {get; set;}
