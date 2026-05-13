@@ -41,6 +41,13 @@ builder.Services.AddScoped<IInfoUserRepository, InfoUserRepository>();
 
 builder.Services.AddScoped<IReproductionListService, ReproductionListService>();
 builder.Services.AddScoped<IReproductionsListRepository, ReproductionsListRepository>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<ISongRepository, SongRepository>();
+builder.Services.AddScoped<ISongService, SongService>();
+
 var app = builder.Build();
 
 
