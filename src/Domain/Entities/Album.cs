@@ -12,6 +12,20 @@ public class Album
     public string? Description {get;set;}
 
 
+    private readonly List<Song> _songs = new();
+
+
+    public void AddSong (Song song)
+    {
+        if(_songs.Any(s=> s.Title == song.Title))
+        {
+            throw new Exception("La cancion ya existe en el album");
+        }
+
+        _songs.Add(song);
+
+    }
+
     private Album(){}
 
 

@@ -17,9 +17,9 @@ public class Song
     private Song(){}
 
 
-    public Song( Guid idArtist, Guid idAlbum, string title, string gender, string duration, string audioBig, int views)
+    public Song( Guid idArtist, Guid idAlbum, string title, string gender, string duration, string audioBig)
     {
-        ValidateProperties(idArtist, idAlbum, title, gender, duration, audioBig, views);
+        ValidateProperties(idArtist, idAlbum, title, gender, duration, audioBig);
         Id = Guid.NewGuid();
         IdArtist=idArtist;
         IdAlbum=idAlbum;
@@ -28,10 +28,10 @@ public class Song
         Duration=duration;
         AudioBig=audioBig;
         DateUpload=DateTime.Now;
-        Views=views;
+        Views=0;
     }
 
-    private void ValidateProperties(Guid idArtist, Guid idAlbum, string title, string gender, string duration, string audioBig, int views)
+    private void ValidateProperties(Guid idArtist, Guid idAlbum, string title, string gender, string duration, string audioBig)
     {
         if (idArtist == Guid.Empty)
             throw new Exception("artist is required");
@@ -51,10 +51,27 @@ public class Song
         if (string.IsNullOrWhiteSpace(audioBig))
             throw new Exception("Audio file is required");
 
-        if (views < 0)
-            throw new Exception("Views cannot be negative");
     }
 
+public void UpdateInfo(string title, string gender, string duration, string audioBig)
+{
+    if (string.IsNullOrWhiteSpace(title))
+        throw new Exception("Title obligatorio");
+
+    if (string.IsNullOrWhiteSpace(gender))
+        throw new Exception("Gender obligatorio");
+
+    if (string.IsNullOrWhiteSpace(duration))
+        throw new Exception("Duration obligatoria");
+
+    if (string.IsNullOrWhiteSpace(audioBig))
+        throw new Exception("Audio obligatorio");
+
+    Title = title;
+    Gender = gender;
+    Duration = duration;
+    AudioBig = audioBig;
+}
 
     
 
