@@ -40,13 +40,13 @@ public class InfoUserRepository : IInfoUserRepository
         var existing = await _context.InfoUsers.FindAsync(infouser.Id);
         if (existing is null)
         {
-            throw new KeyNotFoundException($"La información del usuario con el ID {infouser.Id} no fue encontrada.");
+            throw new KeyNotFoundException($"User information with ID: {infouser.Id} was no found");
         }
         existing.ProfilePicture = infouser.ProfilePicture;
         existing.Biography = infouser.Biography;
         existing.Country = infouser.Country;
         await _context.SaveChangesAsync();
-        return infouser;
+        return existing;
 
     }
 }
