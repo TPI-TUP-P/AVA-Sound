@@ -1,0 +1,13 @@
+namespace Application.DTOs.ReproductionList.Response;
+using Application.DTOs.ReproductionList.Response;
+
+public class GetByIdResponse
+{
+    public Guid Id { get; set; }
+        public Guid IdUser { get; set; }
+        public string? Name { get; set; } 
+        public string? Description { get; set; }
+        public bool IsPublic { get; set; }
+        public DateTime Creation { get; set; }
+        public List<SongResponse> Songs { get; set; } = new();
+}
