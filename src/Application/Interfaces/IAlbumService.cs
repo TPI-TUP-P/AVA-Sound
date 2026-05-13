@@ -12,7 +12,7 @@ public interface IAlbumService
     Task<UpdateResponse>  Update(Guid Id,UpdateRequest albumDto);
     Task Delete(Guid id);
     
-    Task<GetByIdResponse> AddSong(Guid id, Guid idSong);
+    Task<GetByIdResponse> AddSong(Guid id, Song song);
 }
 
 

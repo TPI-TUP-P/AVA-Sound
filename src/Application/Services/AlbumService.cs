@@ -39,7 +39,8 @@ public class AlbumService : IAlbumService
             album.ReleasteDate,
              album.FrontPage,
             album.Description
-            , album.Songs.ToList()
+            ,
+            album.Songs.Select(song => song.Id ).ToList()
         );
 
     }
@@ -153,10 +154,10 @@ public class AlbumService : IAlbumService
 
 
 
-    public async Task<GetByIdResponse> AddSong(Guid id, Guid idSong)
+    public async Task<GetByIdResponse> AddSong(Guid id, Song song)
     {   
         var album = await _album.GetById(id);
-        album.AddSong(idSong);
+        album.AddSong(song);
     
         
         return new GetByIdResponse
@@ -167,7 +168,7 @@ public class AlbumService : IAlbumService
             album.ReleasteDate,
             album.FrontPage,
             album.Description, 
-            album.Songs
+            album.Songs.Select(song => song.Id ).ToList()
         );
 
 

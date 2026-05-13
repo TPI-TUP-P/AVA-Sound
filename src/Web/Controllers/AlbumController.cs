@@ -59,12 +59,13 @@ public ActionResult<GetByIdResponse> GetById(Guid id)
 
 
     [HttpPost("{id}/add-song/{idSong}")]
-    public async Task<ActionResult<GetByIdResponse>> AddSong(Guid id, Guid idSong)
+    public async Task<ActionResult<GetByIdResponse>> AddSong(Guid id, Song song)
     {
         try
         {
-            var result = await _albumService.AddSong(id, idSong);
-            return Ok(result);
+            var result = await _albumService.AddSong(id, song);
+            return CreatedAtAction(nameof(GetById), new {id}, result
+            );
             
         }
        

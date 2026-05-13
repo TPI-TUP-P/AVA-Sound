@@ -14,9 +14,9 @@ public class Album
     public string? Description {get;set;}
 
 
-    private readonly List<Guid> _songs = new();
+    private readonly List<Song> _songs = new();
 
-    public IReadOnlyCollection<Guid> Songs => _songs;
+    public IReadOnlyCollection<Song> Songs => _songs;
     
 
 
@@ -35,17 +35,17 @@ public class Album
         ReleasteDate = releasteDate;
         FrontPage = frontPage;
         Description = description;
-
+        
 
     }
 
-public void AddSong (Guid IdSong)
+public void AddSong (Song song)
     {
-    if (_songs.Contains(IdSong))   {
-            throw new SongAlredyExistAlbumExcepction(IdSong);
+    if (_songs.Contains(song))   {
+            throw new SongAlredyExistAlbumExcepction(song);
         }
 
-        _songs.Add(IdSong);
+        _songs.Add(song);
 
 
     }
