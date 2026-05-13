@@ -19,7 +19,7 @@ public class SongController : ControllerBase
 
     [HttpGet("{id}")]
 
-    public ActionResult<GetByAlbumResponse> GetById(Guid Id)
+    public ActionResult<GetByIdResponse> GetById(Guid Id)
     {
         var song=_songService.GetById(Id);
         return Ok(song);
@@ -34,15 +34,15 @@ public class SongController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<CreateResponse>> Create(CreateRequest songDto)
+    public async Task<ActionResult<CreateResponse>> Create( [FromBody] CreateRequest songDto)
     {
         var song= await _songService.Create(songDto);
-        return Ok(songDto);
+        return Ok(song);
     }
 
     [HttpPut("{id}")]
 
-    public async Task<ActionResult<UpdateResponse>> Update(Guid id, UpdateRequest songDto)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest songDto)
     {
         var song = await _songService.Update(id, songDto);
         return Ok(song);
