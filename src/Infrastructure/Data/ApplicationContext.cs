@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +18,28 @@ namespace Infrastructure.Data
     public ApplicationContext(DbContextOptions<ApplicationContext> options ) : base(options)
         {
             
+
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Album>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Title).IsRequired();
+                entity.HasMany(e => e.Songs)
+                    .WithOne()
+                    .HasForeignKey(s => s.IdAlbum);
+            });
+
+            
+
+           
+
+            base.OnModelCreating(modelBuilder);
+        }
+        
+  
 
     }
 }

@@ -46,7 +46,7 @@ public class SongService : ISongService
     return songs.Select(s => new GetAllResponse
     {
         IdArtist=s.IdArtist,
-        IdAlbum=s.IdAlbum,
+        IdAlbum=s.IdAlbum ?? Guid.Empty,
         Title=s.Title,
         Gender=s.Gender,
         Duration=s.Duration,
@@ -62,12 +62,12 @@ public async Task<CreateResponse> Create(CreateRequest songDto)
     {
         throw new Exception("Datos inválidos");
     }
+        var idAlbum = songDto.IdAlbum;
+
 
         if (songDto.IdArtist == Guid.Empty)
             throw new Exception("IdArtist inválido");
 
-        if (songDto.IdAlbum == Guid.Empty)
-            throw new Exception("IdAlbum inválido");
 
         if (string.IsNullOrWhiteSpace(songDto.Title))
             throw new Exception("Title es obligatorio");
@@ -81,9 +81,11 @@ public async Task<CreateResponse> Create(CreateRequest songDto)
         if (string.IsNullOrWhiteSpace(songDto.AudioBig))
             throw new Exception("AudioBig es obligatoria");
 
+        
+
     var song = new Song(
         songDto.IdArtist,
-        songDto.IdAlbum,
+        idAlbum,
         songDto.Title,
         songDto.Gender,
         songDto.Duration,

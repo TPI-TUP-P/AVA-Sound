@@ -8,11 +8,11 @@ public interface IAlbumService
 {
     Task <GetByIdResponse> GetById(Guid id);
     Task <List<GetAllResponse>> GetAll();
-    Task<CreateResponse> Create(CreateRequest albumDto);
+    Task<CreateResponse> Create(CreateRequest albumDto, CancellationToken cancellationToken);
     Task<UpdateResponse>  Update(Guid Id,UpdateRequest albumDto);
     Task Delete(Guid id);
     
-    Task<GetByIdResponse> AddSong(Guid id, Song song);
+    Task<GetByIdResponse> AddSong(Guid id, Guid idSong);
 }
 
 
