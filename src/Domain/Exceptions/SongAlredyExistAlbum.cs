@@ -5,5 +5,5 @@ namespace Domain.Exceptions;
 
 public class SongAlredyExistAlbumExcepction : DomainException
 {
-    public SongAlredyExistAlbumExcepction(Song song) : base($"la cancion {song.Title} ya se encuentra en la lista") {} 
+    public SongAlredyExistAlbumExcepction(string songTitle) : base($"la cancion {songTitle} ya se encuentra en la lista") {} 
 }

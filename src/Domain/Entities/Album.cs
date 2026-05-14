@@ -1,5 +1,4 @@
 using Domain.Exceptions;
-
 namespace Domain.Entities;
 
 
@@ -14,9 +13,11 @@ public class Album
     public string? Description {get;set;}
 
 
-    private readonly List<Song> _songs = new();
+    // private readonly List<Guid> _songs = [];
 
-    public IReadOnlyCollection<Song> Songs => _songs;
+    private readonly List<Song> _songs = [];
+    public IReadOnlyCollection<Song> Songs => _songs.AsReadOnly();
+    // public List<Song> Songs {get; private set;} = new();
     
 
 
@@ -41,12 +42,12 @@ public class Album
 
 public void AddSong (Song song)
     {
-    if (_songs.Contains(song))   {
-            throw new SongAlredyExistAlbumExcepction(song);
+    if (Songs.Contains(song))   {
+            throw new SongAlredyExistAlbumExcepction(song.Title);
         }
 
         _songs.Add(song);
-
+        
 
     }
 

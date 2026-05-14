@@ -70,12 +70,32 @@ DTOs/InfoUser/Response/
  CreateResponse.cs
  GetByIdResponse.cs
  UpdateResponse.cs
+DTOs/ReproductionList/Request/
+ AddSongRequest.cs
+ CreateRequest.cs
+ DeleteSongRequest.cs
+DTOs/ReproductionList/Response/
+ AddSongResponse.cs
+ CreateResponse.cs
+ DeleteSongResponse.cs
+ GetByIdResponse.cs
+ SongResponse.cs
 DTOs/Review/Request/
  CreateRequest.cs
  UpdateRequest.cs
 DTOs/Review/Response/
  CreateResponse.cs
  GetBySong.cs
+ UpdateResponse.cs
+DTOs/Song/request/
+ CreateRequest.cs
+ UpdateRequest.cs
+DTOs/Song/response/
+ CreateResponse.cs
+ GetAllResponse.cs
+ GetByAlbumResponse.cs
+ GetByIdResponse.cs
+ GetByIdUserResponse.cs
  UpdateResponse.cs
 DTOs/Statistics/Request/
  CreateRequest.cs
@@ -85,12 +105,22 @@ DTOs/Statistics/Response/
  GetAllResponse.cs
  GetByIdResponse.cs
  UpdateResponse.cs
+DTOs/User/request/
+ CreateRequest.cs
+ UpdateRequest.cs
+DTOs/User/response/
+ CreateResponse.cs
+ GetAllResponse.cs
+ GetByIdResponse.cs
+ UpdateResponse.cs
 Interfaces/
  IAlbumService.cs
  IInfoUserService.cs
  IReproductionListService.cs
  IReviewService.cs
+ ISongService.cs
  IStatisticService.cs
+ IUserService.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  Application.AssemblyInfo.cs
@@ -100,7 +130,9 @@ Services/
  InfoUserService.cs
  ReproductionListService.cs
  ReviewService.cs
+ SongService.cs
  StatisticService.cs
+ UserService.cs
 
 [metadataReferences]
 ../Domain/obj/Debug/net10.0/ref/Domain.dll

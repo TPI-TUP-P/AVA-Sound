@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260513163945_addRelationAlbumSong")]
+    partial class addRelationAlbumSong
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.7");
@@ -36,7 +39,6 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -124,6 +126,9 @@ namespace Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("AlbumId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("AudioBig")
                         .HasColumnType("TEXT");
 
@@ -136,7 +141,7 @@ namespace Infrastructure.Data.Migrations
                     b.Property<string>("Gender")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("IdAlbum")
+                    b.Property<Guid>("IdAlbum")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("IdArtist")
@@ -153,7 +158,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdAlbum");
+                    b.HasIndex("AlbumId");
 
                     b.HasIndex("ReproductionsListId");
 
@@ -219,7 +224,7 @@ namespace Infrastructure.Data.Migrations
                 {
                     b.HasOne("Domain.Entities.Album", null)
                         .WithMany("Songs")
-                        .HasForeignKey("IdAlbum");
+                        .HasForeignKey("AlbumId");
 
                     b.HasOne("Domain.Entities.ReproductionsList", null)
                         .WithMany("Songs")

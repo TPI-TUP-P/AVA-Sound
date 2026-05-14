@@ -42,9 +42,9 @@ public ActionResult<GetByIdResponse> GetById(Guid id)
 
 
     [HttpPost ]
-    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest albumDto)
+    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest albumDto, CancellationToken cancellationToken)
     {
-       return await _albumService.Create(albumDto);
+       return await _albumService.Create(albumDto, cancellationToken);
 
    
         
@@ -59,11 +59,11 @@ public ActionResult<GetByIdResponse> GetById(Guid id)
 
 
     [HttpPost("{id}/add-song/{idSong}")]
-    public async Task<ActionResult<GetByIdResponse>> AddSong(Guid id, Song song)
+    public async Task<ActionResult<GetByIdResponse>> AddSong(Guid id, Guid idSong)
     {
         try
         {
-            var result = await _albumService.AddSong(id, song);
+            var result = await _albumService.AddSong(id, idSong);
             return CreatedAtAction(nameof(GetById), new {id}, result
             );
             
