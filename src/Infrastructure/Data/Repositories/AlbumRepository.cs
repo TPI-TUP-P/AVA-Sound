@@ -75,7 +75,7 @@ public class AlbumRepository : IAlbumRepository
 
 
 
-    public async Task<Album> GetById(Guid id)
+     public async Task<Album> GetById(Guid id)
     {
 return await _context.Albums.
     Include(a => a.Songs)
@@ -87,6 +87,5 @@ return await _context.Albums.
     //     }
     //    return album;
     }
-
 
 }
