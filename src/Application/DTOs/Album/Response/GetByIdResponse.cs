@@ -1,5 +1,5 @@
 namespace Application.DTOs.Album.Response;
-
+using Domain.Entities;
 
 
 public class GetByIdResponse
@@ -11,7 +11,12 @@ public class GetByIdResponse
     public string? FrontPage {get;set;}
     public string? Description {get;set;}
 
-    public GetByIdResponse(Guid id, Guid idArtist, string? title, DateTime releasteDate, string? frontPage, string? description)
+    public List<Song> Songs { get; set; }        
+    
+   
+
+    public GetByIdResponse(Guid id, Guid idArtist, string? title, DateTime releasteDate, string? frontPage, string? description, List<Song> songs
+    )
     {
         Id = id;   
         IdArtist = idArtist;
@@ -19,6 +24,11 @@ public class GetByIdResponse
         ReleasteDate = releasteDate;
         FrontPage = frontPage;
         Description = description;
+        Songs = songs;
+    
+
+    }
+       
         
-        }
+        
 }

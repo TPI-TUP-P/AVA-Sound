@@ -9,11 +9,13 @@ namespace Application.Services;
 public class AlbumService : IAlbumService
 {
     private IAlbumRepository _album;
+    private readonly ISongRepository _song;
 
-    public AlbumService(IAlbumRepository album )
+
+    public AlbumService(IAlbumRepository album, ISongRepository song)
     {
         _album = album;
-
+        _song = song;
     }
 
 
@@ -39,6 +41,9 @@ public class AlbumService : IAlbumService
             album.ReleasteDate,
              album.FrontPage,
             album.Description
+            ,
+            album.Songs.ToList()
+            
         );
 
     }
@@ -67,9 +72,10 @@ public class AlbumService : IAlbumService
             albumDto.ReleaseDate,
             albumDto.FrontPage,
             albumDto.Description
+        
         );
 
-        var albumCreated = await _album.Create(albumData, cancellationToken);
+        var albumCreated=await  _album.Create(albumData, cancellationToken);
 
 
         return new CreateResponse(
@@ -150,6 +156,37 @@ public class AlbumService : IAlbumService
     }
 
 
+
+    public async Task<GetByIdResponse> AddSong(Guid id,Guid idSong)
+    {   
+        var album = await _album.GetById(id);
+        var song = await _song.GetById(idSong);
+
+        
+        
+        album.AddSong(song);
+    await _album.Update(album);
+
+
+
+        // var songs = await _song.GetById(idSong);
+
+        
+        return new GetByIdResponse
+        (
+            album.Id,
+            album.IdArtist,
+            album.Title,
+            album.ReleasteDate,
+            album.FrontPage,
+            album.Description, 
+            album.Songs.ToList()
+            
+        );
+
+
+
+    }
 
 // Este metodo no se puede completar porque falta el ABM de song 
 
