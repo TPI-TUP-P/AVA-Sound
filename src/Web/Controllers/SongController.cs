@@ -14,14 +14,14 @@ public class SongController : ControllerBase
 
     public SongController(ISongService songService)
     {
-        _songService=songService;
+        _songService = songService;
     }
 
     [HttpGet("{id}")]
 
     public ActionResult<GetByIdResponse> GetById(Guid Id)
     {
-        var song=_songService.GetById(Id);
+        var song = _songService.GetById(Id);
         return Ok(song);
     }
 
@@ -29,14 +29,14 @@ public class SongController : ControllerBase
 
     public async Task<ActionResult<List<GetAllResponse>>> GetAll()
     {
-        var songs=await _songService.GetAll();
+        var songs = await _songService.GetAll();
         return Ok(songs);
     }
 
     [HttpPost]
-    public async Task<ActionResult<CreateResponse>> Create( [FromBody] CreateRequest songDto)
+    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest songDto, CancellationToken cancellationToken)
     {
-        var song= await _songService.Create(songDto);
+        var song = await _songService.Create(songDto, cancellationToken);
         return Ok(song);
     }
 

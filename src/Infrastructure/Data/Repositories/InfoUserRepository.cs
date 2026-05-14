@@ -18,10 +18,10 @@ public class InfoUserRepository : IInfoUserRepository
         return await _context.InfoUsers.FirstAsync(i => i.IdUser == Id);
     }
 
-    public async Task<InfoUser> Create(InfoUser infouser)
+    public async Task<InfoUser> Create(InfoUser infouser, CancellationToken cancellationToken)
     {
-        await _context.InfoUsers.AddAsync(infouser);
-        await _context.SaveChangesAsync();
+        await _context.InfoUsers.AddAsync(infouser, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
         return infouser;
     }
 
@@ -40,13 +40,13 @@ public class InfoUserRepository : IInfoUserRepository
         var existing = await _context.InfoUsers.FindAsync(infouser.Id);
         if (existing is null)
         {
-            throw new KeyNotFoundException($"La información del usuario con el ID {infouser.Id} no fue encontrada.");
+            throw new KeyNotFoundException($"User information with ID: {infouser.Id} was no found");
         }
         existing.ProfilePicture = infouser.ProfilePicture;
         existing.Biography = infouser.Biography;
         existing.Country = infouser.Country;
         await _context.SaveChangesAsync();
-        return infouser;
-    
+        return existing;
+
     }
 }

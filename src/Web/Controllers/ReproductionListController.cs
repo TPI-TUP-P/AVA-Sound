@@ -19,35 +19,35 @@ public class ReproductionListController : ControllerBase
 
     [HttpGet("{id}")]
     public ActionResult<ReproductionsList> GetById(Guid id)
-{
-    var reproductionList = _reproductionListservice.GetById(id);
+    {
+        var reproductionList = _reproductionListservice.GetById(id);
 
-    return Ok(reproductionList);
-}
+        return Ok(reproductionList);
+    }
 
     [HttpPost]
-    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest reproductionListDto)
+    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest reproductionListDto, CancellationToken cancellationToken)
     {
-        var list = await _reproductionListservice.Create(reproductionListDto);
+        var list = await _reproductionListservice.Create(reproductionListDto, cancellationToken);
         return Ok(list);
     }
 
     [HttpPost("{id}/add-song")]
     public async Task<ActionResult> AddSong(Guid listId, Guid songId)
     {
-        
+
         await _reproductionListservice.AddSong(listId, songId);
         return Ok("cancion agregada a la lista");
-        
-        
+
+
     }
 
     [HttpPost("{id}/remove-song")]
     public async Task<ActionResult> RemoveSong(Guid listId, Guid songId)
     {
-            await _reproductionListservice.RemoveSong(listId, songId);
-            return Ok("cancion eliminada de la lista");
-        
+        await _reproductionListservice.RemoveSong(listId, songId);
+        return Ok("cancion eliminada de la lista");
+
     }
 
     [HttpDelete("{id}")]

@@ -5,13 +5,16 @@ using Application.DTOs.Review.Request;
 using Application.DTOs.Review.Response;
 namespace Application.Services;
 
+
 public class ReviewService : IReviewService
 {
     private readonly IReviewRepository _review;
+    private readonly ISongRepository _song;
 
-    public ReviewService(IReviewRepository review)
+    public ReviewService(IReviewRepository review, ISongRepository song)
     {
         _review = review;
+        _song = song;
     }
 
 
@@ -33,7 +36,7 @@ public class ReviewService : IReviewService
         }).ToList();
     }
 
-    public async Task<CreateResponse> Create(CreateRequest reviewDto)
+    public async Task<CreateResponse> Create(CreateRequest reviewDto, CancellationToken cancellationToken)
     {
         if (reviewDto is null)
         {
@@ -43,10 +46,30 @@ public class ReviewService : IReviewService
         {
             throw new Exception("Not all fields are correct.");
         }
-        if (reviewDto.Comment is null)
+        if (string.IsNullOrWhiteSpace(reviewDto.Comment))
         {
-            throw new Exception("The comment cannot be empty");
+            throw new ArgumentException("The comment cannot be empty.");
         }
+        if (reviewDto.Comment.Length > 800)
+        {
+            throw new ArgumentException("The comment cannot exceed 800 characters.");
+        }
+        if (reviewDto.Comment.Length < 3)
+        {
+            throw new ArgumentException("It must have at least 3 characters.");
+        }
+        var songExists = await _song.GetById(reviewDto.IdSong);
+        if (songExists is null)
+        {
+            throw new KeyNotFoundException("Song not found.");
+        }
+        var reviewsExist = await _review.GetBySong(reviewDto.IdSong);
+        if (reviewsExist.Any(x => x.IdUser == reviewDto.IdUser))
+        {
+            throw new ArgumentException("Theres already a review done on this song.");
+        }
+
+
 
 
         var review = new Review(
@@ -56,7 +79,7 @@ public class ReviewService : IReviewService
             reviewDto.DateCreated
         );
 
-        var reviewCreated = await _review.Create(review);
+        var reviewCreated = await _review.Create(review, cancellationToken);
         return new CreateResponse
         {
             IdUser = reviewCreated.IdUser,
