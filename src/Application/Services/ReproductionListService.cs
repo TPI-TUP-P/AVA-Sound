@@ -12,34 +12,34 @@ public class ReproductionListService : IReproductionListService
 {
     private IReproductionsListRepository _reproductionList;
     private ISongRepository _song;
-    public ReproductionListService (IReproductionsListRepository reproductionList, ISongRepository song)
+    public ReproductionListService(IReproductionsListRepository reproductionList, ISongRepository song)
     {
-        _reproductionList=reproductionList;
-        _song=song;
+        _reproductionList = reproductionList;
+        _song = song;
     }
 
     public async Task<GetByIdResponse> GetById(Guid Id)
     {
         if (Id == Guid.Empty)
-                {
-                    throw new Exception("Id es vacio");
-                }
+        {
+            throw new Exception("Id es vacio");
+        }
 
         var reproductionsList = await _reproductionList.GetById(Id);
 
-        if(reproductionsList == null)
+        if (reproductionsList == null)
         {
             throw new Exception("La lista no existe");
         }
-        
+
         return new GetByIdResponse
         {
-            Id=reproductionsList.Id,
-            IdUser=reproductionsList.IdUser,
-            Name=reproductionsList.Name,
-            Description=reproductionsList.Description,
-            IsPublic=reproductionsList.IsPublic,
-            Creation=reproductionsList.Creation,
+            Id = reproductionsList.Id,
+            IdUser = reproductionsList.IdUser,
+            Name = reproductionsList.Name,
+            Description = reproductionsList.Description,
+            IsPublic = reproductionsList.IsPublic,
+            Creation = reproductionsList.Creation,
             Songs = reproductionsList.Songs.Select(s => new SongResponse
             {
                 Id = s.Id,
@@ -51,8 +51,8 @@ public class ReproductionListService : IReproductionListService
 
 
 
-    
-    public async Task<CreateResponse> Create(CreateRequest reproductionListDto)
+
+    public async Task<CreateResponse> Create(CreateRequest reproductionListDto, CancellationToken cancellationToken)
     {
 
         if (reproductionListDto == null)
@@ -74,7 +74,7 @@ public class ReproductionListService : IReproductionListService
             reproductionListDto.IsPublic
         );
 
-        var reproductionListCreated= await _reproductionList.Create(reproductionListData);
+        var reproductionListCreated = await _reproductionList.Create(reproductionListData, cancellationToken);
 
         return new CreateResponse
         {
@@ -145,5 +145,5 @@ public class ReproductionListService : IReproductionListService
 
         await _reproductionList.Delete(id);
     }
-    
+
 }

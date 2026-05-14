@@ -11,55 +11,55 @@ namespace Application.Services;
 public class UserService : IUserService
 {
     private IUserRepository _user;
-    public UserService ( IUserRepository user)
+    public UserService(IUserRepository user)
     {
-        _user=user;
+        _user = user;
     }
 
     public async Task<GetByIdResponse> GetById(Guid Id)
     {
-        if (Id==Guid.Empty)
+        if (Id == Guid.Empty)
             throw new Exception("El id no existe");
 
         var user = await _user.GetById(Id);
 
-        if(user == null)
+        if (user == null)
             throw new Exception("El usuario no existe");
 
         return new GetByIdResponse
         {
-            Name=user.Name,
-            Surname=user.Surname,
-            Email=user.Email,
-            IsArtista=user.IsArtista,
-            DateRegister=user.DateRegister,
-            Role=user.Role
+            Name = user.Name,
+            Surname = user.Surname,
+            Email = user.Email,
+            IsArtista = user.IsArtista,
+            DateRegister = user.DateRegister,
+            Role = user.Role
 
         };
     }
 
 
     public async Task<List<GetAllResponse>> GetAll()
-{
-    var users = await _user.GetAll();
-
-    return users.Select(u => new GetAllResponse
     {
-            Name=u.Name,
-            Surname=u.Surname,
-            Email=u.Email,
-            IsArtista=u.IsArtista,
-            DateRegister=u.DateRegister,
-            Role=u.Role
-    }).ToList();
-}
+        var users = await _user.GetAll();
 
-public async Task<CreateResponse> Create(CreateRequest userDto)
-{
-    if (userDto == null)
-    {
-        throw new Exception("Datos inválidos");
+        return users.Select(u => new GetAllResponse
+        {
+            Name = u.Name,
+            Surname = u.Surname,
+            Email = u.Email,
+            IsArtista = u.IsArtista,
+            DateRegister = u.DateRegister,
+            Role = u.Role
+        }).ToList();
     }
+
+    public async Task<CreateResponse> Create(CreateRequest userDto, CancellationToken cancellationToken)
+    {
+        if (userDto == null)
+        {
+            throw new Exception("Datos inválidos");
+        }
 
 
 
@@ -76,46 +76,46 @@ public async Task<CreateResponse> Create(CreateRequest userDto)
             throw new Exception("Contraseña es obligatoria");
 
         if (string.IsNullOrWhiteSpace(userDto.Role))
-        throw new Exception("Role es obligatorio");
-        
-        
+            throw new Exception("Role es obligatorio");
 
-    var user = new User(
-        userDto.Name,
-        userDto.Surname,
-        userDto.Email,
-        userDto.Password,
-        userDto.IsArtista,
-        userDto.Role
-    );
 
-    await _user.Create(user);
 
-    return new CreateResponse
+        var user = new User(
+            userDto.Name,
+            userDto.Surname,
+            userDto.Email,
+            userDto.Password,
+            userDto.IsArtista,
+            userDto.Role
+        );
+
+        await _user.Create(user, cancellationToken);
+
+        return new CreateResponse
+        {
+            Name = user.Name,
+            Surname = user.Surname,
+            Email = user.Email,
+            IsArtista = user.IsArtista,
+            DateRegister = user.DateRegister,
+            Role = user.Role
+        };
+    }
+
+    public async Task<UpdateResponse> Update(Guid id, UpdateRequest userDto)
     {
-        Name=user.Name,
-        Surname=user.Surname,
-        Email=user.Email,
-        IsArtista=user.IsArtista,
-        DateRegister=user.DateRegister,
-        Role=user.Role
-    };
-}
+        if (id == Guid.Empty)
+            throw new Exception("Id inválido");
 
-public async Task<UpdateResponse> Update(Guid id, UpdateRequest userDto)
-{
-    if (id == Guid.Empty)
-        throw new Exception("Id inválido");
+        if (userDto == null)
+            throw new Exception("Datos inválidos");
 
-    if (userDto == null)
-        throw new Exception("Datos inválidos");
+        var user = await _user.GetById(id);
 
-    var user = await _user.GetById(id);
+        if (user == null)
+            throw new Exception("el usuario no existe");
 
-    if (user == null)
-        throw new Exception("el usuario no existe");
-
-    if (string.IsNullOrWhiteSpace(userDto.Name))
+        if (string.IsNullOrWhiteSpace(userDto.Name))
             throw new Exception("Name es obligatorio");
 
         if (string.IsNullOrWhiteSpace(userDto.Surname))
@@ -128,39 +128,39 @@ public async Task<UpdateResponse> Update(Guid id, UpdateRequest userDto)
             throw new Exception("Contraseña es obligatoria");
 
         if (string.IsNullOrWhiteSpace(userDto.Role))
-        throw new Exception("Role es obligatorio");
+            throw new Exception("Role es obligatorio");
 
-    user.UpdateInfo(
-        userDto.Name,
-        userDto.Surname,
-        userDto.Email,
-        userDto.Password,
-        userDto.IsArtista,
-        userDto.Role
-    );
+        user.UpdateInfo(
+            userDto.Name,
+            userDto.Surname,
+            userDto.Email,
+            userDto.Password,
+            userDto.IsArtista,
+            userDto.Role
+        );
 
-    await _user.Update(user);
+        await _user.Update(user);
 
-    return new UpdateResponse
+        return new UpdateResponse
+        {
+            Name = user.Name,
+            Surname = user.Surname,
+            Email = user.Email,
+            Password = user.Password,
+            IsArtista = user.IsArtista,
+            Role = user.Role
+        };
+    }
+
+
+    public async Task Delete(Guid Id)
     {
-        Name=user.Name,
-        Surname=user.Surname,
-        Email=user.Email,
-        Password = user.Password,
-        IsArtista=user.IsArtista,
-        Role=user.Role
-    };
-}
-
-
-public async Task Delete(Guid Id)
-    {
-        if (Id==Guid.Empty)
+        if (Id == Guid.Empty)
             throw new Exception("el id no existe");
 
-        var user=await _user.GetById(Id);
+        var user = await _user.GetById(Id);
 
-        if(user==null)
+        if (user == null)
             throw new Exception("el usuario no existe");
 
         await _user.Delete(Id);

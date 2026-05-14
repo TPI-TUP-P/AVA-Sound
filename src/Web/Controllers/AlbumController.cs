@@ -24,18 +24,18 @@ public class AlbumController : ControllerBase
     }
 
     [HttpGet("{id}")]
-public ActionResult<GetByIdResponse> GetById(Guid id)
-{
-    var album = _albumService.GetById(id);
+    public ActionResult<GetByIdResponse> GetById(Guid id)
+    {
+        var album = _albumService.GetById(id);
 
-    return Ok(album);
-}
-    
+        return Ok(album);
+    }
+
 
     [HttpGet]
-    public async Task<ActionResult <List<GetAllResponse>>> GetAll()
+    public async Task<ActionResult<List<GetAllResponse>>> GetAll()
     {
-       
+
         var albums = await _albumService.GetAll();
         return Ok(albums);
     }
@@ -46,15 +46,13 @@ public ActionResult<GetByIdResponse> GetById(Guid id)
     {
        return await _albumService.Create(albumDto, cancellationToken);
 
-   
-        
     }
-    
+
     [HttpPut("{id}")]
-    public async Task<ActionResult<UpdateResponse>> Update(Guid id ,[FromBody]  UpdateRequest albumDto)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest albumDto)
     {
-       return await _albumService.Update(id,albumDto);
- 
+        return await _albumService.Update(id, albumDto);
+
     }
 
 
@@ -82,8 +80,8 @@ public ActionResult<GetByIdResponse> GetById(Guid id)
 
     public async Task<ActionResult> Delete(Guid id)
     {
-        
-        await  _albumService.Delete(id);
+
+        await _albumService.Delete(id);
         return NoContent();
     }
 
