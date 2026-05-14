@@ -41,12 +41,10 @@ public class AlbumController : ControllerBase
     }
 
 
-    [HttpPost]
+    [HttpPost ]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest albumDto, CancellationToken cancellationToken)
     {
-        return await _albumService.Create(albumDto, cancellationToken);
-
-
+       return await _albumService.Create(albumDto, cancellationToken);
 
     }
 
@@ -56,6 +54,25 @@ public class AlbumController : ControllerBase
         return await _albumService.Update(id, albumDto);
 
     }
+
+
+    [HttpPost("{id}/add-song/{idSong}")]
+    public async Task<ActionResult<GetByIdResponse>> AddSong(Guid id, Guid idSong)
+    {
+        try
+        {
+            var result = await _albumService.AddSong(id, idSong);
+            return CreatedAtAction(nameof(GetById), new {id}, result
+            );
+            
+        }
+       
+        catch(Exception ex)
+        {
+            return this.StatusCode(500, ex.Message);
+        }
+    }
+
 
 
 

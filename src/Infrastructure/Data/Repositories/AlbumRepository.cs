@@ -35,9 +35,23 @@ public class AlbumRepository : IAlbumRepository
         return album;
     }
 
-    public async Task AddSong(Guid id)
-    {
+    public async Task<Album> AddSong(Guid id, Song song)
+    {   
+        var album = await _context.Albums.FindAsync(id);
+        if(album == null)
+        {
+            new Exception($"El album con el ID {id} no fue encontrado.");
 
+        }
+         album.AddSong(song);
+
+                    await _context.SaveChangesAsync();
+
+
+         return album;
+         
+
+        
     }
 
     public async Task Delete(Guid id)
@@ -53,8 +67,8 @@ public class AlbumRepository : IAlbumRepository
 
     public async Task<Album> Create(Album album, CancellationToken cancellationToken)
     {
-        await _context.Albums.AddAsync(album, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+         await _context.Albums.AddAsync(album, cancellationToken);
+        await _context.SaveChangesAsync();
         return album;
 
     }
@@ -63,12 +77,15 @@ public class AlbumRepository : IAlbumRepository
 
     public async Task<Album> GetById(Guid id)
     {
-        var album = await _context.Albums.FindAsync(id);
-        if (album == null)
-        {
-            throw new KeyNotFoundException($"El album con el ID {id} no fue encontrado.");
-        }
-        return album;
+return await _context.Albums.
+    Include(a => a.Songs)
+.FirstOrDefaultAsync(a => a.Id == id);
+    
+    //     if(album == null)
+    //     {
+    //         throw new KeyNotFoundException($"El album con el ID {id} no fue encontrado.");
+    //     }
+    //    return album;
     }
 
 

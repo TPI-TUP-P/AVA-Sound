@@ -62,12 +62,35 @@ Data/
   20260424005428_InitialMigration.Designer.cs
   20260430183506_updateIdFieldAlbum.cs
   20260430183506_updateIdFieldAlbum.Designer.cs
+  20260507192436_InitMigration.cs
+  20260507192436_InitMigration.Designer.cs
+  20260513130501_updateFieldUser.cs
+  20260513130501_updateFieldUser.Designer.cs
+  20260513163945_addRelationAlbumSong.cs
+  20260513163945_addRelationAlbumSong.Designer.cs
+  20260513164715_addRelationAlbum.cs
+  20260513164715_addRelationAlbum.Designer.cs
+  20260513173530_addRelationAlbumS.cs
+  20260513173530_addRelationAlbumS.Designer.cs
+  20260513173955_addRelationAlbumSongs.cs
+  20260513173955_addRelationAlbumSongs.Designer.cs
+  20260513180537_updateSongList.cs
+  20260513180537_updateSongList.Designer.cs
+  20260513193321_addRelationsAlbums.cs
+  20260513193321_addRelationsAlbums.Designer.cs
+  20260513194458_AddSongsJson.cs
+  20260513194458_AddSongsJson.Designer.cs
+  20260514014323_UpdateSongEntity.cs
+  20260514014323_UpdateSongEntity.Designer.cs
   ApplicationContextModelSnapshot.cs
  Repositories/
   AlbumRepository.cs
   InfoUserRepository.cs
+  ReproductionListRepository.cs
   ReviewRepository.cs
+  SongRepository.cs
   StatisticRepository.cs
+  UserRepository.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  Infrastructure.AssemblyInfo.cs

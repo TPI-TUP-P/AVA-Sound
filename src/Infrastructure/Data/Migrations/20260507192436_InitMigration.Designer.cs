@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260507192436_InitMigration")]
+    partial class InitMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.7");
@@ -36,7 +39,6 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -77,7 +79,6 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("IdUser")
@@ -87,7 +88,6 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -136,7 +136,7 @@ namespace Infrastructure.Data.Migrations
                     b.Property<string>("Gender")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("IdAlbum")
+                    b.Property<Guid>("IdAlbum")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("IdArtist")
@@ -152,8 +152,6 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdAlbum");
 
                     b.HasIndex("ReproductionsListId");
 
@@ -217,18 +215,9 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.Song", b =>
                 {
-                    b.HasOne("Domain.Entities.Album", null)
-                        .WithMany("Songs")
-                        .HasForeignKey("IdAlbum");
-
                     b.HasOne("Domain.Entities.ReproductionsList", null)
                         .WithMany("Songs")
                         .HasForeignKey("ReproductionsListId");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Album", b =>
-                {
-                    b.Navigation("Songs");
                 });
 
             modelBuilder.Entity("Domain.Entities.ReproductionsList", b =>

@@ -6,7 +6,7 @@ public class Song
 {
     public Guid Id {get; private set;}
     public Guid IdArtist {get; private set;}
-    public Guid IdAlbum {get; private set;}
+    public Guid? IdAlbum {get; private set;}
     public string? Title {get; set;}
     public string? Gender {get; set;}
     public string? Duration{get; set;}
@@ -17,9 +17,10 @@ public class Song
     private Song(){}
 
 
-    public Song( Guid idArtist, Guid idAlbum, string title, string gender, string duration, string audioBig)
+    public Song( Guid idArtist, Guid? idAlbum, string title, string gender, string duration, string audioBig)
     {
-        ValidateProperties(idArtist, idAlbum, title, gender, duration, audioBig);
+        ValidateProperties(idArtist,idAlbum , title, gender, duration, audioBig);
+        
         Id = Guid.NewGuid();
         IdArtist=idArtist;
         IdAlbum=idAlbum;
@@ -31,13 +32,19 @@ public class Song
         Views=0;
     }
 
-    private void ValidateProperties(Guid idArtist, Guid idAlbum, string title, string gender, string duration, string audioBig)
+    private void ValidateProperties(Guid idArtist, Guid? idAlbum, string title, string gender, string duration, string audioBig)
     {
         if (idArtist == Guid.Empty)
             throw new Exception("artist is required");
 
-        if (idAlbum == Guid.Empty)
-            throw new Exception("album is required");
+        if(idAlbum.HasValue)
+        {
+            if(idAlbum.Value == Guid.Empty)
+            {
+                throw new Exception("El IdAlbum no puede ser un Guid vacío si se proporciona");
+            }
+            
+        }
 
         if (string.IsNullOrWhiteSpace(title))
             throw new Exception("title is required");

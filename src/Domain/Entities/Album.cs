@@ -1,3 +1,4 @@
+using Domain.Exceptions;
 namespace Domain.Entities;
 
 
@@ -12,19 +13,15 @@ public class Album
     public string? Description {get;set;}
 
 
-    private readonly List<Song> _songs = new();
+    // private readonly List<Guid> _songs = [];
+
+    private readonly List<Song> _songs = [];
+    public IReadOnlyCollection<Song> Songs => _songs.AsReadOnly();
+    // public List<Song> Songs {get; private set;} = new();
+    
 
 
-    public void AddSong (Song song)
-    {
-        if(_songs.Any(s=> s.Title == song.Title))
-        {
-            throw new Exception("La cancion ya existe en el album");
-        }
-
-        _songs.Add(song);
-
-    }
+    
 
     private Album(){}
 
@@ -39,8 +36,20 @@ public class Album
         ReleasteDate = releasteDate;
         FrontPage = frontPage;
         Description = description;
+        
+
     }
 
+public void AddSong (Song song)
+    {
+    if (Songs.Contains(song))   {
+            throw new SongAlredyExistAlbumExcepction(song.Title);
+        }
+
+        _songs.Add(song);
+        
+
+    }
 
     private void ValidateProperties(Guid idArtist, string? title, DateTime releasteDate, string? frontPage, string? description)
     {

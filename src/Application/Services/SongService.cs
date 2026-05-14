@@ -40,6 +40,25 @@ public class SongService : ISongService
 
 
     public async Task<List<GetAllResponse>> GetAll()
+{
+    var songs = await _song.GetAll();
+
+    return songs.Select(s => new GetAllResponse
+    {
+        IdArtist=s.IdArtist,
+        IdAlbum=s.IdAlbum ?? Guid.Empty,
+        Title=s.Title,
+        Gender=s.Gender,
+        Duration=s.Duration,
+        AudioBig=s.AudioBig,
+        DateUpload=s.DateUpload,
+        Views=s.Views
+    }).ToList();
+}
+
+public async Task<CreateResponse> Create(CreateRequest songDto)
+{
+    if (songDto == null)
     {
         var songs = await _song.GetAll();
 
@@ -55,6 +74,8 @@ public class SongService : ISongService
             Views = s.Views
         }).ToList();
     }
+        var idAlbum = songDto.IdAlbum;
+
 
     public async Task<CreateResponse> Create(CreateRequest songDto, CancellationToken cancellationToken)
     {
@@ -66,8 +87,6 @@ public class SongService : ISongService
         if (songDto.IdArtist == Guid.Empty)
             throw new Exception("IdArtist inválido");
 
-        if (songDto.IdAlbum == Guid.Empty)
-            throw new Exception("IdAlbum inválido");
 
         if (string.IsNullOrWhiteSpace(songDto.Title))
             throw new Exception("Title es obligatorio");
@@ -81,14 +100,16 @@ public class SongService : ISongService
         if (string.IsNullOrWhiteSpace(songDto.AudioBig))
             throw new Exception("AudioBig es obligatoria");
 
-        var song = new Song(
-            songDto.IdArtist,
-            songDto.IdAlbum,
-            songDto.Title,
-            songDto.Gender,
-            songDto.Duration,
-            songDto.AudioBig
-        );
+        
+
+    var song = new Song(
+        songDto.IdArtist,
+        idAlbum,
+        songDto.Title,
+        songDto.Gender,
+        songDto.Duration,
+        songDto.AudioBig
+    );
 
         await _song.Create(song, cancellationToken);
 

@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260513164715_addRelationAlbum")]
+    partial class addRelationAlbum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.7");
@@ -36,7 +39,6 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -136,7 +138,7 @@ namespace Infrastructure.Data.Migrations
                     b.Property<string>("Gender")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("IdAlbum")
+                    b.Property<Guid>("IdAlbum")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("IdArtist")
@@ -151,11 +153,14 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Views")
                         .HasColumnType("INTEGER");
 
+                    b.Property<Guid>("albumId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("IdAlbum");
-
                     b.HasIndex("ReproductionsListId");
+
+                    b.HasIndex("albumId");
 
                     b.ToTable("Songs");
                 });
@@ -217,13 +222,17 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.Song", b =>
                 {
-                    b.HasOne("Domain.Entities.Album", null)
-                        .WithMany("Songs")
-                        .HasForeignKey("IdAlbum");
-
                     b.HasOne("Domain.Entities.ReproductionsList", null)
                         .WithMany("Songs")
                         .HasForeignKey("ReproductionsListId");
+
+                    b.HasOne("Domain.Entities.Album", "album")
+                        .WithMany("Songs")
+                        .HasForeignKey("albumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("album");
                 });
 
             modelBuilder.Entity("Domain.Entities.Album", b =>
