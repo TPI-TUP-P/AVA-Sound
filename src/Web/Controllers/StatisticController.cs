@@ -23,9 +23,9 @@ public class StatisticController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<GetByIdResponse> GetById(Guid id)
+    public ActionResult<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var album = _statisticService.GetById(id);
+        var album = _statisticService.GetById(id, cancellationToken);
 
         return Ok(album);
     }
@@ -49,9 +49,9 @@ public class StatisticController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest statisticDto)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest statisticDto, CancellationToken cancellationToken)
     {
-        return await _statisticService.Update(id, statisticDto);
+        return await _statisticService.Update(id, statisticDto, cancellationToken);
 
     }
 
@@ -59,10 +59,10 @@ public class StatisticController : ControllerBase
 
     [HttpDelete("{id}")]
 
-    public async Task<ActionResult> Delete(Guid id)
+    public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
 
-        await _statisticService.Delete(id);
+        await _statisticService.Delete(id, cancellationToken);
         return NoContent();
     }
 

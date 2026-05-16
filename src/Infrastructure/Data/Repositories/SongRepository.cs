@@ -13,9 +13,9 @@ public class SongRepository : ISongRepository
         _context = context;
     }
 
-    public async Task<Song> GetById(Guid id)
+    public async Task<Song> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var song = await _context.Songs.FindAsync(id);
+        var song = await _context.Songs.FindAsync(id, cancellationToken);
         if (song == null)
             throw new KeyNotFoundException($"La cancion con el ID {id} no fue encontrado.");
 
@@ -38,21 +38,21 @@ public class SongRepository : ISongRepository
         return song;
     }
 
-    public async Task<Song> Update(Song song)
+    public async Task<Song> Update(Song song, CancellationToken cancellationToken)
     {
         _context.Songs.Update(song);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return song;
     }
 
-    public async Task Delete(Guid id)
+    public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
         var song = await _context.Songs.FindAsync(id);
 
         if (song != null)
         {
             _context.Songs.Remove(song);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

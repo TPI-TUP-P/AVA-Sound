@@ -15,14 +15,14 @@ public class InfoUserService : IInfoUserService
         _InfoUser = infouser;
     }
 
-    public async Task<GetByIdResponse> GetById(Guid Id)
+    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new ArgumentException("Id cannot be empty");
         }
 
-        var infouser = await _InfoUser.GetById(Id);
+        var infouser = await _InfoUser.GetById(Id, cancellationToken);
 
         return new GetByIdResponse
         {
@@ -64,20 +64,20 @@ public class InfoUserService : IInfoUserService
         };
     }
 
-    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest infouserDto)
+    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest infouserDto, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new ArgumentException("Id cannot be empty");
         }
-        var existingInfo = await _InfoUser.GetById(Id);
+        var existingInfo = await _InfoUser.GetById(Id, cancellationToken);
         if (infouserDto.Biography != null && infouserDto.Country != null && infouserDto.ProfilePicture != null)
         {
             existingInfo.Biography = infouserDto.Biography;
             existingInfo.Country = infouserDto.Country;
             existingInfo.ProfilePicture = infouserDto.ProfilePicture;
         }
-        await _InfoUser.Update(existingInfo);
+        await _InfoUser.Update(existingInfo, cancellationToken);
 
         return new UpdateResponse
         {
@@ -87,13 +87,13 @@ public class InfoUserService : IInfoUserService
         };
     }
 
-    public Task Delete(Guid Id)
+    public Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new ArgumentException("Id cannot be empty");
         }
-        return _InfoUser.Delete(Id);
+        return _InfoUser.Delete(Id, cancellationToken);
     }
 
 }

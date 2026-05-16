@@ -19,10 +19,10 @@ public class StatisticRepository : IStatisticRepository
     }
 
 
-    public async Task<Statistic> GetById(Guid Id)
+    public async Task<Statistic> GetById(Guid Id, CancellationToken cancellationToken)
     {
 
-        var statistic = await _context.Statistics.FirstAsync(s => s.Id == Id);
+        var statistic = await _context.Statistics.FirstAsync(s => s.Id == Id, cancellationToken);
         if (statistic == null)
         {
             throw new KeyNotFoundException($"La estadística con el ID {Id} no fue encontrada.");
@@ -38,26 +38,26 @@ public class StatisticRepository : IStatisticRepository
         return statistic;
     }
 
-    public async Task Delete(Guid Id)
+    public async Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         var statistic = await _context.Statistics.FindAsync(Id);
         if (statistic != null)
         {
             _context.Statistics.Remove(statistic);
         }
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
 
 
-    public async Task<Statistic> Update(Statistic statistic)
+    public async Task<Statistic> Update(Statistic statistic, CancellationToken cancellationToken)
     {
 
         _context.Update(
             statistic
         );
 
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return statistic;
 
     }

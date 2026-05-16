@@ -13,9 +13,9 @@ public class InfoUserRepository : IInfoUserRepository
         _context = context;
     }
 
-    public async Task<InfoUser> GetById(Guid Id)
+    public async Task<InfoUser> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        return await _context.InfoUsers.FirstAsync(i => i.IdUser == Id);
+        return await _context.InfoUsers.FirstAsync(i => i.IdUser == Id, cancellationToken);
     }
 
     public async Task<InfoUser> Create(InfoUser infouser, CancellationToken cancellationToken)
@@ -25,17 +25,17 @@ public class InfoUserRepository : IInfoUserRepository
         return infouser;
     }
 
-    public async Task Delete(Guid Id)
+    public async Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         var info = await _context.InfoUsers.FindAsync(Id);
         if (info != null)
         {
             _context.InfoUsers.Remove(info);
         }
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<InfoUser> Update(InfoUser infouser)
+    public async Task<InfoUser> Update(InfoUser infouser, CancellationToken cancellationToken)
     {
         var existing = await _context.InfoUsers.FindAsync(infouser.Id);
         if (existing is null)
@@ -45,7 +45,7 @@ public class InfoUserRepository : IInfoUserRepository
         existing.ProfilePicture = infouser.ProfilePicture;
         existing.Biography = infouser.Biography;
         existing.Country = infouser.Country;
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return existing;
 
     }
