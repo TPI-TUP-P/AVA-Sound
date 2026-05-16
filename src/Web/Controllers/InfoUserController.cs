@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 
 using Application.DTOs.InfoUser.Request;
 using Application.DTOs.InfoUser.Response;
+using Microsoft.AspNetCore.RateLimiting;
 namespace Web.Controllers;
 
 [Route("api/infoUser")]
 [ApiController]
-
+[EnableRateLimiting("HeavyEndpoint")]
 public class InfoUserController : ControllerBase
 {
     private readonly IInfoUserService _infouservice;
