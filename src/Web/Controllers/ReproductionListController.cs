@@ -33,19 +33,19 @@ public class ReproductionListController : ControllerBase
     }
 
     [HttpPost("{id}/add-song")]
-    public async Task<ActionResult> AddSong(Guid listId, Guid songId)
+    public async Task<ActionResult> AddSong(Guid listId, Guid songId, CancellationToken cancellationToken)
     {
 
-        await _reproductionListservice.AddSong(listId, songId);
+        await _reproductionListservice.AddSong(listId, songId, cancellationToken);
         return Ok("cancion agregada a la lista");
 
 
     }
 
     [HttpPost("{id}/remove-song")]
-    public async Task<ActionResult> RemoveSong(Guid listId, Guid songId)
+    public async Task<ActionResult> RemoveSong(Guid listId, Guid songId, CancellationToken cancellationToken)
     {
-        await _reproductionListservice.RemoveSong(listId, songId);
+        await _reproductionListservice.RemoveSong(listId, songId, cancellationToken);
         return Ok("cancion eliminada de la lista");
 
     }

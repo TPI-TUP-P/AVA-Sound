@@ -38,10 +38,10 @@ public class SongRepository : ISongRepository
         return song;
     }
 
-    public async Task<Song> Update(Song song)
+    public async Task<Song> Update(Song song, CancellationToken cancellationToken)
     {
         _context.Songs.Update(song);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return song;
     }
 

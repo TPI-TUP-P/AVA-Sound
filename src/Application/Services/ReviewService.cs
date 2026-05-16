@@ -89,7 +89,7 @@ public class ReviewService : IReviewService
         };
     }
 
-    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest reviewDto)
+    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest reviewDto, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
@@ -109,7 +109,7 @@ public class ReviewService : IReviewService
             throw new Exception("It must have at least 3 characters.");
         }
 
-        await _review.Update(existReview);
+        await _review.Update(existReview, cancellationToken);
         return new UpdateResponse
         {
             Comment = existReview.Comment

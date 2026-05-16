@@ -43,9 +43,9 @@ public class UserController : ControllerBase
 
     [HttpPut("{id}")]
 
-    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest userDto)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest userDto, CancellationToken cancellationToken)
     {
-        var user = await _userService.Update(id, userDto);
+        var user = await _userService.Update(id, userDto, cancellationToken);
         return Ok(user);
     }
 

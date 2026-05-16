@@ -24,9 +24,9 @@ public class InfoUserController : ControllerBase
     }
 
     [HttpPatch("{Id}")]
-    public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest infouserDto)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest infouserDto, CancellationToken cancellationToken)
     {
-        return Ok(await _infouservice.Update(Id, infouserDto));
+        return Ok(await _infouservice.Update(Id, infouserDto, cancellationToken));
     }
     [HttpPost]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest infouserDto, CancellationToken cancellationToken)

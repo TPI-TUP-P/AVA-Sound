@@ -49,9 +49,9 @@ public class StatisticController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest statisticDto)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest statisticDto, CancellationToken cancellationToken)
     {
-        return await _statisticService.Update(id, statisticDto);
+        return await _statisticService.Update(id, statisticDto, cancellationToken);
 
     }
 

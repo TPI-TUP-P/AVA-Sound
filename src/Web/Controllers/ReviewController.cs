@@ -41,9 +41,9 @@ public class ReviewController : ControllerBase
     }
     [HttpPatch]
 
-    public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest reviewDto)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest reviewDto, CancellationToken cancellationToken)
     {
-        await _reviewService.Update(Id, reviewDto);
+        await _reviewService.Update(Id, reviewDto, cancellationToken);
         return Ok();
     }
 

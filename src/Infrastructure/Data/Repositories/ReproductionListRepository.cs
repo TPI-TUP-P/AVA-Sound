@@ -31,10 +31,10 @@ public class ReproductionsListRepository : IReproductionsListRepository
         return list;
     }
 
-    public async Task<ReproductionsList> Update(ReproductionsList list)
+    public async Task<ReproductionsList> Update(ReproductionsList list, CancellationToken cancellationToken)
     {
         _context.ReproductionsLists.Update(list);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return list;
     }
 

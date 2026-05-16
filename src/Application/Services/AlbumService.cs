@@ -43,7 +43,7 @@ public class AlbumService : IAlbumService
             album.Description
             ,
             album.Songs.ToList()
-            
+
         );
 
     }
@@ -72,10 +72,10 @@ public class AlbumService : IAlbumService
             albumDto.ReleaseDate,
             albumDto.FrontPage,
             albumDto.Description
-        
+
         );
 
-        var albumCreated=await  _album.Create(albumData, cancellationToken);
+        var albumCreated = await _album.Create(albumData, cancellationToken);
 
 
         return new CreateResponse(
@@ -92,7 +92,7 @@ public class AlbumService : IAlbumService
     }
 
 
-    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest albumDto)
+    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest albumDto, CancellationToken cancellationToken)
     {
         var existingAlbum = await _album.GetById(Id);
         if (existingAlbum == null)
@@ -127,7 +127,7 @@ public class AlbumService : IAlbumService
 
 
         await _album.Update(
-            existingAlbum
+            existingAlbum, cancellationToken
         );
 
         return new UpdateResponse
@@ -157,21 +157,21 @@ public class AlbumService : IAlbumService
 
 
 
-    public async Task<GetByIdResponse> AddSong(Guid id,Guid idSong)
-    {   
+    public async Task<GetByIdResponse> AddSong(Guid id, Guid idSong, CancellationToken cancellationToken)
+    {
         var album = await _album.GetById(id);
         var song = await _song.GetById(idSong);
 
-        
-        
+
+
         album.AddSong(song);
-    await _album.Update(album);
+        await _album.Update(album, cancellationToken);
 
 
 
         // var songs = await _song.GetById(idSong);
 
-        
+
         return new GetByIdResponse
         (
             album.Id,
@@ -179,16 +179,16 @@ public class AlbumService : IAlbumService
             album.Title,
             album.ReleasteDate,
             album.FrontPage,
-            album.Description, 
+            album.Description,
             album.Songs.ToList()
-            
+
         );
 
 
 
     }
 
-// Este metodo no se puede completar porque falta el ABM de song 
+    // Este metodo no se puede completar porque falta el ABM de song 
 
     // public Task AddSong(Guid id, Song song)
     // {

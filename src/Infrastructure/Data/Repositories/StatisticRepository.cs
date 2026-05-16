@@ -50,14 +50,14 @@ public class StatisticRepository : IStatisticRepository
 
 
 
-    public async Task<Statistic> Update(Statistic statistic)
+    public async Task<Statistic> Update(Statistic statistic, CancellationToken cancellationToken)
     {
 
         _context.Update(
             statistic
         );
 
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return statistic;
 
     }

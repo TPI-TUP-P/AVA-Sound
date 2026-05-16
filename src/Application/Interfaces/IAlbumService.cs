@@ -6,13 +6,13 @@ using Domain.Entities;
 
 public interface IAlbumService
 {
-    Task <GetByIdResponse> GetById(Guid id);
-    Task <List<GetAllResponse>> GetAll();
+    Task<GetByIdResponse> GetById(Guid id);
+    Task<List<GetAllResponse>> GetAll();
     Task<CreateResponse> Create(CreateRequest albumDto, CancellationToken cancellationToken);
-    Task<UpdateResponse>  Update(Guid Id,UpdateRequest albumDto);
+    Task<UpdateResponse> Update(Guid Id, UpdateRequest albumDto, CancellationToken cancellationToken);
     Task Delete(Guid id);
-    
-    Task<GetByIdResponse> AddSong(Guid id, Guid idSong);
+
+    Task<GetByIdResponse> AddSong(Guid id, Guid idSong, CancellationToken cancellationToken);
 }
 
 
