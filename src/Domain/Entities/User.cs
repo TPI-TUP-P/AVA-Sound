@@ -10,7 +10,7 @@ public class User
     public string? Surname {get; private set;}
     public string? Email { get; private set;}
     public string? Password { get; private set;}
-    public bool IsArtista {get; private set;}
+    public bool IsArtist {get; private set;}
 
     public DateTime DateRegister { get; private set;}
 
@@ -19,7 +19,7 @@ public class User
     private User(){}
 
 
-    public User(string name, string surname, string email, string password, bool isArtista,string role)
+    public User(string name, string surname, string email, string password, bool isArtist,string role)
     {
         ValidateProperties(name, surname, email, password, role);
         Id = Guid.NewGuid();
@@ -27,7 +27,7 @@ public class User
         Surname = surname;
         Email = email;
         Password = password;
-        IsArtista= isArtista;
+        IsArtist= isArtist;
         DateRegister = DateTime.Now;
         Role = role;
         
@@ -54,7 +54,7 @@ public class User
     }
 
 
-    public void UpdateInfo(string name, string surname, string email, string password, bool isArtista, string role)
+    public void UpdateInfo(string name, string surname, string email, string password, bool isArtist, string role)
 {
     if(string.IsNullOrWhiteSpace(name))
             throw new Exception("name is required");
@@ -75,7 +75,7 @@ public class User
     Surname = surname;
     Email = email;
     Password = password;
-    IsArtista = isArtista;
+    IsArtist = isArtist;
     Role = role;
 }
         
