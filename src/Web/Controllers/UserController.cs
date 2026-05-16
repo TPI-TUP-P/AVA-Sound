@@ -28,9 +28,9 @@ public class UserController : ControllerBase
 
     [HttpGet]
 
-    public async Task<ActionResult<List<GetAllResponse>>> GetAll()
+    public async Task<ActionResult<List<GetAllResponse>>> GetAll(CancellationToken cancellationToken)
     {
-        var users = await _userService.GetAll();
+        var users = await _userService.GetAll(cancellationToken);
         return Ok(users);
     }
 

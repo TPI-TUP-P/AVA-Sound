@@ -39,9 +39,9 @@ public class UserService : IUserService
     }
 
 
-    public async Task<List<GetAllResponse>> GetAll()
+    public async Task<List<GetAllResponse>> GetAll(CancellationToken cancellationToken)
     {
-        var users = await _user.GetAll();
+        var users = await _user.GetAll(cancellationToken);
 
         return users.Select(u => new GetAllResponse
         {

@@ -23,18 +23,18 @@ public class UserRepository : IUserRepository
     }
 
 
-    public async Task<List<User>> GetAll()
+    public async Task<List<User>> GetAll(CancellationToken cancellationToken)
     {
         return await _context.Users
             .OrderByDescending(s => s.DateRegister)
             .Take(30)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<User> Create(User user, CancellationToken cancellationToken)
     {
         _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return user;
     }
 
