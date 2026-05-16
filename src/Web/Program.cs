@@ -5,6 +5,8 @@ using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Core.Middlewares;
+using Application.Interfaces.IJwtService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 
 var connection = new SqliteConnection("Data Source=AVA_Sound.db");
@@ -48,6 +52,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ISongRepository, SongRepository>();
 builder.Services.AddScoped<ISongService, SongService>();
 
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+
 var app = builder.Build();
 
 
@@ -64,7 +71,11 @@ if (app.Environment.IsDevelopment())
 
 }
 
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

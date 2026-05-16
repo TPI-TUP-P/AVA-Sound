@@ -1,6 +1,6 @@
 
-using Application.DTOs.User.request;
-using Application.DTOs.User.response;
+using Application.DTOs.User.Request;
+using Application.DTOs.User.Response;
 using Application.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -16,6 +16,29 @@ public class UserService : IUserService
         _user = user;
     }
 
+
+
+    public async Task<GetByIdResponse> GetByEmail(string email, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            throw new Exception("El email es obligatorio");
+
+        var user = await _user.GetByEmail(email, cancellationToken);
+
+        if (user is null)
+            throw new Exception("El usuario no existe");
+
+        return new GetByIdResponse
+        {
+            Name = user.Name,
+            Surname = user.Surname,
+            Email = user.Email,
+            IsArtist = user.IsArtist,
+            DateRegister = user.DateRegister,
+            Role = user.Role
+        };
+    }
+    
     public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
@@ -31,7 +54,7 @@ public class UserService : IUserService
             Name = user.Name,
             Surname = user.Surname,
             Email = user.Email,
-            IsArtista = user.IsArtista,
+            IsArtist = user.IsArtist,
             DateRegister = user.DateRegister,
             Role = user.Role
 
@@ -48,7 +71,7 @@ public class UserService : IUserService
             Name = u.Name,
             Surname = u.Surname,
             Email = u.Email,
-            IsArtista = u.IsArtista,
+            IsArtist = u.IsArtist,
             DateRegister = u.DateRegister,
             Role = u.Role
         }).ToList();
@@ -85,7 +108,7 @@ public class UserService : IUserService
             userDto.Surname,
             userDto.Email,
             userDto.Password,
-            userDto.IsArtista,
+            userDto.IsArtist,
             userDto.Role
         );
 
@@ -96,7 +119,7 @@ public class UserService : IUserService
             Name = user.Name,
             Surname = user.Surname,
             Email = user.Email,
-            IsArtista = user.IsArtista,
+            IsArtist = user.IsArtist,
             DateRegister = user.DateRegister,
             Role = user.Role
         };
@@ -135,7 +158,7 @@ public class UserService : IUserService
             userDto.Surname,
             userDto.Email,
             userDto.Password,
-            userDto.IsArtista,
+            userDto.IsArtist,
             userDto.Role
         );
 
@@ -147,7 +170,7 @@ public class UserService : IUserService
             Surname = user.Surname,
             Email = user.Email,
             Password = user.Password,
-            IsArtista = user.IsArtista,
+            IsArtist = user.IsArtist,
             Role = user.Role
         };
     }
