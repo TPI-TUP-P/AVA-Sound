@@ -8,7 +8,7 @@ namespace Web.Controllers;
 
 [Route("api/review")]
 [ApiController]
-
+[EnableRateLimiting("HeavyEndpoint")]
 public class ReviewController : ControllerBase
 {
     private readonly IReviewService _reviewService;
@@ -20,13 +20,14 @@ public class ReviewController : ControllerBase
 
     [HttpGet("{Id}")]
 
+
     public ActionResult<List<GetBySongResponse>> GetBySong([FromRoute] Guid Id, CancellationToken cancellationToken)
     {
         return Ok(_reviewService.GetBySong(Id, cancellationToken));
     }
 
     [HttpPost]
-    [EnableRateLimiting("HeavyEndpoint")]
+
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest reviewDto, CancellationToken cancellationToken)
     {
         await _reviewService.Create(reviewDto, cancellationToken);
