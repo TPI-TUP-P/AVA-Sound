@@ -18,14 +18,14 @@ public class ReviewService : IReviewService
     }
 
 
-    public async Task<List<GetBySongResponse>> GetBySong(Guid Id)
+    public async Task<List<GetBySongResponse>> GetBySong(Guid Id, CancellationToken cancellationToken)
     // For my future self, the id refers to the song id
     {
         if (Id == Guid.Empty)
         {
             throw new Exception("id is empety");
         }
-        var review = await _review.GetBySong(Id);
+        var review = await _review.GetBySong(Id, cancellationToken);
         // The r refers to reviews
         return review.Select(r => new GetBySongResponse
         {
@@ -63,7 +63,7 @@ public class ReviewService : IReviewService
         {
             throw new KeyNotFoundException("Song not found.");
         }
-        var reviewsExist = await _review.GetBySong(reviewDto.IdSong);
+        var reviewsExist = await _review.GetBySong(reviewDto.IdSong, cancellationToken);
         if (reviewsExist.Any(x => x.IdUser == reviewDto.IdUser))
         {
             throw new ArgumentException("Theres already a review done on this song.");
