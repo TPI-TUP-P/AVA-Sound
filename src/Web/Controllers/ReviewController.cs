@@ -33,9 +33,9 @@ public class ReviewController : ControllerBase
 
     [HttpDelete("{Id}")]
 
-    public async Task<ActionResult> Delete(Guid Id)
+    public async Task<ActionResult> Delete(Guid Id, CancellationToken cancellationToken)
     {
-        await _reviewService.Delete(Id);
+        await _reviewService.Delete(Id, cancellationToken);
 
         return Ok();
     }

@@ -59,10 +59,10 @@ public class StatisticController : ControllerBase
 
     [HttpDelete("{id}")]
 
-    public async Task<ActionResult> Delete(Guid id)
+    public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
 
-        await _statisticService.Delete(id);
+        await _statisticService.Delete(id, cancellationToken);
         return NoContent();
     }
 

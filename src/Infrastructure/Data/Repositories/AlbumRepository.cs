@@ -54,14 +54,14 @@ public class AlbumRepository : IAlbumRepository
 
     }
 
-    public async Task Delete(Guid id)
+    public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
         var album = await _context.Albums.FindAsync(id);
         if (album != null)
         {
             _context.Albums.Remove(album);
         }
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
 
     }
 

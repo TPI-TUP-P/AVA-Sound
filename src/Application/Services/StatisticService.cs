@@ -160,13 +160,13 @@ public class StatisticService : IStatisticService
         );
     }
 
-    public async Task Delete(Guid Id)
+    public async Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new Exception("Id es vacio");
         }
 
-        await _statistic.Delete(Id);
+        await _statistic.Delete(Id, cancellationToken);
     }
 }

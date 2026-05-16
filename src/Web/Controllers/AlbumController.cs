@@ -78,10 +78,10 @@ public class AlbumController : ControllerBase
 
     [HttpDelete("{id}")]
 
-    public async Task<ActionResult> Delete(Guid id)
+    public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
 
-        await _albumService.Delete(id);
+        await _albumService.Delete(id, cancellationToken);
         return NoContent();
     }
 

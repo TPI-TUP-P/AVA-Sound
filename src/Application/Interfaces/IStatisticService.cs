@@ -9,6 +9,6 @@ public interface IStatisticService
     Task<GetByIdResponse> GetById(Guid Id);
     Task<CreateResponse> Create(CreateRequest statisticDto, CancellationToken cancellationToken);
     Task<UpdateResponse> Update(Guid Id, UpdateRequest statisticDto, CancellationToken cancellationToken);
-    Task Delete(Guid Id);
+    Task Delete(Guid Id, CancellationToken cancellationToken);
 
 }

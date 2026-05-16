@@ -52,9 +52,9 @@ public class UserController : ControllerBase
 
     [HttpDelete("{id}")]
 
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        await _userService.Delete(id);
+        await _userService.Delete(id, cancellationToken);
         return NoContent();
     }
 }

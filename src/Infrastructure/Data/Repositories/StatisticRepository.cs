@@ -38,14 +38,14 @@ public class StatisticRepository : IStatisticRepository
         return statistic;
     }
 
-    public async Task Delete(Guid Id)
+    public async Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         var statistic = await _context.Statistics.FindAsync(Id);
         if (statistic != null)
         {
             _context.Statistics.Remove(statistic);
         }
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
 

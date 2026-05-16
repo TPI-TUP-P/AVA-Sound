@@ -153,7 +153,7 @@ public class UserService : IUserService
     }
 
 
-    public async Task Delete(Guid Id)
+    public async Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
             throw new Exception("el id no existe");
@@ -163,7 +163,7 @@ public class UserService : IUserService
         if (user == null)
             throw new Exception("el usuario no existe");
 
-        await _user.Delete(Id);
+        await _user.Delete(Id, cancellationToken);
     }
 
 

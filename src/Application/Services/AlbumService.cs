@@ -144,7 +144,7 @@ public class AlbumService : IAlbumService
         );
     }
 
-    public Task Delete(Guid Id)
+    public Task Delete(Guid Id, CancellationToken cancellationToken)
     {
 
         if (Id == Guid.Empty)
@@ -152,7 +152,7 @@ public class AlbumService : IAlbumService
             throw new Exception("Id es vacio");
         }
 
-        return _album.Delete(Id);
+        return _album.Delete(Id, cancellationToken);
     }
 
 

@@ -36,9 +36,9 @@ public class InfoUserController : ControllerBase
 
     [HttpDelete("{Id}")]
 
-    public async Task<ActionResult> Delete(Guid Id)
+    public async Task<ActionResult> Delete(Guid Id, CancellationToken cancellationToken)
     {
-        await _infouservice.Delete(Id);
+        await _infouservice.Delete(Id, cancellationToken);
 
         return NoContent();
     }

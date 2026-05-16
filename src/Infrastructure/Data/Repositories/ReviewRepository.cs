@@ -46,13 +46,13 @@ public class ReviewRepository : IReviewRepository
         await _context.SaveChangesAsync(cancellationToken);
         return review;
     }
-    public async Task Delete(Guid Id)
+    public async Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         var review = await _context.Reviews.FindAsync(Id);
         if (review != null)
         {
             _context.Reviews.Remove(review);
         }
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }
