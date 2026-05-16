@@ -18,14 +18,14 @@ public class ReproductionListService : IReproductionListService
         _song = song;
     }
 
-    public async Task<GetByIdResponse> GetById(Guid Id)
+    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new Exception("Id es vacio");
         }
 
-        var reproductionsList = await _reproductionList.GetById(Id);
+        var reproductionsList = await _reproductionList.GetById(Id, cancellationToken);
 
         if (reproductionsList == null)
         {
@@ -94,12 +94,12 @@ public class ReproductionListService : IReproductionListService
         if (songId == Guid.Empty)
             throw new ArgumentException("songId inválido");
 
-        var list = await _reproductionList.GetById(listId);
+        var list = await _reproductionList.GetById(listId, cancellationToken);
 
         if (list == null)
             throw new KeyNotFoundException("La lista no existe");
 
-        var song = await _song.GetById(songId);
+        var song = await _song.GetById(songId, cancellationToken);
 
         if (song == null)
             throw new KeyNotFoundException("La canción no existe");
@@ -118,7 +118,7 @@ public class ReproductionListService : IReproductionListService
         if (songId == Guid.Empty)
             throw new ArgumentException("songId inválido");
 
-        var list = await _reproductionList.GetById(listId);
+        var list = await _reproductionList.GetById(listId, cancellationToken);
 
         if (list == null)
             throw new KeyNotFoundException("La lista no existe");
@@ -138,7 +138,7 @@ public class ReproductionListService : IReproductionListService
         if (id == Guid.Empty)
             throw new ArgumentException("Id inválido");
 
-        var list = await _reproductionList.GetById(id);
+        var list = await _reproductionList.GetById(id, cancellationToken);
 
         if (list == null)
             throw new KeyNotFoundException("La lista no existe");

@@ -58,7 +58,7 @@ public class ReviewService : IReviewService
         {
             throw new ArgumentException("It must have at least 3 characters.");
         }
-        var songExists = await _song.GetById(reviewDto.IdSong);
+        var songExists = await _song.GetById(reviewDto.IdSong, cancellationToken);
         if (songExists is null)
         {
             throw new KeyNotFoundException("Song not found.");
@@ -99,7 +99,7 @@ public class ReviewService : IReviewService
         {
             throw new Exception("review is empety.");
         }
-        var existReview = await _review.GetById(Id);
+        var existReview = await _review.GetById(Id, cancellationToken);
         if (reviewDto.Comment != null && reviewDto.Comment.Length > 3)
         {
             existReview.Comment = reviewDto.Comment;

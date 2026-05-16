@@ -15,14 +15,14 @@ public class InfoUserService : IInfoUserService
         _InfoUser = infouser;
     }
 
-    public async Task<GetByIdResponse> GetById(Guid Id)
+    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new ArgumentException("Id cannot be empty");
         }
 
-        var infouser = await _InfoUser.GetById(Id);
+        var infouser = await _InfoUser.GetById(Id, cancellationToken);
 
         return new GetByIdResponse
         {
@@ -70,7 +70,7 @@ public class InfoUserService : IInfoUserService
         {
             throw new ArgumentException("Id cannot be empty");
         }
-        var existingInfo = await _InfoUser.GetById(Id);
+        var existingInfo = await _InfoUser.GetById(Id, cancellationToken);
         if (infouserDto.Biography != null && infouserDto.Country != null && infouserDto.ProfilePicture != null)
         {
             existingInfo.Biography = infouserDto.Biography;

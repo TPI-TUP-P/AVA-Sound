@@ -24,9 +24,9 @@ public class AlbumController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<GetByIdResponse> GetById(Guid id)
+    public ActionResult<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var album = _albumService.GetById(id);
+        var album = _albumService.GetById(id, cancellationToken);
 
         return Ok(album);
     }

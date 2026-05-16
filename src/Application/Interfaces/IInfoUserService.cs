@@ -7,7 +7,7 @@ using Application.DTOs.InfoUser.Response;
 
 public interface IInfoUserService
 {
-    Task<GetByIdResponse> GetById(Guid Id);
+    Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken);
 
     Task<CreateResponse> Create(CreateRequest infouserDto, CancellationToken cancellationToken);
 

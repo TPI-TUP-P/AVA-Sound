@@ -18,9 +18,9 @@ public class InfoUserController : ControllerBase
         _infouservice = infouserservice;
     }
     [HttpGet("{Id}")]
-    public async Task<ActionResult<GetByIdResponse>> GetById(Guid Id)
+    public async Task<ActionResult<GetByIdResponse>> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        return Ok(await _infouservice.GetById(Id));
+        return Ok(await _infouservice.GetById(Id, cancellationToken));
     }
 
     [HttpPatch("{Id}")]

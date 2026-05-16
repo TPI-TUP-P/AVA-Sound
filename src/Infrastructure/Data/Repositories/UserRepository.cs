@@ -13,9 +13,9 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<User> GetById(Guid id)
+    public async Task<User> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var user = await _context.Users.FindAsync(id);
+        var user = await _context.Users.FindAsync(id, cancellationToken);
         if (user == null)
             throw new Exception($"El usuario con el ID {id} no fue encontrado.");
 

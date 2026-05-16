@@ -19,14 +19,14 @@ public class AlbumService : IAlbumService
     }
 
 
-    public async Task<GetByIdResponse> GetById(Guid Id)
+    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new Exception("Id es vacio");
         }
 
-        var album = await _album.GetById(Id);
+        var album = await _album.GetById(Id, cancellationToken);
 
         if (album == null)
         {
@@ -94,7 +94,7 @@ public class AlbumService : IAlbumService
 
     public async Task<UpdateResponse> Update(Guid Id, UpdateRequest albumDto, CancellationToken cancellationToken)
     {
-        var existingAlbum = await _album.GetById(Id);
+        var existingAlbum = await _album.GetById(Id, cancellationToken);
         if (existingAlbum == null)
         {
             throw new Exception("El album no existe");
@@ -159,8 +159,8 @@ public class AlbumService : IAlbumService
 
     public async Task<GetByIdResponse> AddSong(Guid id, Guid idSong, CancellationToken cancellationToken)
     {
-        var album = await _album.GetById(id);
-        var song = await _song.GetById(idSong);
+        var album = await _album.GetById(id, cancellationToken);
+        var song = await _song.GetById(idSong, cancellationToken);
 
 
 

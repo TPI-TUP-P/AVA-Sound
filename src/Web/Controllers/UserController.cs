@@ -20,9 +20,9 @@ public class UserController : ControllerBase
 
     [HttpGet("{id}")]
 
-    public ActionResult<GetByIdResponse> GetById(Guid Id)
+    public ActionResult<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        var user = _userService.GetById(Id);
+        var user = _userService.GetById(Id, cancellationToken);
         return Ok(user);
     }
 

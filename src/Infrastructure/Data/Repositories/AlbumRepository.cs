@@ -75,11 +75,11 @@ public class AlbumRepository : IAlbumRepository
 
 
 
-    public async Task<Album> GetById(Guid id)
+    public async Task<Album> GetById(Guid id, CancellationToken cancellationToken)
     {
         return await _context.Albums.
             Include(a => a.Songs)
-        .FirstOrDefaultAsync(a => a.Id == id);
+        .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
 
         //     if(album == null)
         //     {

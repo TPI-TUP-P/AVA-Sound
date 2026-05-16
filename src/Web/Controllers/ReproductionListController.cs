@@ -18,9 +18,9 @@ public class ReproductionListController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<ReproductionsList> GetById(Guid id)
+    public ActionResult<ReproductionsList> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var reproductionList = _reproductionListservice.GetById(id);
+        var reproductionList = _reproductionListservice.GetById(id, cancellationToken);
 
         return Ok(reproductionList);
     }
