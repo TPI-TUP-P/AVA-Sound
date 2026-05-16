@@ -11,7 +11,7 @@ public interface IInfoUserService
 
     Task<CreateResponse> Create(CreateRequest infouserDto, CancellationToken cancellationToken);
 
-    Task<UpdateResponse> Update(Guid Id, UpdateRequest infouserDto);
+    Task<UpdateResponse> Update(Guid Id, UpdateRequest infouserDto, CancellationToken cancellationToken);
 
     Task Delete(Guid Id);
 }

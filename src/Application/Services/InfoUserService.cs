@@ -64,7 +64,7 @@ public class InfoUserService : IInfoUserService
         };
     }
 
-    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest infouserDto)
+    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest infouserDto, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
@@ -77,7 +77,7 @@ public class InfoUserService : IInfoUserService
             existingInfo.Country = infouserDto.Country;
             existingInfo.ProfilePicture = infouserDto.ProfilePicture;
         }
-        await _InfoUser.Update(existingInfo);
+        await _InfoUser.Update(existingInfo, cancellationToken);
 
         return new UpdateResponse
         {

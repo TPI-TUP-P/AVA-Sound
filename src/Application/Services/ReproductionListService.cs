@@ -86,7 +86,7 @@ public class ReproductionListService : IReproductionListService
         };
     }
 
-    public async Task AddSong(Guid listId, Guid songId)
+    public async Task AddSong(Guid listId, Guid songId, CancellationToken cancellationToken)
     {
         if (listId == Guid.Empty)
             throw new ArgumentException("listId inválido");
@@ -106,11 +106,11 @@ public class ReproductionListService : IReproductionListService
 
         list.AddSong(song);
 
-        await _reproductionList.Update(list);
+        await _reproductionList.Update(list, cancellationToken);
     }
 
 
-    public async Task RemoveSong(Guid listId, Guid songId)
+    public async Task RemoveSong(Guid listId, Guid songId, CancellationToken cancellationToken)
     {
         if (listId == Guid.Empty)
             throw new ArgumentException("listId inválido");
@@ -130,7 +130,7 @@ public class ReproductionListService : IReproductionListService
 
         list.RemoveSong(song);
 
-        await _reproductionList.Update(list);
+        await _reproductionList.Update(list, cancellationToken);
     }
 
     public async Task Delete(Guid id)

@@ -25,7 +25,7 @@ public class ReviewRepository : IReviewRepository
         return await _context.Reviews.FirstAsync(r => r.Id == Id);
 
     }
-    public async Task<Review> Update(Review review)
+    public async Task<Review> Update(Review review, CancellationToken cancellationToken)
     {
         var existing = await _context.Reviews.FindAsync(review.Id);
 
@@ -34,7 +34,7 @@ public class ReviewRepository : IReviewRepository
             throw new KeyNotFoundException($"La reseña con el ID {review.Id} no fue encontrada.");
         }
         existing.Comment = review.Comment;
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return review;
     }
 

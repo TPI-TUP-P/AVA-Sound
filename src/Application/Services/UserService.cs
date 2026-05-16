@@ -102,7 +102,7 @@ public class UserService : IUserService
         };
     }
 
-    public async Task<UpdateResponse> Update(Guid id, UpdateRequest userDto)
+    public async Task<UpdateResponse> Update(Guid id, UpdateRequest userDto, CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)
             throw new Exception("Id inválido");
@@ -139,7 +139,7 @@ public class UserService : IUserService
             userDto.Role
         );
 
-        await _user.Update(user);
+        await _user.Update(user, cancellationToken);
 
         return new UpdateResponse
         {

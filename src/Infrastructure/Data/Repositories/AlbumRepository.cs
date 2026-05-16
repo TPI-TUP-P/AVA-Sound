@@ -17,7 +17,7 @@ public class AlbumRepository : IAlbumRepository
     {
         return await _context.Albums.ToListAsync();
     }
-    public async Task<Album> Update(Album album)
+    public async Task<Album> Update(Album album, CancellationToken cancellationToken)
     {
         var existing = await _context.Albums.FindAsync(album.Id);
 
@@ -31,27 +31,27 @@ public class AlbumRepository : IAlbumRepository
         existing.ReleasteDate = album.ReleasteDate;
         existing.FrontPage = album.FrontPage;
 
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return album;
     }
 
     public async Task<Album> AddSong(Guid id, Song song)
-    {   
+    {
         var album = await _context.Albums.FindAsync(id);
-        if(album == null)
+        if (album == null)
         {
             new Exception($"El album con el ID {id} no fue encontrado.");
 
         }
-         album.AddSong(song);
+        album.AddSong(song);
 
-                    await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
 
 
-         return album;
-         
+        return album;
 
-        
+
+
     }
 
     public async Task Delete(Guid id)
@@ -67,7 +67,7 @@ public class AlbumRepository : IAlbumRepository
 
     public async Task<Album> Create(Album album, CancellationToken cancellationToken)
     {
-         await _context.Albums.AddAsync(album, cancellationToken);
+        await _context.Albums.AddAsync(album, cancellationToken);
         await _context.SaveChangesAsync();
         return album;
 
@@ -75,17 +75,17 @@ public class AlbumRepository : IAlbumRepository
 
 
 
-     public async Task<Album> GetById(Guid id)
+    public async Task<Album> GetById(Guid id)
     {
-return await _context.Albums.
-    Include(a => a.Songs)
-.FirstOrDefaultAsync(a => a.Id == id);
-    
-    //     if(album == null)
-    //     {
-    //         throw new KeyNotFoundException($"El album con el ID {id} no fue encontrado.");
-    //     }
-    //    return album;
+        return await _context.Albums.
+            Include(a => a.Songs)
+        .FirstOrDefaultAsync(a => a.Id == id);
+
+        //     if(album == null)
+        //     {
+        //         throw new KeyNotFoundException($"El album con el ID {id} no fue encontrado.");
+        //     }
+        //    return album;
     }
 
 }

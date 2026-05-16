@@ -124,7 +124,7 @@ public class StatisticService : IStatisticService
     //     }
 
 
-    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest statisticDto)
+    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest statisticDto, CancellationToken cancellationToken)
     {
         var existingAlbum = await _statistic.GetById(Id);
         if (existingAlbum == null)
@@ -145,7 +145,7 @@ public class StatisticService : IStatisticService
 
         await _statistic.Update(
 
-            existingAlbum
+            existingAlbum, cancellationToken
         );
 
 

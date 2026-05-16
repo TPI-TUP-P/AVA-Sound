@@ -8,6 +8,6 @@ public interface IReviewService
 {
     Task<List<GetBySongResponse>> GetBySong(Guid Id);
     Task<CreateResponse> Create(CreateRequest reviewDto, CancellationToken cancellationToken);
-    Task<UpdateResponse> Update(Guid Id, UpdateRequest reviewDto);
+    Task<UpdateResponse> Update(Guid Id, UpdateRequest reviewDto, CancellationToken cancellationToken);
     Task Delete(Guid id);
 }

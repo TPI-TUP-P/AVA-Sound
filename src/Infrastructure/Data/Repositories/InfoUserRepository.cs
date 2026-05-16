@@ -35,7 +35,7 @@ public class InfoUserRepository : IInfoUserRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<InfoUser> Update(InfoUser infouser)
+    public async Task<InfoUser> Update(InfoUser infouser, CancellationToken cancellationToken)
     {
         var existing = await _context.InfoUsers.FindAsync(infouser.Id);
         if (existing is null)
@@ -45,7 +45,7 @@ public class InfoUserRepository : IInfoUserRepository
         existing.ProfilePicture = infouser.ProfilePicture;
         existing.Biography = infouser.Biography;
         existing.Country = infouser.Country;
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return existing;
 
     }

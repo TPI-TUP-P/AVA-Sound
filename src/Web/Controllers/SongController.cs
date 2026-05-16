@@ -42,9 +42,9 @@ public class SongController : ControllerBase
 
     [HttpPut("{id}")]
 
-    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest songDto)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest songDto, CancellationToken cancellationToken)
     {
-        var song = await _songService.Update(id, songDto);
+        var song = await _songService.Update(id, songDto, cancellationToken);
         return Ok(song);
     }
 
