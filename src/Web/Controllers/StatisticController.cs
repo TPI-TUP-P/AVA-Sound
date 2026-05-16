@@ -23,9 +23,9 @@ public class StatisticController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<GetByIdResponse> GetById(Guid id)
+    public ActionResult<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var album = _statisticService.GetById(id);
+        var album = _statisticService.GetById(id, cancellationToken);
 
         return Ok(album);
     }

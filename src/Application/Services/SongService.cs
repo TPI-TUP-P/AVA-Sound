@@ -15,12 +15,12 @@ public class SongService : ISongService
         _song = song;
     }
 
-    public async Task<GetByIdResponse> GetById(Guid Id)
+    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
             throw new Exception("el id no existe");
 
-        var song = await _song.GetById(Id);
+        var song = await _song.GetById(Id, cancellationToken);
 
         if (song == null)
             throw new Exception("la cancion no existe");
@@ -115,7 +115,7 @@ public class SongService : ISongService
         if (songDto == null)
             throw new Exception("Datos inválidos");
 
-        var song = await _song.GetById(id);
+        var song = await _song.GetById(id, cancellationToken);
 
         if (song == null)
             throw new Exception("La canción no existe");
@@ -156,7 +156,7 @@ public class SongService : ISongService
         if (Id == Guid.Empty)
             throw new Exception("el id no existe");
 
-        var song = await _song.GetById(Id);
+        var song = await _song.GetById(Id, cancellationToken);
 
         if (song == null)
             throw new Exception("la cancion no existe");

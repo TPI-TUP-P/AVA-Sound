@@ -13,9 +13,9 @@ public class ReproductionsListRepository : IReproductionsListRepository
         _context = context;
     }
 
-    public async Task<ReproductionsList> GetById(Guid id)
+    public async Task<ReproductionsList> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var lista = await _context.ReproductionsLists.FindAsync(id);
+        var lista = await _context.ReproductionsLists.FindAsync(id, cancellationToken);
         // .Include(r => r.Songs)
         // .FirstOrDefaultAsync(r => r.Id == id);
         if (lista == null)

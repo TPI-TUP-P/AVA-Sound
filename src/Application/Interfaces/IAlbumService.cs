@@ -6,7 +6,7 @@ using Domain.Entities;
 
 public interface IAlbumService
 {
-    Task<GetByIdResponse> GetById(Guid id);
+    Task<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken);
     Task<List<GetAllResponse>> GetAll();
     Task<CreateResponse> Create(CreateRequest albumDto, CancellationToken cancellationToken);
     Task<UpdateResponse> Update(Guid Id, UpdateRequest albumDto, CancellationToken cancellationToken);

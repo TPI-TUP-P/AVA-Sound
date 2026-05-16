@@ -13,9 +13,9 @@ public class InfoUserRepository : IInfoUserRepository
         _context = context;
     }
 
-    public async Task<InfoUser> GetById(Guid Id)
+    public async Task<InfoUser> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        return await _context.InfoUsers.FirstAsync(i => i.IdUser == Id);
+        return await _context.InfoUsers.FirstAsync(i => i.IdUser == Id, cancellationToken);
     }
 
     public async Task<InfoUser> Create(InfoUser infouser, CancellationToken cancellationToken)

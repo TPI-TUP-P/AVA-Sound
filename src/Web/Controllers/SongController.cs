@@ -19,9 +19,9 @@ public class SongController : ControllerBase
 
     [HttpGet("{id}")]
 
-    public ActionResult<GetByIdResponse> GetById(Guid Id)
+    public ActionResult<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        var song = _songService.GetById(Id);
+        var song = _songService.GetById(Id, cancellationToken);
         return Ok(song);
     }
 

@@ -19,10 +19,10 @@ public class StatisticRepository : IStatisticRepository
     }
 
 
-    public async Task<Statistic> GetById(Guid Id)
+    public async Task<Statistic> GetById(Guid Id, CancellationToken cancellationToken)
     {
 
-        var statistic = await _context.Statistics.FirstAsync(s => s.Id == Id);
+        var statistic = await _context.Statistics.FirstAsync(s => s.Id == Id, cancellationToken);
         if (statistic == null)
         {
             throw new KeyNotFoundException($"La estadística con el ID {Id} no fue encontrada.");

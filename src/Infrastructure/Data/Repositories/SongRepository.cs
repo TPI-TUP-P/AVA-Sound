@@ -13,9 +13,9 @@ public class SongRepository : ISongRepository
         _context = context;
     }
 
-    public async Task<Song> GetById(Guid id)
+    public async Task<Song> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var song = await _context.Songs.FindAsync(id);
+        var song = await _context.Songs.FindAsync(id, cancellationToken);
         if (song == null)
             throw new KeyNotFoundException($"La cancion con el ID {id} no fue encontrado.");
 

@@ -20,9 +20,9 @@ public class ReviewRepository : IReviewRepository
         .ToListAsync();
 
     }
-    public async Task<Review> GetById(Guid Id)
+    public async Task<Review> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        return await _context.Reviews.FirstAsync(r => r.Id == Id);
+        return await _context.Reviews.FirstAsync(r => r.Id == Id, cancellationToken);
 
     }
     public async Task<Review> Update(Review review, CancellationToken cancellationToken)

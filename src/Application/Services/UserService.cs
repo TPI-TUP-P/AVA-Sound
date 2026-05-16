@@ -16,12 +16,12 @@ public class UserService : IUserService
         _user = user;
     }
 
-    public async Task<GetByIdResponse> GetById(Guid Id)
+    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
             throw new Exception("El id no existe");
 
-        var user = await _user.GetById(Id);
+        var user = await _user.GetById(Id, cancellationToken);
 
         if (user == null)
             throw new Exception("El usuario no existe");
@@ -110,7 +110,7 @@ public class UserService : IUserService
         if (userDto == null)
             throw new Exception("Datos inválidos");
 
-        var user = await _user.GetById(id);
+        var user = await _user.GetById(id, cancellationToken);
 
         if (user == null)
             throw new Exception("el usuario no existe");
@@ -158,7 +158,7 @@ public class UserService : IUserService
         if (Id == Guid.Empty)
             throw new Exception("el id no existe");
 
-        var user = await _user.GetById(Id);
+        var user = await _user.GetById(Id, cancellationToken);
 
         if (user == null)
             throw new Exception("el usuario no existe");
