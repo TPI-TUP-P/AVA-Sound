@@ -1,6 +1,6 @@
 
-using Application.DTOs.User.request;
-using Application.DTOs.User.response;
+using Application.DTOs.User.Request;
+using Application.DTOs.User.Response;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;

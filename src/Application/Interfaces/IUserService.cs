@@ -1,6 +1,6 @@
 
-using Application.DTOs.User.request;
-using Application.DTOs.User.response;
+using Application.DTOs.User.Request;
+using Application.DTOs.User.Response;
 
 namespace Application.Interfaces;
 
