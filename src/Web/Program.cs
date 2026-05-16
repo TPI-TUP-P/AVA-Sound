@@ -5,6 +5,7 @@ using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +49,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ISongRepository, SongRepository>();
 builder.Services.AddScoped<ISongService, SongService>();
 
+builder.Services.AddCustomRateLimit(
+    builder.Configuration);
+
 var app = builder.Build();
 
 
@@ -63,6 +67,7 @@ if (app.Environment.IsDevelopment())
 
 
 }
+app.UseRateLimiter();
 
 app.UseHttpsRedirection();
 

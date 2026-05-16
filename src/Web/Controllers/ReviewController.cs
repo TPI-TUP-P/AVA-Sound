@@ -3,6 +3,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Application.DTOs.Review.Request;
 using Application.DTOs.Review.Response;
+using Microsoft.AspNetCore.RateLimiting;
 namespace Web.Controllers;
 
 [Route("api/review")]
@@ -25,6 +26,7 @@ public class ReviewController : ControllerBase
     }
 
     [HttpPost]
+    [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest reviewDto, CancellationToken cancellationToken)
     {
         await _reviewService.Create(reviewDto, cancellationToken);

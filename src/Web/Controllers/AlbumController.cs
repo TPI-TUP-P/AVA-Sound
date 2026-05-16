@@ -5,7 +5,7 @@ using Application.DTOs.Album.Response;
 using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.RateLimiting;
 namespace Web.Controllers;
 
 
@@ -42,6 +42,7 @@ public class AlbumController : ControllerBase
 
 
     [HttpPost]
+    [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest albumDto, CancellationToken cancellationToken)
     {
         return await _albumService.Create(albumDto, cancellationToken);
