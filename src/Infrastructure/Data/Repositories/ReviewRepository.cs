@@ -13,11 +13,11 @@ public class ReviewRepository : IReviewRepository
     {
         _context = context;
     }
-    public async Task<List<Review>> GetBySong(Guid Id)
+    public async Task<List<Review>> GetBySong(Guid Id, CancellationToken cancellationToken)
     {
         return await _context.Reviews
         .Where(r => r.IdSong == Id)
-        .ToListAsync();
+        .ToListAsync(cancellationToken);
 
     }
     public async Task<Review> GetById(Guid Id, CancellationToken cancellationToken)

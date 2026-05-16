@@ -19,9 +19,9 @@ public class ReviewController : ControllerBase
 
     [HttpGet("{Id}")]
 
-    public ActionResult<List<GetBySongResponse>> GetBySong([FromRoute] Guid Id)
+    public ActionResult<List<GetBySongResponse>> GetBySong([FromRoute] Guid Id, CancellationToken cancellationToken)
     {
-        return Ok(_reviewService.GetBySong(Id));
+        return Ok(_reviewService.GetBySong(Id, cancellationToken));
     }
 
     [HttpPost]
