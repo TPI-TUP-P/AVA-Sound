@@ -13,9 +13,9 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<User> GetById(Guid id)
+    public async Task<User> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var user = await _context.Users.FindAsync(id);
+        var user = await _context.Users.FindAsync(id, cancellationToken);
         if (user == null)
             throw new Exception($"El usuario con el ID {id} no fue encontrado.");
 
@@ -23,36 +23,36 @@ public class UserRepository : IUserRepository
     }
 
 
-    public async Task<List<User>> GetAll()
+    public async Task<List<User>> GetAll(CancellationToken cancellationToken)
     {
         return await _context.Users
             .OrderByDescending(s => s.DateRegister)
             .Take(30)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<User> Create(User user, CancellationToken cancellationToken)
     {
         _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return user;
     }
 
-    public async Task<User> Update(User user)
+    public async Task<User> Update(User user, CancellationToken cancellationToken)
     {
         _context.Users.Update(user);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return user;
     }
 
-    public async Task Delete(Guid id)
+    public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
         var user = await _context.Users.FindAsync(id);
 
         if (user != null)
         {
             _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

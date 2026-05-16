@@ -18,14 +18,14 @@ public class ReviewService : IReviewService
     }
 
 
-    public async Task<List<GetBySongResponse>> GetBySong(Guid Id)
+    public async Task<List<GetBySongResponse>> GetBySong(Guid Id, CancellationToken cancellationToken)
     // For my future self, the id refers to the song id
     {
         if (Id == Guid.Empty)
         {
             throw new Exception("id is empety");
         }
-        var review = await _review.GetBySong(Id);
+        var review = await _review.GetBySong(Id, cancellationToken);
         // The r refers to reviews
         return review.Select(r => new GetBySongResponse
         {
@@ -58,12 +58,12 @@ public class ReviewService : IReviewService
         {
             throw new ArgumentException("It must have at least 3 characters.");
         }
-        var songExists = await _song.GetById(reviewDto.IdSong);
+        var songExists = await _song.GetById(reviewDto.IdSong, cancellationToken);
         if (songExists is null)
         {
             throw new KeyNotFoundException("Song not found.");
         }
-        var reviewsExist = await _review.GetBySong(reviewDto.IdSong);
+        var reviewsExist = await _review.GetBySong(reviewDto.IdSong, cancellationToken);
         if (reviewsExist.Any(x => x.IdUser == reviewDto.IdUser))
         {
             throw new ArgumentException("Theres already a review done on this song.");
@@ -89,7 +89,7 @@ public class ReviewService : IReviewService
         };
     }
 
-    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest reviewDto)
+    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest reviewDto, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
@@ -99,7 +99,7 @@ public class ReviewService : IReviewService
         {
             throw new Exception("review is empety.");
         }
-        var existReview = await _review.GetById(Id);
+        var existReview = await _review.GetById(Id, cancellationToken);
         if (reviewDto.Comment != null && reviewDto.Comment.Length > 3)
         {
             existReview.Comment = reviewDto.Comment;
@@ -109,19 +109,19 @@ public class ReviewService : IReviewService
             throw new Exception("It must have at least 3 characters.");
         }
 
-        await _review.Update(existReview);
+        await _review.Update(existReview, cancellationToken);
         return new UpdateResponse
         {
             Comment = existReview.Comment
         };
     }
 
-    public Task Delete(Guid Id)
+    public Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new Exception("id empety.");
         }
-        return _review.Delete(Id);
+        return _review.Delete(Id, cancellationToken);
     }
 }

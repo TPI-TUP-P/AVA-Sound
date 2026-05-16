@@ -19,9 +19,9 @@ public class SongController : ControllerBase
 
     [HttpGet("{id}")]
 
-    public ActionResult<GetByIdResponse> GetById(Guid Id)
+    public ActionResult<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        var song = _songService.GetById(Id);
+        var song = _songService.GetById(Id, cancellationToken);
         return Ok(song);
     }
 
@@ -42,18 +42,18 @@ public class SongController : ControllerBase
 
     [HttpPut("{id}")]
 
-    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest songDto)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest songDto, CancellationToken cancellationToken)
     {
-        var song = await _songService.Update(id, songDto);
+        var song = await _songService.Update(id, songDto, cancellationToken);
         return Ok(song);
     }
 
 
     [HttpDelete("{id}")]
 
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        await _songService.Delete(id);
+        await _songService.Delete(id, cancellationToken);
         return NoContent();
     }
 }

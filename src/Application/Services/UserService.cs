@@ -16,12 +16,12 @@ public class UserService : IUserService
         _user = user;
     }
 
-    public async Task<GetByIdResponse> GetById(Guid Id)
+    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
             throw new Exception("El id no existe");
 
-        var user = await _user.GetById(Id);
+        var user = await _user.GetById(Id, cancellationToken);
 
         if (user == null)
             throw new Exception("El usuario no existe");
@@ -39,9 +39,9 @@ public class UserService : IUserService
     }
 
 
-    public async Task<List<GetAllResponse>> GetAll()
+    public async Task<List<GetAllResponse>> GetAll(CancellationToken cancellationToken)
     {
-        var users = await _user.GetAll();
+        var users = await _user.GetAll(cancellationToken);
 
         return users.Select(u => new GetAllResponse
         {
@@ -102,7 +102,7 @@ public class UserService : IUserService
         };
     }
 
-    public async Task<UpdateResponse> Update(Guid id, UpdateRequest userDto)
+    public async Task<UpdateResponse> Update(Guid id, UpdateRequest userDto, CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)
             throw new Exception("Id inválido");
@@ -110,7 +110,7 @@ public class UserService : IUserService
         if (userDto == null)
             throw new Exception("Datos inválidos");
 
-        var user = await _user.GetById(id);
+        var user = await _user.GetById(id, cancellationToken);
 
         if (user == null)
             throw new Exception("el usuario no existe");
@@ -139,7 +139,7 @@ public class UserService : IUserService
             userDto.Role
         );
 
-        await _user.Update(user);
+        await _user.Update(user, cancellationToken);
 
         return new UpdateResponse
         {
@@ -153,17 +153,17 @@ public class UserService : IUserService
     }
 
 
-    public async Task Delete(Guid Id)
+    public async Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
             throw new Exception("el id no existe");
 
-        var user = await _user.GetById(Id);
+        var user = await _user.GetById(Id, cancellationToken);
 
         if (user == null)
             throw new Exception("el usuario no existe");
 
-        await _user.Delete(Id);
+        await _user.Delete(Id, cancellationToken);
     }
 
 

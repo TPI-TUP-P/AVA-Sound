@@ -18,15 +18,15 @@ public class InfoUserController : ControllerBase
         _infouservice = infouserservice;
     }
     [HttpGet("{Id}")]
-    public async Task<ActionResult<GetByIdResponse>> GetById(Guid Id)
+    public async Task<ActionResult<GetByIdResponse>> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        return Ok(await _infouservice.GetById(Id));
+        return Ok(await _infouservice.GetById(Id, cancellationToken));
     }
 
     [HttpPatch("{Id}")]
-    public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest infouserDto)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest infouserDto, CancellationToken cancellationToken)
     {
-        return Ok(await _infouservice.Update(Id, infouserDto));
+        return Ok(await _infouservice.Update(Id, infouserDto, cancellationToken));
     }
     [HttpPost]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest infouserDto, CancellationToken cancellationToken)
@@ -36,9 +36,9 @@ public class InfoUserController : ControllerBase
 
     [HttpDelete("{Id}")]
 
-    public async Task<ActionResult> Delete(Guid Id)
+    public async Task<ActionResult> Delete(Guid Id, CancellationToken cancellationToken)
     {
-        await _infouservice.Delete(Id);
+        await _infouservice.Delete(Id, cancellationToken);
 
         return NoContent();
     }

@@ -19,9 +19,9 @@ public class ReviewController : ControllerBase
 
     [HttpGet("{Id}")]
 
-    public ActionResult<List<GetBySongResponse>> GetBySong([FromRoute] Guid Id)
+    public ActionResult<List<GetBySongResponse>> GetBySong([FromRoute] Guid Id, CancellationToken cancellationToken)
     {
-        return Ok(_reviewService.GetBySong(Id));
+        return Ok(_reviewService.GetBySong(Id, cancellationToken));
     }
 
     [HttpPost]
@@ -33,17 +33,17 @@ public class ReviewController : ControllerBase
 
     [HttpDelete("{Id}")]
 
-    public async Task<ActionResult> Delete(Guid Id)
+    public async Task<ActionResult> Delete(Guid Id, CancellationToken cancellationToken)
     {
-        await _reviewService.Delete(Id);
+        await _reviewService.Delete(Id, cancellationToken);
 
         return Ok();
     }
     [HttpPatch]
 
-    public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest reviewDto)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest reviewDto, CancellationToken cancellationToken)
     {
-        await _reviewService.Update(Id, reviewDto);
+        await _reviewService.Update(Id, reviewDto, cancellationToken);
         return Ok();
     }
 
