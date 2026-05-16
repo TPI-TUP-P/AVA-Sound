@@ -41,7 +41,7 @@ public static class RateLimiterExtensions
                     userId,
                     _ => new FixedWindowRateLimiterOptions
                     {
-                        PermitLimit = settings.UserLimit,
+                        PermitLimit = settings!.UserLimit,
                         Window = TimeSpan.FromMinutes(1)
                     });
             });
@@ -52,7 +52,7 @@ public static class RateLimiterExtensions
                         "heavy",
                         _ => new FixedWindowRateLimiterOptions
                         {
-                            PermitLimit = settings.EndpointLimit,
+                            PermitLimit = settings!.EndpointLimit,
                             Window = TimeSpan.FromMinutes(1)
                         });
                 });

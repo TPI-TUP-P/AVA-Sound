@@ -48,12 +48,18 @@ public class InfoUserService : IInfoUserService
         {
             throw new Exception("empty information.");
         }
+        var existingInfoUser = _InfoUser.GetById(infouserDto.IdUser, cancellationToken);
+        if (existingInfoUser is not null)
+        {
+            throw new Exception("already have info user");
+        }
         var newInfoUser = new InfoUser(
             infouserDto.IdUser,
             infouserDto.ProfilePicture,
             infouserDto.Biography,
             infouserDto.Country
         );
+
         var infouserCreated = await _InfoUser.Create(newInfoUser, cancellationToken);
         return new CreateResponse
         {
