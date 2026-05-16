@@ -65,6 +65,7 @@ Entities/
  User.cs
 Exceptions/
  DomainException.cs
+ NotFoundException.cs
  SongAlredyExistAlbum.cs
 Interfaces/
  IAlbumRepository.cs
