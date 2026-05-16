@@ -13,5 +13,5 @@ public interface IInfoUserService
 
     Task<UpdateResponse> Update(Guid Id, UpdateRequest infouserDto, CancellationToken cancellationToken);
 
-    Task Delete(Guid Id);
+    Task Delete(Guid Id, CancellationToken cancellationToken);
 }

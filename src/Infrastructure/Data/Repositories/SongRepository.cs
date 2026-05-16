@@ -45,14 +45,14 @@ public class SongRepository : ISongRepository
         return song;
     }
 
-    public async Task Delete(Guid id)
+    public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
         var song = await _context.Songs.FindAsync(id);
 
         if (song != null)
         {
             _context.Songs.Remove(song);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

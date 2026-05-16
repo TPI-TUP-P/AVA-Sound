@@ -151,7 +151,7 @@ public class SongService : ISongService
     }
 
 
-    public async Task Delete(Guid Id)
+    public async Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
             throw new Exception("el id no existe");
@@ -161,7 +161,7 @@ public class SongService : ISongService
         if (song == null)
             throw new Exception("la cancion no existe");
 
-        await _song.Delete(Id);
+        await _song.Delete(Id, cancellationToken);
     }
 
 

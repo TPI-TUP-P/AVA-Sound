@@ -51,9 +51,9 @@ public class SongController : ControllerBase
 
     [HttpDelete("{id}")]
 
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        await _songService.Delete(id);
+        await _songService.Delete(id, cancellationToken);
         return NoContent();
     }
 }

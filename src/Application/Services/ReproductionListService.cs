@@ -133,7 +133,7 @@ public class ReproductionListService : IReproductionListService
         await _reproductionList.Update(list, cancellationToken);
     }
 
-    public async Task Delete(Guid id)
+    public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)
             throw new ArgumentException("Id inválido");
@@ -143,7 +143,7 @@ public class ReproductionListService : IReproductionListService
         if (list == null)
             throw new KeyNotFoundException("La lista no existe");
 
-        await _reproductionList.Delete(id);
+        await _reproductionList.Delete(id, cancellationToken);
     }
 
 }

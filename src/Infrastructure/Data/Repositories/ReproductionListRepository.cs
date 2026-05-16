@@ -38,14 +38,14 @@ public class ReproductionsListRepository : IReproductionsListRepository
         return list;
     }
 
-    public async Task Delete(Guid id)
+    public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
         var list = await _context.ReproductionsLists.FindAsync(id);
 
         if (list != null)
         {
             _context.ReproductionsLists.Remove(list);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

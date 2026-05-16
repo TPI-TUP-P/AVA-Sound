@@ -25,14 +25,14 @@ public class InfoUserRepository : IInfoUserRepository
         return infouser;
     }
 
-    public async Task Delete(Guid Id)
+    public async Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         var info = await _context.InfoUsers.FindAsync(Id);
         if (info != null)
         {
             _context.InfoUsers.Remove(info);
         }
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<InfoUser> Update(InfoUser infouser, CancellationToken cancellationToken)

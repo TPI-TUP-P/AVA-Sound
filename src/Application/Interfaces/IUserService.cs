@@ -10,5 +10,5 @@ public interface IUserService
     Task<List<GetAllResponse>> GetAll(CancellationToken cancellationToken);
     Task<CreateResponse> Create(CreateRequest UserDto, CancellationToken cancellationToken);
     Task<UpdateResponse> Update(Guid Id, UpdateRequest UsermDto, CancellationToken cancellationToken);
-    Task Delete(Guid id);
+    Task Delete(Guid id, CancellationToken cancellationToken);
 }

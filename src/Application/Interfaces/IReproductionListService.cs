@@ -10,5 +10,5 @@ public interface IReproductionListService
     Task<CreateResponse> Create(CreateRequest reproductionsListDto, CancellationToken cancellationToken);
     Task AddSong(Guid listId, Guid songId, CancellationToken cancellationToken);
     Task RemoveSong(Guid listId, Guid songId, CancellationToken cancellationToken);
-    Task Delete(Guid id);
+    Task Delete(Guid id, CancellationToken cancellationToken);
 }

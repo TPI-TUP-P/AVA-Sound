@@ -13,5 +13,5 @@ public interface ISongService
     Task<List<GetAllResponse>> GetAll();
     Task<CreateResponse> Create(CreateRequest songDto, CancellationToken cancellationToken);
     Task<UpdateResponse> Update(Guid Id, UpdateRequest songDto, CancellationToken cancellationToken);
-    Task Delete(Guid id);
+    Task Delete(Guid id, CancellationToken cancellationToken);
 }

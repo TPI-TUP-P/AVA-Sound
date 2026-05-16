@@ -51,9 +51,9 @@ public class ReproductionListController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(Guid id)
+    public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        await _reproductionListservice.Delete(id);
+        await _reproductionListservice.Delete(id, cancellationToken);
         return Ok("lista borrada");
     }
 }

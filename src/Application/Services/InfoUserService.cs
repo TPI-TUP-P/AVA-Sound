@@ -87,13 +87,13 @@ public class InfoUserService : IInfoUserService
         };
     }
 
-    public Task Delete(Guid Id)
+    public Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new ArgumentException("Id cannot be empty");
         }
-        return _InfoUser.Delete(Id);
+        return _InfoUser.Delete(Id, cancellationToken);
     }
 
 }

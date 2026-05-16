@@ -116,12 +116,12 @@ public class ReviewService : IReviewService
         };
     }
 
-    public Task Delete(Guid Id)
+    public Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new Exception("id empety.");
         }
-        return _review.Delete(Id);
+        return _review.Delete(Id, cancellationToken);
     }
 }
