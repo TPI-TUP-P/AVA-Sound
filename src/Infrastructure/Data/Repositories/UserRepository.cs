@@ -22,13 +22,21 @@ public class UserRepository : IUserRepository
         return user;
     }
 
+    
 
-    public async Task<List<User>> GetAll()
+
+    public async Task<List<User>> GetAll(int page, int pageSize)
     {
         return await _context.Users
-            .OrderByDescending(s => s.DateRegister)
-            .Take(30)
-            .ToListAsync();
+        .OrderBy(x => x.Name)
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+    }   
+
+    public async Task<int> Count()
+    {
+        return await _context.Users.CountAsync();
     }
 
     public async Task<User> Create(User user, CancellationToken cancellationToken)

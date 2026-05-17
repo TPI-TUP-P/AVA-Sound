@@ -39,20 +39,37 @@ public class UserService : IUserService
     }
 
 
-    public async Task<List<GetAllResponse>> GetAll()
+    public async Task<PagerResponse<GetByIdResponse>> GetAll(PagerRequest pagerRequest)
     {
-        var users = await _user.GetAll();
+        var users = await _user.GetAll(pagerRequest.Page, pagerRequest.PageSize);
 
-        return users.Select(u => new GetAllResponse
+        var totalRecords = await _user.Count();
+
+        var response = new PagerResponse<GetByIdResponse>
         {
-            Name = u.Name,
-            Surname = u.Surname,
-            Email = u.Email,
-            IsArtista = u.IsArtista,
-            DateRegister = u.DateRegister,
-            Role = u.Role
-        }).ToList();
+            Users = users.Select(x => new GetByIdResponse
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Surname = x.Surname,
+                Email = x.Email,
+                IsArtista = x.IsArtista,
+                Role = x.Role
+            }).ToList(),
+
+            Page = pagerRequest.Page,
+
+            PageSize = pagerRequest.PageSize,
+
+            TotalRecords = totalRecords,
+
+            TotalPages = (int)Math.Ceiling(
+                totalRecords / (double)pagerRequest.PageSize)
+        };
+
+        return response;
     }
+   
 
     public async Task<CreateResponse> Create(CreateRequest userDto, CancellationToken cancellationToken)
     {
