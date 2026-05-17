@@ -26,13 +26,24 @@ public class UserController : ControllerBase
         return Ok(user);
     }
 
-    [HttpGet]
 
-    public async Task<ActionResult<List<GetAllResponse>>> GetAll(CancellationToken cancellationToken)
-    {
-        var users = await _userService.GetAll(cancellationToken);
-        return Ok(users);
-    }
+    [HttpGet]
+    public async Task<ActionResult<PagerResponse<GetByIdResponse>>> GetAll([FromQuery] PagerRequest pagerRequest)
+{
+    var result = await _userService.GetAll(pagerRequest);
+
+    return Ok(result);
+}
+
+
+
+    // [HttpGet]
+
+    // public async Task<ActionResult<List<GetAllResponse>>> GetAll()
+    // {
+    //     var users = await _userService.GetAll();
+    //     return Ok(users);
+    // }
 
     [HttpPost]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest userDto, CancellationToken cancellationToken)
