@@ -1,6 +1,6 @@
 
-using Application.DTOs.User.request;
-using Application.DTOs.User.response;
+using Application.DTOs.User.Request;
+using Application.DTOs.User.Response;
 using Application.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -16,12 +16,35 @@ public class UserService : IUserService
         _user = user;
     }
 
-    public async Task<GetByIdResponse> GetById(Guid Id)
+
+
+    public async Task<GetByIdResponse> GetByEmail(string email, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            throw new Exception("El email es obligatorio");
+
+        var user = await _user.GetByEmail(email, cancellationToken);
+
+        if (user is null)
+            throw new Exception("El usuario no existe");
+
+        return new GetByIdResponse
+        {
+            Name = user.Name,
+            Surname = user.Surname,
+            Email = user.Email,
+            IsArtist = user.IsArtist,
+            DateRegister = user.DateRegister,
+            Role = user.Role
+        };
+    }
+    
+    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
             throw new Exception("El id no existe");
 
-        var user = await _user.GetById(Id);
+        var user = await _user.GetById(Id, cancellationToken);
 
         if (user == null)
             throw new Exception("El usuario no existe");
@@ -31,7 +54,7 @@ public class UserService : IUserService
             Name = user.Name,
             Surname = user.Surname,
             Email = user.Email,
-            IsArtista = user.IsArtista,
+            IsArtist = user.IsArtist,
             DateRegister = user.DateRegister,
             Role = user.Role
 
@@ -102,7 +125,7 @@ public class UserService : IUserService
             userDto.Surname,
             userDto.Email,
             userDto.Password,
-            userDto.IsArtista,
+            userDto.IsArtist,
             userDto.Role
         );
 
@@ -113,13 +136,13 @@ public class UserService : IUserService
             Name = user.Name,
             Surname = user.Surname,
             Email = user.Email,
-            IsArtista = user.IsArtista,
+            IsArtist = user.IsArtist,
             DateRegister = user.DateRegister,
             Role = user.Role
         };
     }
 
-    public async Task<UpdateResponse> Update(Guid id, UpdateRequest userDto)
+    public async Task<UpdateResponse> Update(Guid id, UpdateRequest userDto, CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)
             throw new Exception("Id inválido");
@@ -127,7 +150,7 @@ public class UserService : IUserService
         if (userDto == null)
             throw new Exception("Datos inválidos");
 
-        var user = await _user.GetById(id);
+        var user = await _user.GetById(id, cancellationToken);
 
         if (user == null)
             throw new Exception("el usuario no existe");
@@ -152,11 +175,11 @@ public class UserService : IUserService
             userDto.Surname,
             userDto.Email,
             userDto.Password,
-            userDto.IsArtista,
+            userDto.IsArtist,
             userDto.Role
         );
 
-        await _user.Update(user);
+        await _user.Update(user, cancellationToken);
 
         return new UpdateResponse
         {
@@ -164,23 +187,23 @@ public class UserService : IUserService
             Surname = user.Surname,
             Email = user.Email,
             Password = user.Password,
-            IsArtista = user.IsArtista,
+            IsArtist = user.IsArtist,
             Role = user.Role
         };
     }
 
 
-    public async Task Delete(Guid Id)
+    public async Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
             throw new Exception("el id no existe");
 
-        var user = await _user.GetById(Id);
+        var user = await _user.GetById(Id, cancellationToken);
 
         if (user == null)
             throw new Exception("el usuario no existe");
 
-        await _user.Delete(Id);
+        await _user.Delete(Id, cancellationToken);
     }
 
 

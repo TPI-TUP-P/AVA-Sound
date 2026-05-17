@@ -24,9 +24,9 @@ public class AlbumController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<GetByIdResponse> GetById(Guid id)
+    public ActionResult<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var album = _albumService.GetById(id);
+        var album = _albumService.GetById(id, cancellationToken);
 
         return Ok(album);
     }
@@ -41,33 +41,33 @@ public class AlbumController : ControllerBase
     }
 
 
-    [HttpPost ]
+    [HttpPost]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest albumDto, CancellationToken cancellationToken)
     {
-       return await _albumService.Create(albumDto, cancellationToken);
+        return await _albumService.Create(albumDto, cancellationToken);
 
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest albumDto)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest albumDto, CancellationToken cancellationToken)
     {
-        return await _albumService.Update(id, albumDto);
+        return await _albumService.Update(id, albumDto, cancellationToken);
 
     }
 
 
     [HttpPost("{id}/add-song/{idSong}")]
-    public async Task<ActionResult<GetByIdResponse>> AddSong(Guid id, Guid idSong)
+    public async Task<ActionResult<GetByIdResponse>> AddSong(Guid id, Guid idSong, CancellationToken cancellationToken)
     {
         try
         {
-            var result = await _albumService.AddSong(id, idSong);
-            return CreatedAtAction(nameof(GetById), new {id}, result
+            var result = await _albumService.AddSong(id, idSong, cancellationToken);
+            return CreatedAtAction(nameof(GetById), new { id }, result
             );
-            
+
         }
-       
-        catch(Exception ex)
+
+        catch (Exception ex)
         {
             return this.StatusCode(500, ex.Message);
         }
@@ -78,10 +78,10 @@ public class AlbumController : ControllerBase
 
     [HttpDelete("{id}")]
 
-    public async Task<ActionResult> Delete(Guid id)
+    public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
 
-        await _albumService.Delete(id);
+        await _albumService.Delete(id, cancellationToken);
         return NoContent();
     }
 

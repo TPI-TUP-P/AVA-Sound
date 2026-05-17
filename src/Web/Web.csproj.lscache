@@ -57,12 +57,16 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 [sourceFiles]
 Controllers/
  AlbumController.cs
+ AuthController.cs
  InfoUserController.cs
  ReproductionListController.cs
  ReviewController.cs
  SongController.cs
  StatisticController.cs
  UserController.cs
+Middleware/
+ AuthMiddleware.cs
+ GlobalExceptionHandlingMIddleware.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  Web.AssemblyInfo.cs

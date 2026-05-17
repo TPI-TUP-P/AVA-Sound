@@ -6,9 +6,9 @@ namespace Application.Interfaces;
 
 public interface IReproductionListService
 {
-    Task<GetByIdResponse> GetById(Guid id);
+    Task<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken);
     Task<CreateResponse> Create(CreateRequest reproductionsListDto, CancellationToken cancellationToken);
-    Task AddSong(Guid listId, Guid songId);
-    Task RemoveSong(Guid listId, Guid songId);
-    Task Delete(Guid id);
+    Task AddSong(Guid listId, Guid songId, CancellationToken cancellationToken);
+    Task RemoveSong(Guid listId, Guid songId, CancellationToken cancellationToken);
+    Task Delete(Guid id, CancellationToken cancellationToken);
 }

@@ -28,14 +28,14 @@ public class StatisticService : IStatisticService
     }
 
 
-    public async Task<GetByIdResponse> GetById(Guid Id)
+    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new Exception("Id es vacio");
         }
 
-        var statistic = await _statistic.GetById(Id);
+        var statistic = await _statistic.GetById(Id, cancellationToken);
 
         if (statistic == null)
         {
@@ -124,9 +124,9 @@ public class StatisticService : IStatisticService
     //     }
 
 
-    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest statisticDto)
+    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest statisticDto, CancellationToken cancellationToken)
     {
-        var existingAlbum = await _statistic.GetById(Id);
+        var existingAlbum = await _statistic.GetById(Id, cancellationToken);
         if (existingAlbum == null)
         {
             throw new Exception("El album no existe");
@@ -145,7 +145,7 @@ public class StatisticService : IStatisticService
 
         await _statistic.Update(
 
-            existingAlbum
+            existingAlbum, cancellationToken
         );
 
 
@@ -160,13 +160,13 @@ public class StatisticService : IStatisticService
         );
     }
 
-    public async Task Delete(Guid Id)
+    public async Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new Exception("Id es vacio");
         }
 
-        await _statistic.Delete(Id);
+        await _statistic.Delete(Id, cancellationToken);
     }
 }

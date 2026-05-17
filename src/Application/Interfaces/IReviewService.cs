@@ -6,8 +6,8 @@ using Application.DTOs.Review.Response;
 
 public interface IReviewService
 {
-    Task<List<GetBySongResponse>> GetBySong(Guid Id);
+    Task<List<GetBySongResponse>> GetBySong(Guid Id, CancellationToken cancellationToken);
     Task<CreateResponse> Create(CreateRequest reviewDto, CancellationToken cancellationToken);
-    Task<UpdateResponse> Update(Guid Id, UpdateRequest reviewDto);
-    Task Delete(Guid id);
+    Task<UpdateResponse> Update(Guid Id, UpdateRequest reviewDto, CancellationToken cancellationToken);
+    Task Delete(Guid id, CancellationToken cancellationToken);
 }
