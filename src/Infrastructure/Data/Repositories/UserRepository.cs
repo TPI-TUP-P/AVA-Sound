@@ -22,7 +22,21 @@ public class UserRepository : IUserRepository
         return user;
     }
 
+    
 
+
+    public async Task<List<User>> GetAll(int page, int pageSize)
+    {
+        return await _context.Users
+        .OrderBy(x => x.Name)
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+    }   
+
+    public async Task<int> Count()
+    {
+        return await _context.Users.CountAsync();
     public async Task<User> GetByEmail(string email, CancellationToken cancellationToken)
     {   
         return await _context.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
