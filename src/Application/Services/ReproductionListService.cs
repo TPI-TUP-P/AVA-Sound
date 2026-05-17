@@ -18,14 +18,14 @@ public class ReproductionListService : IReproductionListService
         _song = song;
     }
 
-    public async Task<GetByIdResponse> GetById(Guid Id)
+    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new Exception("Id es vacio");
         }
 
-        var reproductionsList = await _reproductionList.GetById(Id);
+        var reproductionsList = await _reproductionList.GetById(Id, cancellationToken);
 
         if (reproductionsList == null)
         {
@@ -86,7 +86,7 @@ public class ReproductionListService : IReproductionListService
         };
     }
 
-    public async Task AddSong(Guid listId, Guid songId)
+    public async Task AddSong(Guid listId, Guid songId, CancellationToken cancellationToken)
     {
         if (listId == Guid.Empty)
             throw new ArgumentException("listId inválido");
@@ -94,23 +94,23 @@ public class ReproductionListService : IReproductionListService
         if (songId == Guid.Empty)
             throw new ArgumentException("songId inválido");
 
-        var list = await _reproductionList.GetById(listId);
+        var list = await _reproductionList.GetById(listId, cancellationToken);
 
         if (list == null)
             throw new KeyNotFoundException("La lista no existe");
 
-        var song = await _song.GetById(songId);
+        var song = await _song.GetById(songId, cancellationToken);
 
         if (song == null)
             throw new KeyNotFoundException("La canción no existe");
 
         list.AddSong(song);
 
-        await _reproductionList.Update(list);
+        await _reproductionList.Update(list, cancellationToken);
     }
 
 
-    public async Task RemoveSong(Guid listId, Guid songId)
+    public async Task RemoveSong(Guid listId, Guid songId, CancellationToken cancellationToken)
     {
         if (listId == Guid.Empty)
             throw new ArgumentException("listId inválido");
@@ -118,7 +118,7 @@ public class ReproductionListService : IReproductionListService
         if (songId == Guid.Empty)
             throw new ArgumentException("songId inválido");
 
-        var list = await _reproductionList.GetById(listId);
+        var list = await _reproductionList.GetById(listId, cancellationToken);
 
         if (list == null)
             throw new KeyNotFoundException("La lista no existe");
@@ -130,20 +130,20 @@ public class ReproductionListService : IReproductionListService
 
         list.RemoveSong(song);
 
-        await _reproductionList.Update(list);
+        await _reproductionList.Update(list, cancellationToken);
     }
 
-    public async Task Delete(Guid id)
+    public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)
             throw new ArgumentException("Id inválido");
 
-        var list = await _reproductionList.GetById(id);
+        var list = await _reproductionList.GetById(id, cancellationToken);
 
         if (list == null)
             throw new KeyNotFoundException("La lista no existe");
 
-        await _reproductionList.Delete(id);
+        await _reproductionList.Delete(id, cancellationToken);
     }
 
 }

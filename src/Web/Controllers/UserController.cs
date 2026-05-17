@@ -1,6 +1,6 @@
 
-using Application.DTOs.User.request;
-using Application.DTOs.User.response;
+using Application.DTOs.User.Request;
+using Application.DTOs.User.Response;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,9 +20,9 @@ public class UserController : ControllerBase
 
     [HttpGet("{id}")]
 
-    public ActionResult<GetByIdResponse> GetById(Guid Id)
+    public ActionResult<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        var user = _userService.GetById(Id);
+        var user = _userService.GetById(Id, cancellationToken);
         return Ok(user);
     }
 
@@ -54,18 +54,18 @@ public class UserController : ControllerBase
 
     [HttpPut("{id}")]
 
-    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest userDto)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest userDto, CancellationToken cancellationToken)
     {
-        var user = await _userService.Update(id, userDto);
+        var user = await _userService.Update(id, userDto, cancellationToken);
         return Ok(user);
     }
 
 
     [HttpDelete("{id}")]
 
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        await _userService.Delete(id);
+        await _userService.Delete(id, cancellationToken);
         return NoContent();
     }
 }

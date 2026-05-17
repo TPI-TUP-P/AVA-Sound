@@ -13,19 +13,19 @@ public class ReviewRepository : IReviewRepository
     {
         _context = context;
     }
-    public async Task<List<Review>> GetBySong(Guid Id)
+    public async Task<List<Review>> GetBySong(Guid Id, CancellationToken cancellationToken)
     {
         return await _context.Reviews
         .Where(r => r.IdSong == Id)
-        .ToListAsync();
+        .ToListAsync(cancellationToken);
 
     }
-    public async Task<Review> GetById(Guid Id)
+    public async Task<Review> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        return await _context.Reviews.FirstAsync(r => r.Id == Id);
+        return await _context.Reviews.FirstAsync(r => r.Id == Id, cancellationToken);
 
     }
-    public async Task<Review> Update(Review review)
+    public async Task<Review> Update(Review review, CancellationToken cancellationToken)
     {
         var existing = await _context.Reviews.FindAsync(review.Id);
 
@@ -34,7 +34,7 @@ public class ReviewRepository : IReviewRepository
             throw new KeyNotFoundException($"La reseña con el ID {review.Id} no fue encontrada.");
         }
         existing.Comment = review.Comment;
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return review;
     }
 
@@ -46,13 +46,13 @@ public class ReviewRepository : IReviewRepository
         await _context.SaveChangesAsync(cancellationToken);
         return review;
     }
-    public async Task Delete(Guid Id)
+    public async Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         var review = await _context.Reviews.FindAsync(Id);
         if (review != null)
         {
             _context.Reviews.Remove(review);
         }
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

@@ -13,9 +13,9 @@ public class ReproductionsListRepository : IReproductionsListRepository
         _context = context;
     }
 
-    public async Task<ReproductionsList> GetById(Guid id)
+    public async Task<ReproductionsList> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var lista = await _context.ReproductionsLists.FindAsync(id);
+        var lista = await _context.ReproductionsLists.FindAsync(id, cancellationToken);
         // .Include(r => r.Songs)
         // .FirstOrDefaultAsync(r => r.Id == id);
         if (lista == null)
@@ -31,21 +31,21 @@ public class ReproductionsListRepository : IReproductionsListRepository
         return list;
     }
 
-    public async Task<ReproductionsList> Update(ReproductionsList list)
+    public async Task<ReproductionsList> Update(ReproductionsList list, CancellationToken cancellationToken)
     {
         _context.ReproductionsLists.Update(list);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return list;
     }
 
-    public async Task Delete(Guid id)
+    public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
         var list = await _context.ReproductionsLists.FindAsync(id);
 
         if (list != null)
         {
             _context.ReproductionsLists.Remove(list);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }
