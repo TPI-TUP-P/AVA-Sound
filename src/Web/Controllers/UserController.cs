@@ -1,5 +1,7 @@
 
+using Application.DTOs.User.request;
 using Application.DTOs.User.Request;
+using Application.DTOs.User.response;
 using Application.DTOs.User.Response;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -28,9 +30,9 @@ public class UserController : ControllerBase
 
 
     [HttpGet]
-    public async Task<ActionResult<PagerResponse<GetByIdResponse>>> GetAll([FromQuery] PagerRequest pagerRequest)
+    public async Task<ActionResult<PagerResponse<GetByIdResponse>>> GetAll([FromQuery] PagerRequest pagerRequest, CancellationToken cancellationToken)
 {
-    var result = await _userService.GetAll(pagerRequest);
+    var result = await _userService.GetAll(pagerRequest, cancellationToken);
 
     return Ok(result);
 }
