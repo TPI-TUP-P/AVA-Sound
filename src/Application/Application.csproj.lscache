@@ -2,10 +2,12 @@ version=1
 
 # This file caches language service data to improve the performance of C# Dev Kit.
 # It is not intended for manual editing. It can safely be deleted and will be
-# regenerated automatically. For more information, see https://aka.ms/lscache
+# regenerated automatically.
 #
-# To control where cache files are stored, use the following VS Code setting:
-#   "dotnet.projectsystem.cacheInProjectFolder": true
+# To exclude from version control, add *.lscache to your .gitignore file.
+#
+# To disable caching, add the following to your VS Code settings:
+#   "dotnet.projectsystem.enableLanguageServiceCache": false
 
 [project]
 language=C#
@@ -31,7 +33,7 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 /noconfig
 /unsafe-
 /checked-
-/nowarn:1701,1702,1701,1702,8002
+/nowarn:1701,1702,1701,1702
 /fullpaths
 /nostdlib+
 /errorreport:prompt
@@ -44,8 +46,8 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 /debug:portable
 /filealign:512
 /optimize-
-/out:obj\Debug\net10.0\Application.dll
-/refout:obj\Debug\net10.0\refint\Application.dll
+/out:obj/Debug/net10.0/Application.dll
+/refout:obj/Debug/net10.0/refint/Application.dll
 /target:library
 /warnaserror-
 /utf8output
@@ -55,90 +57,14 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 
 [sourceFiles]
 Class1.cs
-DTOs/Album/Request/
- CreateRequest.cs
- UpdateRequest.cs
-DTOs/Album/Response/
- CreateResponse.cs
- GetAllReponse.cs
- GetByIdResponse.cs
- UpdateResponse.cs
-DTOs/InfoUser/Request/
- CreateRequest.cs
- UpdateRequest.cs
-DTOs/InfoUser/Response/
- CreateResponse.cs
- GetByIdResponse.cs
- UpdateResponse.cs
-DTOs/ReproductionList/Request/
- AddSongRequest.cs
- CreateRequest.cs
- DeleteSongRequest.cs
-DTOs/ReproductionList/Response/
- AddSongResponse.cs
- CreateResponse.cs
- DeleteSongResponse.cs
- GetByIdResponse.cs
- SongResponse.cs
-DTOs/Review/Request/
- CreateRequest.cs
- UpdateRequest.cs
-DTOs/Review/Response/
- CreateResponse.cs
- GetBySong.cs
- UpdateResponse.cs
-DTOs/Song/request/
- CreateRequest.cs
- UpdateRequest.cs
-DTOs/Song/response/
- CreateResponse.cs
- GetAllResponse.cs
- GetByAlbumResponse.cs
- GetByIdResponse.cs
- GetByIdUserResponse.cs
- UpdateResponse.cs
-DTOs/Statistics/Request/
- CreateRequest.cs
- UpdateRequest.cs
-DTOs/Statistics/Response/
- CreateResponse.cs
- GetAllResponse.cs
- GetByIdResponse.cs
- UpdateResponse.cs
-DTOs/User/request/
- CreateRequest.cs
- PagerRequest.cs
- UpdateRequest.cs
-DTOs/User/response/
- CreateResponse.cs
- GetAllResponse.cs
- GetByIdResponse.cs
- PagerResponse.cs
- UpdateResponse.cs
-Interfaces/
- IAlbumService.cs
- IInfoUserService.cs
- IReproductionListService.cs
- IReviewService.cs
- ISongService.cs
- IStatisticService.cs
- IUserService.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  Application.AssemblyInfo.cs
  Application.GlobalUsings.g.cs
-Services/
- AlbumService.cs
- InfoUserService.cs
- ReproductionListService.cs
- ReviewService.cs
- SongService.cs
- StatisticService.cs
- UserService.cs
 
 [metadataReferences]
 ../Domain/obj/Debug/net10.0/ref/Domain.dll
-<DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.8/ref/net10.0/
+<DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.6/ref/net10.0/
  Microsoft.CSharp.dll
  Microsoft.VisualBasic.Core.dll
  Microsoft.VisualBasic.dll
@@ -308,17 +234,17 @@ Services/
  WindowsBase.dll
 
 [analyzerReferences]
-<DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.8/analyzers/dotnet/cs/
+<DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.6/analyzers/dotnet/cs/
  Microsoft.Interop.ComInterfaceGenerator.dll
  Microsoft.Interop.JavaScript.JSImportGenerator.dll
  Microsoft.Interop.LibraryImportGenerator.dll
  Microsoft.Interop.SourceGeneration.dll
  System.Text.Json.SourceGeneration.dll
  System.Text.RegularExpressions.Generator.dll
-<DOTNET>/sdk/10.0.204/Sdks/Microsoft.NET.Sdk/analyzers/
+<DOTNET>/sdk/10.0.106/Sdks/Microsoft.NET.Sdk/analyzers/
  Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll
  Microsoft.CodeAnalysis.NetAnalyzers.dll
 
 [analyzerConfigFiles]
-<DOTNET>/sdk/10.0.204/Sdks/Microsoft.NET.Sdk/analyzers/build/config/analysislevel_10_default.globalconfig
+<DOTNET>/sdk/10.0.106/Sdks/Microsoft.NET.Sdk/analyzers/build/config/analysislevel_10_default.globalconfig
 obj/Debug/net10.0/Application.GeneratedMSBuildEditorConfig.editorconfig
