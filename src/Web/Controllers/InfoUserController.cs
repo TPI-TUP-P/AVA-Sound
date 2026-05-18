@@ -1,0 +1,45 @@
+using Application.Interfaces;
+using Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
+
+using Application.DTOs.InfoUser.Request;
+using Application.DTOs.InfoUser.Response;
+namespace Web.Controllers;
+
+[Route("api/infoUser")]
+[ApiController]
+
+public class InfoUserController : ControllerBase
+{
+    private readonly IInfoUserService _infouservice;
+
+    public InfoUserController(IInfoUserService infouserservice)
+    {
+        _infouservice = infouserservice;
+    }
+    [HttpGet("{Id}")]
+    public async Task<ActionResult<GetByIdResponse>> GetById(Guid Id, CancellationToken cancellationToken)
+    {
+        return Ok(await _infouservice.GetById(Id, cancellationToken));
+    }
+
+    [HttpPatch("{Id}")]
+    public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest infouserDto, CancellationToken cancellationToken)
+    {
+        return Ok(await _infouservice.Update(Id, infouserDto, cancellationToken));
+    }
+    [HttpPost]
+    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest infouserDto, CancellationToken cancellationToken)
+    {
+        return await _infouservice.Create(infouserDto, cancellationToken);
+    }
+
+    [HttpDelete("{Id}")]
+
+    public async Task<ActionResult> Delete(Guid Id, CancellationToken cancellationToken)
+    {
+        await _infouservice.Delete(Id, cancellationToken);
+
+        return NoContent();
+    }
+}

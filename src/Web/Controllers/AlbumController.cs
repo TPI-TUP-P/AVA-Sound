@@ -1,0 +1,88 @@
+// using Microsoft.AspNetCore.Components;
+using Application.DTOs.Album.Request;
+using Application.DTOs.Album.Response;
+
+using Application.Interfaces;
+using Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Web.Controllers;
+
+
+
+
+[Route("api/album")]
+[ApiController]
+
+public class AlbumController : ControllerBase
+{
+    private readonly IAlbumService _albumService;
+
+    public AlbumController(IAlbumService albumService)
+    {
+        _albumService = albumService;
+    }
+
+    [HttpGet("{id}")]
+    public ActionResult<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken)
+    {
+        var album = _albumService.GetById(id, cancellationToken);
+
+        return Ok(album);
+    }
+
+
+    [HttpGet]
+    public async Task<ActionResult<List<GetAllResponse>>> GetAll()
+    {
+
+        var albums = await _albumService.GetAll();
+        return Ok(albums);
+    }
+
+
+    [HttpPost]
+    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest albumDto, CancellationToken cancellationToken)
+    {
+        return await _albumService.Create(albumDto, cancellationToken);
+
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest albumDto, CancellationToken cancellationToken)
+    {
+        return await _albumService.Update(id, albumDto, cancellationToken);
+
+    }
+
+
+    [HttpPost("{id}/add-song/{idSong}")]
+    public async Task<ActionResult<GetByIdResponse>> AddSong(Guid id, Guid idSong, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await _albumService.AddSong(id, idSong, cancellationToken);
+            return CreatedAtAction(nameof(GetById), new { id }, result
+            );
+
+        }
+
+        catch (Exception ex)
+        {
+            return this.StatusCode(500, ex.Message);
+        }
+    }
+
+
+
+
+    [HttpDelete("{id}")]
+
+    public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
+    {
+
+        await _albumService.Delete(id, cancellationToken);
+        return NoContent();
+    }
+
+}
