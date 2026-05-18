@@ -6,7 +6,6 @@
 # dotenv files
 .env
 
-.lscache
 # User-specific files
 *.rsuser
 *.suo
@@ -220,11 +219,6 @@ csx/
 # Microsoft Azure Emulator
 ecf/
 rcf/
-
-# SQLite databases
-*.db
-*.db-shm
-*.db-wal
 
 *.lscache
 
