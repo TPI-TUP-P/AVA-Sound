@@ -25,31 +25,26 @@ public class UserRepository : IUserRepository
     
 
 
-    public async Task<List<User>> GetAll(int page, int pageSize)
+    public async Task<List<User>> GetAll(int page, int pageSize, CancellationToken cancellationToken)
     {
         return await _context.Users
         .OrderBy(x => x.Name)
         .Skip((page - 1) * pageSize)
         .Take(pageSize)
-        .ToListAsync();
+        .ToListAsync(cancellationToken);
     }   
 
     public async Task<int> Count()
     {
         return await _context.Users.CountAsync();
-    public async Task<User> GetByEmail(string email, CancellationToken cancellationToken)
+    }
+
+    public async Task<User?> GetByEmail(string email, CancellationToken cancellationToken)
     {   
         return await _context.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
         
     }
 
-    public async Task<List<User>> GetAll(CancellationToken cancellationToken)
-    {
-        return await _context.Users
-            .OrderByDescending(s => s.DateRegister)
-            .Take(30)
-            .ToListAsync(cancellationToken);
-    }
 
     public async Task<User> Create(User user, CancellationToken cancellationToken)
     {
