@@ -1,5 +1,7 @@
 
+using Application.DTOs.User.request;
 using Application.DTOs.User.Request;
+using Application.DTOs.User.response;
 using Application.DTOs.User.Response;
 using Application.Interfaces;
 using Domain.Entities;
@@ -62,9 +64,9 @@ public class UserService : IUserService
     }
 
 
-    public async Task<PagerResponse<GetByIdResponse>> GetAll(PagerRequest pagerRequest)
+    public async Task<PagerResponse<GetByIdResponse>> GetAll(PagerRequest pagerRequest,CancellationToken cancellationToken)
     {
-        var users = await _user.GetAll(pagerRequest.Page, pagerRequest.PageSize);
+        var users = await _user.GetAll(pagerRequest.Page, pagerRequest.PageSize, cancellationToken);
 
         var totalRecords = await _user.Count();
 
@@ -76,7 +78,7 @@ public class UserService : IUserService
                 Name = x.Name,
                 Surname = x.Surname,
                 Email = x.Email,
-                IsArtista = x.IsArtista,
+                IsArtist = x.IsArtist,
                 Role = x.Role
             }).ToList(),
 
