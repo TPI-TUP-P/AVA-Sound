@@ -1,13 +1,12 @@
 using Application.Interfaces;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 using Application.DTOs.InfoUser.Request;
 using Application.DTOs.InfoUser.Response;
 namespace Web.Controllers;
+[ApiController]
 
 [Route("api/infoUser")]
-[ApiController]
 
 public class InfoUserController : ControllerBase
 {

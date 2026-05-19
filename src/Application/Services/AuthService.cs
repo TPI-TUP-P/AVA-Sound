@@ -23,6 +23,11 @@ public class AuthService : IAuthService
 
     public async Task<RegisterResponse> Register (RegisterRequest registerRequest, CancellationToken cancellationToken)
     {
+        if (registerRequest.Email == null || registerRequest.Password == null)
+        {
+            throw new Exception("El email y la contraseña son obligatorios");
+        }
+        
         var existingUserEmail = await _userRepository.GetByEmail(registerRequest.Email, cancellationToken);
 
 
@@ -33,6 +38,11 @@ public class AuthService : IAuthService
 
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password);
 
+        if (registerRequest.Name == null || registerRequest.Surname == null || registerRequest.Role == null)
+        {
+            throw new Exception("Todos los campos son obligatorios");
+        }
+        
         var user = new User(
             registerRequest.Name,
             registerRequest.Surname,
@@ -57,6 +67,12 @@ public class AuthService : IAuthService
 
     public async Task<LoginResponse> Login(LoginRequest loginRequest, CancellationToken cancellationToken)
     {
+        if (loginRequest.Email == null || loginRequest.Password == null)
+        {
+            throw new Exception("El email y la contraseña son obligatorios");
+        }
+        
+
         var user = await _userRepository.GetByEmail(loginRequest.Email, cancellationToken);
 
         if (user == null)
