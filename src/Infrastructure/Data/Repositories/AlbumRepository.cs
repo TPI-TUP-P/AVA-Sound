@@ -40,9 +40,10 @@ public class AlbumRepository : IAlbumRepository
         var album = await _context.Albums.FindAsync(id);
         if (album == null)
         {
-            new Exception($"El album con el ID {id} no fue encontrado.");
-
+            new NotFoundException($"El album con el ID {id} no fue encontrado.");
         }
+        
+        
         album.AddSong(song);
 
         await _context.SaveChangesAsync();
