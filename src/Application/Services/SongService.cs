@@ -39,11 +39,15 @@ public class SongService : ISongService
     }
 
 
-    public async Task<List<GetAllResponse>> GetAll()
+    public async Task<PagerSongResponse<GetByIdResponse>> GetAll(PagerRequest pagerRequest, CancellationToken cancellationToken)
     {
-        var songs = await _song.GetAll();
-
-        return songs.Select(s => new GetAllResponse
+        var songs = await _song.GetAll(pagerRequest.Page,pagerRequest.PageSize, cancellationToken);
+        var page = pagerRequest.Page;
+        var pageSize = pagerRequest.PageSize;
+        var songTotal= await _song.Count();
+        var response= new PagerSongResponse<GetByIdResponse>
+        {
+            Songs = songs.Select(s => new GetByIdResponse
         {
             IdArtist = s.IdArtist,
             IdAlbum = s.IdAlbum ?? Guid.Empty,
@@ -53,7 +57,15 @@ public class SongService : ISongService
             AudioBig = s.AudioBig,
             DateUpload = s.DateUpload,
             Views = s.Views
-        }).ToList();
+        }).ToList(),
+
+        Page=page,
+        PageSize=pageSize,
+        SongTotal=songTotal,
+        PageTotal=(int) Math.Ceiling(songTotal/(double)pageSize)
+        };
+        return response;
+        
     }
 
     public async Task<CreateResponse> Create(CreateRequest songDto, CancellationToken cancellationToken)
