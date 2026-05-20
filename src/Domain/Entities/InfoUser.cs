@@ -2,16 +2,16 @@ namespace Domain.Entities;
 
 public class InfoUser
 {
-    public Guid Id { get; private set; }
+    public Guid Id { get; init; }
 
-    public Guid IdUser { get; private set; }
+    public Guid IdUser { get; init; }
 
     public string? ProfilePicture { get; set; }
 
     public string? Biography { get; set; }
     public string? Country { get; set; }
 
-    private InfoUser(){}
+    private InfoUser() { }
 
     public InfoUser(Guid iduser, string profilepicture, string biography, string country)
     {
