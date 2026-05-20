@@ -19,17 +19,17 @@ public class SongController : ControllerBase
 
     [HttpGet("{id}")]
 
-    public ActionResult<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
+    public async Task<ActionResult<GetByIdResponse>> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        var song = _songService.GetById(Id, cancellationToken);
-        return Ok(song);
+        var response = await _songService.GetById(Id, cancellationToken);
+        return Ok(response);
     }
 
     [HttpGet]
 
-    public async Task<ActionResult<List<GetAllResponse>>> GetAll()
+    public async Task<ActionResult<PagerSongResponse<GetByIdResponse>>> GetAll([FromBody] PagerRequest pagerRequest,CancellationToken cancellationToken)
     {
-        var songs = await _songService.GetAll();
+        var songs = await _songService.GetAll(pagerRequest, cancellationToken);
         return Ok(songs);
     }
 
