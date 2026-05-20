@@ -3,6 +3,7 @@ namespace Application.DTOs.Album.Response;
 
 public class CreateResponse
 {
+    public Guid Id {get;  init;}
     public Guid IdArtist {get; private set;}
     public string? Title {get; set;}
     public DateTime ReleasteDate {get; set;}
@@ -10,8 +11,9 @@ public class CreateResponse
     public string? Description {get;set;}
 
 
-    public CreateResponse(Guid idArtist, string? title, DateTime releasteDate, string? frontPage, string? description)
+    public CreateResponse(Guid id,Guid idArtist, string? title, DateTime releasteDate, string? frontPage, string? description)
     {
+        Id = id;
         IdArtist = idArtist;
         Title = title;
         ReleasteDate = releasteDate;

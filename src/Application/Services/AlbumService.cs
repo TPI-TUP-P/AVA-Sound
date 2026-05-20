@@ -56,6 +56,7 @@ public class AlbumService : IAlbumService
         return albums.Select(album => new GetAllResponse
         (
             album.Id,
+            album.IdArtist,
             album.Title,
             album.ReleasteDate,
             album.FrontPage
@@ -68,6 +69,7 @@ public class AlbumService : IAlbumService
         {
             throw new Exception("El album esta vacio");
         }
+
 
         var user = await _user.GetById(idUser, cancellationToken);
 
@@ -92,12 +94,14 @@ public class AlbumService : IAlbumService
 
 
         return new CreateResponse(
-
+            albumCreated.Id,
             albumCreated.IdArtist,
             albumCreated.Title,
             albumCreated.ReleasteDate,
             albumCreated.FrontPage,
             albumCreated.Description
+                
+        
         );
 
 
@@ -110,12 +114,12 @@ public class AlbumService : IAlbumService
         var existingAlbum = await _album.GetById(Id, cancellationToken);
         if (existingAlbum == null)
         {
-            throw new Exception("El album no existe");
+            throw new Exception("The ID is empty");
         }
 
         if (albumDto == null)
         {
-            throw new Exception("El album esta vacio");
+            throw new Exception("The album is empty");
         }
 
         if (albumDto.Title != null)
@@ -162,7 +166,7 @@ public class AlbumService : IAlbumService
         
         if (Id == Guid.Empty)
         {
-            throw new Exception("Id es vacio");
+            throw new Exception("The ID is empty");
         }
 
         return _album.Delete(Id, cancellationToken);
@@ -177,12 +181,12 @@ public class AlbumService : IAlbumService
 
         if(album is null)
         {
-            throw new NotFoundException("El album no existe");
+            throw new NotFoundException("The album does not exist");
         }
 
         if(song is null)
         {
-            throw new NotFoundException("La cancion no existe");
+            throw new NotFoundException("The song doesn't exist");
         }
 
         album.AddSong(song);
