@@ -87,16 +87,20 @@ public class AuthService : IAuthService
             throw new Exception("Invalid credentials");
         }
 
-        var token = _jwtService.GenerateToken(new CreateRequest
+        var createRequest = new CreateRequest(
+            user.Name!,
+            user.Surname!,
+            user.Email!,
+            user.Password!,
+            user.IsArtist,
+            user.Role!
+        )
         {
-            Name = user.Name,
-            Surname = user.Surname,
-            Email = user.Email,
-            Role = user.Role,
-            IsArtist = user.IsArtist
-        }
-        );
+            Id = user.Id
+        };
 
+        var token = _jwtService.GenerateToken(createRequest);
+        
             
 
         return new LoginResponse(

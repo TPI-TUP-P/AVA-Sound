@@ -55,6 +55,7 @@ public class AlbumService : IAlbumService
         return albums.Select(album => new GetAllResponse
         (
             album.Id,
+            album.IdArtist,
             album.Title,
             album.ReleasteDate,
             album.FrontPage

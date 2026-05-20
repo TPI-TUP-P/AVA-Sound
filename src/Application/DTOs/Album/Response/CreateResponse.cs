@@ -11,9 +11,9 @@ public class CreateResponse
     public string? Description {get;set;}
 
 
-    public CreateResponse(Guid Id,Guid idArtist, string? title, DateTime releasteDate, string? frontPage, string? description)
+    public CreateResponse(Guid id,Guid idArtist, string? title, DateTime releasteDate, string? frontPage, string? description)
     {
-        Id = Id;
+        Id = id;
         IdArtist = idArtist;
         Title = title;
         ReleasteDate = releasteDate;
