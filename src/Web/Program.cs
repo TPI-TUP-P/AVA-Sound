@@ -5,11 +5,13 @@ using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Web.Extensions;
 using Core.Middlewares;
 using Application.Interfaces.IJwtService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.RateLimiting;
 
 using System.Text;
 
@@ -24,25 +26,25 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
-builder.Services.AddSwaggerGen(setupAct=>
+builder.Services.AddSwaggerGen(setupAct =>
 {
-    setupAct.CustomSchemaIds(type=> type.FullName);
+    setupAct.CustomSchemaIds(type => type.FullName);
 
-     setupAct.SwaggerDoc("v1", new OpenApiInfo 
-    { 
-        Title = "Mi API", 
+    setupAct.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Mi API",
         Version = "v1",
         Description = "API para AVA-Sound"
     });
-    
-   setupAct.AddSecurityDefinition("ApiBearerAuth", new OpenApiSecurityScheme()
-   {
-       Type = SecuritySchemeType.Http,
-       Scheme = "Bearer",
-    BearerFormat= "JWT",
-    Description = "Acá debe pegar el token"
-     
-   }); 
+
+    setupAct.AddSecurityDefinition("ApiBearerAuth", new OpenApiSecurityScheme()
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        Description = "Acá debe pegar el token"
+
+    });
 
     setupAct.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -57,7 +59,7 @@ builder.Services.AddSwaggerGen(setupAct=>
             },
             new List<string>()
         }
-        
+
     }
     );
 });
@@ -94,6 +96,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ISongRepository, SongRepository>();
 builder.Services.AddScoped<ISongService, SongService>();
 
+builder.Services.AddCustomRateLimit(
+    builder.Configuration);
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 
@@ -102,7 +106,7 @@ builder.Services.AddAuthentication(
     JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
-        opt.TokenValidationParameters = 
+        opt.TokenValidationParameters =
         new TokenValidationParameters
         {
             ValidateIssuer = false,
@@ -111,8 +115,8 @@ builder.Services.AddAuthentication(
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not found")))
-                
-        };      
+
+        };
     });
 
 
@@ -130,6 +134,9 @@ if (app.Environment.IsDevelopment())
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
 });
 }
+
+app.UseRateLimiter();
+app.MapControllers();
 
 
 
