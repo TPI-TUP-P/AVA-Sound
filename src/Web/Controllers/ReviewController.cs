@@ -8,6 +8,7 @@ namespace Web.Controllers;
 
 [Route("api/review")]
 [ApiController]
+
 [EnableRateLimiting("HeavyEndpoint")]
 public class ReviewController : ControllerBase
 {
@@ -27,7 +28,7 @@ public class ReviewController : ControllerBase
     }
 
     [HttpPost]
-
+    [EnableRateLimiting("PerUser")]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest reviewDto, CancellationToken cancellationToken)
     {
         await _reviewService.Create(reviewDto, cancellationToken);
@@ -43,7 +44,7 @@ public class ReviewController : ControllerBase
         return Ok();
     }
     [HttpPatch]
-
+    [EnableRateLimiting("PerUser")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest reviewDto, CancellationToken cancellationToken)
     {
         await _reviewService.Update(Id, reviewDto, cancellationToken);
