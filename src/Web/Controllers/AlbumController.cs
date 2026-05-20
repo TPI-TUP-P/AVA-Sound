@@ -59,8 +59,8 @@ public class AlbumController : ControllerBase
         var idUser = Guid.Parse(idUserToken);
      
         
-        return await _albumService.Create(albumDto, idUser ,cancellationToken);
-
+        var album=  await _albumService.Create(albumDto, idUser ,cancellationToken);
+        return CreatedAtAction(nameof(GetById),new { id = album.Id }, album);
     }
 
     [Authorize]
