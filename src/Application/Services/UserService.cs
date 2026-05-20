@@ -68,7 +68,7 @@ public class UserService : IUserService
     {
         var users = await _user.GetAll(pagerRequest.Page, pagerRequest.PageSize, cancellationToken);
 
-        var totalRecords = await _user.Count();
+        var userTotal = await _user.Count();
 
         var response = new PagerResponse<GetByIdResponse>
         {
@@ -86,10 +86,10 @@ public class UserService : IUserService
 
             PageSize = pagerRequest.PageSize,
 
-            TotalRecords = totalRecords,
+            UserTotal = userTotal,
 
-            TotalPages = (int)Math.Ceiling(
-                totalRecords / (double)pagerRequest.PageSize)
+            PageTotal = (int)Math.Ceiling(
+                userTotal / (double)pagerRequest.PageSize)
         };
 
         return response;
