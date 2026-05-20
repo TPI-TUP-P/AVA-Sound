@@ -1,5 +1,7 @@
 
+using Application.DTOs.User.request;
 using Application.DTOs.User.Request;
+using Application.DTOs.User.response;
 using Application.DTOs.User.Response;
 using Application.Interfaces;
 using Domain.Entities;
@@ -62,20 +64,37 @@ public class UserService : IUserService
     }
 
 
-    public async Task<List<GetAllResponse>> GetAll(CancellationToken cancellationToken)
+    public async Task<PagerResponse<GetByIdResponse>> GetAll(PagerRequest pagerRequest,CancellationToken cancellationToken)
     {
-        var users = await _user.GetAll(cancellationToken);
+        var users = await _user.GetAll(pagerRequest.Page, pagerRequest.PageSize, cancellationToken);
 
-        return users.Select(u => new GetAllResponse
+        var totalRecords = await _user.Count();
+
+        var response = new PagerResponse<GetByIdResponse>
         {
-            Name = u.Name,
-            Surname = u.Surname,
-            Email = u.Email,
-            IsArtist = u.IsArtist,
-            DateRegister = u.DateRegister,
-            Role = u.Role
-        }).ToList();
+            Users = users.Select(x => new GetByIdResponse
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Surname = x.Surname,
+                Email = x.Email,
+                IsArtist = x.IsArtist,
+                Role = x.Role
+            }).ToList(),
+
+            Page = pagerRequest.Page,
+
+            PageSize = pagerRequest.PageSize,
+
+            TotalRecords = totalRecords,
+
+            TotalPages = (int)Math.Ceiling(
+                totalRecords / (double)pagerRequest.PageSize)
+        };
+
+        return response;
     }
+   
 
     public async Task<CreateResponse> Create(CreateRequest userDto, CancellationToken cancellationToken)
     {

@@ -1,5 +1,7 @@
 
+using Application.DTOs.User.request;
 using Application.DTOs.User.Request;
+using Application.DTOs.User.response;
 using Application.DTOs.User.Response;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -26,13 +28,24 @@ public class UserController : ControllerBase
         return Ok(user);
     }
 
-    [HttpGet]
 
-    public async Task<ActionResult<List<GetAllResponse>>> GetAll(CancellationToken cancellationToken)
-    {
-        var users = await _userService.GetAll(cancellationToken);
-        return Ok(users);
-    }
+    [HttpGet]
+    public async Task<ActionResult<PagerResponse<GetByIdResponse>>> GetAll([FromQuery] PagerRequest pagerRequest, CancellationToken cancellationToken)
+{
+    var result = await _userService.GetAll(pagerRequest, cancellationToken);
+
+    return Ok(result);
+}
+
+
+
+    // [HttpGet]
+
+    // public async Task<ActionResult<List<GetAllResponse>>> GetAll()
+    // {
+    //     var users = await _userService.GetAll();
+    //     return Ok(users);
+    // }
 
     [HttpPost]
     [EnableRateLimiting("HeavyEndpoint")]
