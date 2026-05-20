@@ -5,7 +5,7 @@ using Application.DTOs.User.response;
 using Application.DTOs.User.Response;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.RateLimiting;
 namespace Web.Controllers;
 
 [Route("api/User")]
@@ -39,15 +39,8 @@ public class UserController : ControllerBase
 
 
 
-    // [HttpGet]
-
-    // public async Task<ActionResult<List<GetAllResponse>>> GetAll()
-    // {
-    //     var users = await _userService.GetAll();
-    //     return Ok(users);
-    // }
-
     [HttpPost]
+    [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest userDto, CancellationToken cancellationToken)
     {
         var user = await _userService.Create(userDto, cancellationToken);

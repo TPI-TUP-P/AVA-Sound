@@ -42,9 +42,9 @@ public class AlbumRepository : IAlbumRepository
         {
             new NotFoundException($"El album con el ID {id} no fue encontrado.");
         }
-        
-        
-        album.AddSong(song);
+
+
+        album!.AddSong(song);
 
         await _context.SaveChangesAsync();
 
@@ -78,9 +78,15 @@ public class AlbumRepository : IAlbumRepository
 
     public async Task<Album> GetById(Guid id, CancellationToken cancellationToken)
     {
-        return await _context.Albums.
-            Include(a => a.Songs)
-        .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
+        var result = await _context.Albums.
+             Include(a => a.Songs)
+         .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
+
+        if (result is null)
+        {
+            throw new Exception();
+        }
+        return result;
 
         //     if(album == null)
         //     {

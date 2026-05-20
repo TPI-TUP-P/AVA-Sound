@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 
 using Application.DTOs.InfoUser.Request;
 using Application.DTOs.InfoUser.Response;
+using Microsoft.AspNetCore.RateLimiting;
 namespace Web.Controllers;
+
 [ApiController]
 
 [Route("api/infoUser")]
 
+[EnableRateLimiting("HeavyEndpoint")]
 public class InfoUserController : ControllerBase
 {
     private readonly IInfoUserService _infouservice;
@@ -16,7 +19,7 @@ public class InfoUserController : ControllerBase
     {
         _infouservice = infouserservice;
     }
-    [HttpGet("{Id}")]
+    [HttpGet("{id:guid}")]
     public async Task<ActionResult<GetByIdResponse>> GetById(Guid Id, CancellationToken cancellationToken)
     {
         return Ok(await _infouservice.GetById(Id, cancellationToken));
@@ -30,7 +33,9 @@ public class InfoUserController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest infouserDto, CancellationToken cancellationToken)
     {
-        return await _infouservice.Create(infouserDto, cancellationToken);
+        var created = await _infouservice.Create(infouserDto, cancellationToken);
+
+        return CreatedAtAction(nameof(GetById), new { id = created.IdUser }, created);
     }
 
     [HttpDelete("{Id}")]

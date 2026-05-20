@@ -4,11 +4,11 @@ namespace Domain.Entities;
 
 public class Review
 {
-    public Guid Id { get; private set; }
+    public Guid Id { get; init; }
 
-    public Guid IdUser { get; private set; }
+    public Guid IdUser { get; init; }
 
-    public Guid IdSong { get; private set; }
+    public Guid IdSong { get; init; }
 
     public string? Comment { get; set; }
 
