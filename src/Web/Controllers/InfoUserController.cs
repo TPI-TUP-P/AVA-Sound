@@ -1,5 +1,4 @@
 using Application.Interfaces;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 using Application.DTOs.InfoUser.Request;
@@ -7,8 +6,10 @@ using Application.DTOs.InfoUser.Response;
 using Microsoft.AspNetCore.RateLimiting;
 namespace Web.Controllers;
 
-[Route("api/infoUser")]
 [ApiController]
+
+[Route("api/infoUser")]
+
 [EnableRateLimiting("HeavyEndpoint")]
 public class InfoUserController : ControllerBase
 {
