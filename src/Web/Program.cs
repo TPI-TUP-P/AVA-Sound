@@ -136,7 +136,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseRateLimiter();
 app.MapControllers()
-    .RequireRateLimiting("global");
+    .RequireRateLimiting("Global");
 
 
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
