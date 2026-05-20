@@ -9,7 +9,6 @@ namespace Web.Controllers;
 [Route("api/review")]
 [ApiController]
 
-[EnableRateLimiting("HeavyEndpoint")]
 public class ReviewController : ControllerBase
 {
     private readonly IReviewService _reviewService;

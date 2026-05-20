@@ -11,6 +11,7 @@ using Application.Interfaces.IJwtService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.RateLimiting;
 
 using System.Text;
 
@@ -135,8 +136,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRateLimiter();
-app.MapControllers()
-    .RequireRateLimiting("Global");
+app.MapControllers();
+
 
 
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
