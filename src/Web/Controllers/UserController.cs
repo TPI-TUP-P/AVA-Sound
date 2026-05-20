@@ -39,14 +39,6 @@ public class UserController : ControllerBase
 
 
 
-    // [HttpGet]
-
-    // public async Task<ActionResult<List<GetAllResponse>>> GetAll()
-    // {
-    //     var users = await _userService.GetAll();
-    //     return Ok(users);
-    // }
-
     [HttpPost]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest userDto, CancellationToken cancellationToken)
     {

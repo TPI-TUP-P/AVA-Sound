@@ -23,12 +23,18 @@ public class SongRepository : ISongRepository
     }
 
 
-    public async Task<List<Song>> GetAll()
+    public async Task<List<Song>> GetAll(int Page,int PageSize,CancellationToken cancellationToken)
     {
         return await _context.Songs
             .OrderByDescending(s => s.DateUpload)
-            .Take(30)
-            .ToListAsync();
+            .Skip((Page-1)*PageSize)
+            .Take(PageSize)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<int> Count()
+    {
+        return await _context.Users.CountAsync();
     }
 
     public async Task<Song> Create(Song song, CancellationToken cancellationToken)
