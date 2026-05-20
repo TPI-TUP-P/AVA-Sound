@@ -68,9 +68,9 @@ public class AlbumRepository : IAlbumRepository
 
     public async Task<Album> Create(Album album, CancellationToken cancellationToken)
     {
-        await _context.Albums.AddAsync(album, cancellationToken);
-        await _context.SaveChangesAsync();
-        return album;
+        var albumCreated = await _context.Albums.AddAsync(album, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+        return albumCreated.Entity;
 
     }
 

@@ -25,7 +25,7 @@ public class AuthService : IAuthService
     {
         if (registerRequest.Email == null || registerRequest.Password == null)
         {
-            throw new Exception("El email y la contraseña son obligatorios");
+            throw new Exception("Your email address and password are required");
         }
         
         var existingUserEmail = await _userRepository.GetByEmail(registerRequest.Email, cancellationToken);
@@ -33,14 +33,14 @@ public class AuthService : IAuthService
 
         if(existingUserEmail != null)
         {
-            throw new Exception("El email ya se encuentra registrado");
+            throw new Exception("The email address is already registered");
         }
 
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password);
 
         if (registerRequest.Name == null || registerRequest.Surname == null || registerRequest.Role == null)
         {
-            throw new Exception("Todos los campos son obligatorios");
+            throw new Exception("All fields are required");
         }
         
         var user = new User(
@@ -69,7 +69,7 @@ public class AuthService : IAuthService
     {
         if (loginRequest.Email == null || loginRequest.Password == null)
         {
-            throw new Exception("El email y la contraseña son obligatorios");
+            throw new Exception("Your email address and password are required");
         }
         
 
@@ -77,26 +77,30 @@ public class AuthService : IAuthService
 
         if (user == null)
         {
-            throw new Exception("Credenciales incorrectas");
+            throw new Exception("Invalid credentials");
         }
 
         var validatePassword = BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password);
 
         if (!validatePassword)
         {
-            throw new Exception("Credenciales incorrectas");
+            throw new Exception("Invalid credentials");
         }
 
-        var token = _jwtService.GenerateToken(new CreateRequest
+        var createRequest = new CreateRequest(
+            user.Name!,
+            user.Surname!,
+            user.Email!,
+            user.Password!,
+            user.IsArtist,
+            user.Role!
+        )
         {
-            Name = user.Name,
-            Surname = user.Surname,
-            Email = user.Email,
-            Role = user.Role,
-            IsArtist = user.IsArtist
-        }
-        );
+            Id = user.Id
+        };
 
+        var token = _jwtService.GenerateToken(createRequest);
+        
             
 
         return new LoginResponse(
