@@ -26,9 +26,9 @@ public class AlbumController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<GetByIdResponse>> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var album = _albumService.GetById(id, cancellationToken);
+        var album = await _albumService.GetById(id, cancellationToken);
 
         return Ok(album);
     }
@@ -48,14 +48,15 @@ public class AlbumController : ControllerBase
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest albumDto, CancellationToken cancellationToken)
     {
 
-        string? idUserToken =  User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                  ?? User.FindFirst("id")?.Value 
+                  ?? User.FindFirst("sub")?.Value;
         if (string.IsNullOrEmpty(idUserToken))
         {
             return Unauthorized("User ID not found in token.");
         }
         
-        Guid idUser = Guid.Parse(idUserToken);
+        var idUser = Guid.Parse(idUserToken);
      
         
         return await _albumService.Create(albumDto, idUser ,cancellationToken);

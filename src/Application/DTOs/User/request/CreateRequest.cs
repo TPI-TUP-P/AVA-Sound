@@ -2,7 +2,7 @@ namespace Application.DTOs.User.Request;
 
 public class CreateRequest
 {
-
+    public Guid Id {get; init;}
     public string? Name {get; init;}
     public string? Surname {get; init;}
     public string? Email { get; init;}

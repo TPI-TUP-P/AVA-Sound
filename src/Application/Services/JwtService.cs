@@ -27,6 +27,11 @@ public string GenerateToken(CreateRequest createRequest)
     // Este apartado coloca los datos que va a contener el token
     List<Claim> claims =
     [
+        new Claim (
+            ClaimTypes.NameIdentifier,
+            createRequest.Id.ToString() ?? string.Empty
+        ),
+            
         new Claim(
             ClaimTypes.Name,
             createRequest.Name ?? string.Empty),
@@ -50,14 +55,14 @@ public string GenerateToken(CreateRequest createRequest)
 
     // Obtener la clave secreta desde la configuración
 
-    string secretKey = _config["Jwt:Key"] ?? throw new InvalidOperationException("El destino del secret key no coicide");
+    string secretKey = _config["Jwt:Key"] ?? throw new InvalidOperationException("The destination of the secret key does not match");
 
 
      // Validar que la clave tenga el tamaño minimo requerido para HS256 (lo use para testear un problema que estaba teniendo)
     
     if (secretKey.Length < 32)
     {
-        throw new InvalidOperationException("La clave JWT en appsettings.json debe tener al menos 32 caracteres para cumplir con el algoritmo HS256.");
+        throw new InvalidOperationException("The JWT key in appsettings.json must be at least 32 characters long to comply with the HS256 algorithm.");
     }
 
 
