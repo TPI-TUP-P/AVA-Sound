@@ -34,8 +34,9 @@ public static class RateLimiterExtensions
             options.AddPolicy("PerUser", context =>
             {
                 var userId =
-                // esto obtiene el usuario autentificado supuestamente, falta investigar mas y probar cuando hagamos la autentificacion
-                    context.User.Identity?.Name ?? "anonymous";
+                //It checks if the user is identified; if not, it uses the connection's IP address as a reference,
+                //and if that's not possible, it assigns "unidentified." The only problem is that unidentified users share the same bucket.
+                    context.User.Identity?.Name ?? context.Connection.RemoteIpAddress?.ToString() ?? "unidentified";
 
                 return RateLimitPartition.GetFixedWindowLimiter(
                     userId,

@@ -25,25 +25,25 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
-builder.Services.AddSwaggerGen(setupAct=>
+builder.Services.AddSwaggerGen(setupAct =>
 {
-    setupAct.CustomSchemaIds(type=> type.FullName);
+    setupAct.CustomSchemaIds(type => type.FullName);
 
-     setupAct.SwaggerDoc("v1", new OpenApiInfo 
-    { 
-        Title = "Mi API", 
+    setupAct.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Mi API",
         Version = "v1",
         Description = "API para AVA-Sound"
     });
-    
-   setupAct.AddSecurityDefinition("ApiBearerAuth", new OpenApiSecurityScheme()
-   {
-       Type = SecuritySchemeType.Http,
-       Scheme = "Bearer",
-    BearerFormat= "JWT",
-    Description = "Acá debe pegar el token"
-     
-   }); 
+
+    setupAct.AddSecurityDefinition("ApiBearerAuth", new OpenApiSecurityScheme()
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        Description = "Acá debe pegar el token"
+
+    });
 
     setupAct.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -58,7 +58,7 @@ builder.Services.AddSwaggerGen(setupAct=>
             },
             new List<string>()
         }
-        
+
     }
     );
 });
@@ -105,7 +105,7 @@ builder.Services.AddAuthentication(
     JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
-        opt.TokenValidationParameters = 
+        opt.TokenValidationParameters =
         new TokenValidationParameters
         {
             ValidateIssuer = false,
@@ -114,8 +114,8 @@ builder.Services.AddAuthentication(
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not found")))
-                
-        };      
+
+        };
     });
 
 
@@ -133,8 +133,10 @@ if (app.Environment.IsDevelopment())
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
 });
 }
-app.UseRateLimiter();
 
+app.UseRateLimiter();
+app.MapControllers()
+    .RequireRateLimiting("global");
 
 
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
