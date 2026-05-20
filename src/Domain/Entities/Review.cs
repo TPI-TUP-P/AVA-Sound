@@ -14,7 +14,7 @@ public class Review
 
     public DateTime DateCreated { get; set; }
 
-
+    private Review() { }
 
 
     public Review(Guid iduser, Guid idsong, string comment, DateTime datecreated)
