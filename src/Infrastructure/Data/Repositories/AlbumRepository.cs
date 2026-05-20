@@ -69,7 +69,7 @@ public class AlbumRepository : IAlbumRepository
     public async Task<Album> Create(Album album, CancellationToken cancellationToken)
     {
         await _context.Albums.AddAsync(album, cancellationToken);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return album;
 
     }

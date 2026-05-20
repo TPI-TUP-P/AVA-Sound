@@ -55,23 +55,23 @@ public void AddSong (Song song)
     {
         if (idArtist == Guid.Empty)
         {
-            throw new Exception("El IdArtist no puede ser vacio");
+            throw new Exception("The IdArtist cannot be empty");
         }
         if (string.IsNullOrWhiteSpace(title))
         {
-            throw new Exception("El titulo no puede estar vacio");
+            throw new Exception("The title cannot be left blank ");
         }
         if (releasteDate > DateTime.Now)
         {
-            throw new Exception("La fecha de lanzamiento no puede ser futura");
+            throw new Exception("The release date cannot be in the future");
         }
         if (string.IsNullOrWhiteSpace(frontPage))
         {
-            throw new Exception("La portada no puede estar vacia");
+            throw new Exception("The cover cannot be left blank");
         }
         if (string.IsNullOrWhiteSpace(description))
         {
-            throw new Exception("La descripcion no puede estar vacia");
+            throw new Exception("The description cannot be empty");
         }
     }
     

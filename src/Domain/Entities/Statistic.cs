@@ -29,19 +29,19 @@ public class Statistic
     {
             if(idUser == Guid.Empty)
         {
-            throw new Exception("El Iduser no puede ser vacio");
+            throw new Exception("The Iduser cannot be empty");
         }
         if(songTop == Guid.Empty)
         {
-            throw new Exception("El IdSongTop no puede ser vacio");
+            throw new Exception("The IdSongTop cannot be empty");
         }
         if (string.IsNullOrWhiteSpace(favoriteGender))
         {
-            throw new Exception("El genero favorito no puede estar vacio");
+            throw new Exception("The Favorite field cannot be left blank");
         }
         if (totalReproductions < 0)
         {
-            throw new Exception("El total de reproducciones no puede ser negativo");
+            throw new Exception("The total number of views cannot be negative");
         }
         
 
