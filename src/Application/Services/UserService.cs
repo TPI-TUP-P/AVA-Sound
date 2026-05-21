@@ -32,7 +32,7 @@ public class UserService : IUserService
 
         return new GetByIdResponse
         {
-            Id=user.Id,
+            Id = user.Id,
             Name = user.Name,
             Surname = user.Surname,
             Email = user.Email,
@@ -41,7 +41,7 @@ public class UserService : IUserService
             Role = user.Role
         };
     }
-    
+
     public async Task<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)
@@ -54,7 +54,7 @@ public class UserService : IUserService
 
         return new GetByIdResponse
         {
-            Id=id,
+            Id = id,
             Name = user.Name,
             Surname = user.Surname,
             Email = user.Email,
@@ -66,7 +66,7 @@ public class UserService : IUserService
     }
 
 
-    public async Task<PagerResponse<GetByIdResponse>> GetAll(PagerRequest pagerRequest,CancellationToken cancellationToken)
+    public async Task<PagerResponse<GetByIdResponse>> GetAll(PagerRequest pagerRequest, CancellationToken cancellationToken)
     {
         var users = await _user.GetAll(pagerRequest.Page, pagerRequest.PageSize, cancellationToken);
 
@@ -96,7 +96,7 @@ public class UserService : IUserService
 
         return response;
     }
-   
+
 
     public async Task<CreateResponse> Create(CreateRequest userDto, CancellationToken cancellationToken)
     {
@@ -127,14 +127,15 @@ public class UserService : IUserService
             userDto.Surname,
             userDto.Email,
             userDto.Password,
-            userDto.IsArtist
+            userDto.IsArtist,
+            userDto.Role!
         );
 
         await _user.Create(user, cancellationToken);
 
         return new CreateResponse
         {
-            Id=user.Id,
+            Id = user.Id,
             Name = user.Name,
             Surname = user.Surname,
             Email = user.Email,
@@ -182,7 +183,7 @@ public class UserService : IUserService
 
         return new UpdateResponse
         {
-            Id=id,
+            Id = id,
             Name = user.Name,
             Surname = user.Surname,
             Email = user.Email,
@@ -209,12 +210,12 @@ public class UserService : IUserService
 
     public async Task MakeAdmin(Guid userId, Guid currentUserId, CancellationToken cancellationToken)
     {
-        var currentUser = await _user.GetById(currentUserId,cancellationToken);
+        var currentUser = await _user.GetById(currentUserId, cancellationToken);
 
-    if (currentUser == null)
-    {
-        throw new Exception("Usuario actual no encontrado");
-    }
+        if (currentUser == null)
+        {
+            throw new Exception("Usuario actual no encontrado");
+        }
         if (currentUser.Role != "superadmin")
         {
             throw new Exception("No autorizado");
