@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Application.DTOs.Review.Request;
 using Application.DTOs.Review.Response;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.Authorization;
 namespace Web.Controllers;
 
 [Route("api/review")]
 [ApiController]
+[Authorize]
 
 public class ReviewController : ControllerBase
 {
@@ -19,7 +21,6 @@ public class ReviewController : ControllerBase
     }
 
     [HttpGet("{Id}")]
-
 
     public ActionResult<List<GetBySongResponse>> GetBySong([FromRoute] Guid Id, CancellationToken cancellationToken)
     {
