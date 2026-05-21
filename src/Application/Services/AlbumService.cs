@@ -146,15 +146,25 @@ public class AlbumService : IAlbumService
         );
     }
 
-    public Task Delete(Guid Id, CancellationToken cancellationToken)
+    public async Task Delete(Guid Id, Guid idUser,CancellationToken cancellationToken)
     {
         
-        if (Id == Guid.Empty)
+        var album = await _album.GetById(Id, cancellationToken);
+
+        if(album is null)
         {
-            throw new Exception("The ID is empty");
+            throw new NotFoundException("Album");
         }
 
-        return _album.Delete(Id, cancellationToken);
+        if (idUser !=  album.IdArtist)
+        {
+            throw new Exception("You are not the owner of this album");
+        }
+
+      
+
+         await _album.Delete(Id, cancellationToken);
+         
     }
 
 

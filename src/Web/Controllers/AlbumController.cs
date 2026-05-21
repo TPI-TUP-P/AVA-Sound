@@ -97,8 +97,17 @@ public class AlbumController : ControllerBase
 
     public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-
-        await _albumService.Delete(id, cancellationToken);
+             var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                  ?? User.FindFirst("id")?.Value 
+                  ?? User.FindFirst("sub")?.Value;
+        if (string.IsNullOrEmpty(idUserToken))
+        {
+            return Unauthorized("User ID not found in token.");
+        }
+        
+        var idUser = Guid.Parse(idUserToken);
+        
+        await _albumService.Delete(id, idUser,cancellationToken);
         return NoContent();
     }
 
