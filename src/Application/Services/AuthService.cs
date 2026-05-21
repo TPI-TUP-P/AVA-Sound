@@ -21,37 +21,37 @@ public class AuthService : IAuthService
 
 
 
-    public async Task<RegisterResponse> Register (RegisterRequest registerRequest, CancellationToken cancellationToken)
+    public async Task<RegisterResponse> Register(RegisterRequest registerRequest, CancellationToken cancellationToken)
     {
-        
+
         var existingUserEmail = await _userRepository.GetByEmail(registerRequest.Email, cancellationToken);
 
 
-        if(existingUserEmail != null)
+        if (existingUserEmail != null)
         {
             throw new NotFoundException("Email");
         }
 
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password);
 
-      
+
         var user = new User(
             registerRequest.Name,
             registerRequest.Surname,
             registerRequest.Email,
             passwordHash,
             registerRequest.IsArtist,
-            registerRequest.Role
+            registerRequest.Role!
         );
 
         await _userRepository.Create(user, cancellationToken);
-        
-        return new RegisterResponse (
+
+        return new RegisterResponse(
             user.Name,
             user.Surname,
             user.Email,
             user.IsArtist,
-            user.Role  
+            user.Role
         );
 
     }
@@ -59,12 +59,12 @@ public class AuthService : IAuthService
 
     public async Task<LoginResponse> Login(LoginRequest loginRequest, CancellationToken cancellationToken)
     {
-    
 
-        var user = await _userRepository.GetByEmail(loginRequest.Email, cancellationToken);
+
+        var user = await _userRepository.GetByEmail(loginRequest.Email!, cancellationToken);
 
         if (user == null)
-        {   
+        {
             throw new NotFoundException("User");
         }
 
@@ -75,30 +75,29 @@ public class AuthService : IAuthService
             throw new InvalidCredentialsException();
         }
 
-        var createRequest = new CreateRequest(
-            user.Name!,
-            user.Surname!,
-            user.Email!,
-            user.Password!,
-            user.IsArtist,
-            user.Role!
-        )
+        var createRequest = new CreateRequest
         {
-            Id = user.Id
+            Id = user.Id,
+            Name = user.Name,
+            Surname = user.Surname,
+            Email = user.Email,
+            Password = user.Password,
+            IsArtist = user.IsArtist,
+            Role = user.Role
         };
 
         var token = _jwtService.GenerateToken(createRequest);
-        
-            
+
+
 
         return new LoginResponse(
-            token: token,  
-            email: user.Email,
+            token: token,
+            email: user.Email!,
             role: user.Role!
         );
-        
+
 
 
     }
-   
+
 }
