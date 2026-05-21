@@ -8,4 +8,15 @@ public class UpdateRequest
     public string? Password { get; set;}
     public bool IsArtist {get; set;}
    
+
+
+    public UpdateRequest(string? name, string? surname, string? email, string? password, bool isArtist)
+    {
+        Name = name;
+        Surname = surname;
+        Email = email;
+        Password = password;
+        IsArtist = isArtist;
+    }
+    
 }

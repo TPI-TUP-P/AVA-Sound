@@ -75,16 +75,15 @@ public class AuthService : IAuthService
             throw new InvalidCredentialsException();
         }
 
-        var createRequest = new CreateRequest
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Surname = user.Surname,
-            Email = user.Email,
-            Password = user.Password,
-            IsArtist = user.IsArtist,
-            Role = user.Role
-        };
+        var createRequest = new CreateRequest(
+            user.Id,
+            user.Name,
+            user.Surname,
+            user.Email,
+            user.Password,
+            user.IsArtist,
+            user.Role
+        );
 
         var token = _jwtService.GenerateToken(createRequest);
 
