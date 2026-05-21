@@ -6,20 +6,19 @@ namespace Domain.Entities;
 public class User
 {
     public Guid Id {get;  init;}
-    public string? Name {get; private set;}
-    public string? Surname {get; private set;}
-    public string? Email { get; private set;}
-    public string? Password { get; private set;}
+    public string Name {get; private set;}
+    public string Surname {get; private set;}
+    public string Email { get; private set;}
+    public string Password { get; private set;}
     public bool IsArtist {get; private set;}
 
     public DateTime DateRegister { get; private set;}
 
-    public string? Role { get; private set;}
-
-    private User(){}
+    public string? Role { get; private set;} 
 
 
-    public User(string name, string surname, string email, string password, bool isArtist,string role)
+
+    public User(string name, string surname, string email, string password, bool isArtist,string? role)
     {
         ValidateProperties(name, surname, email, password, role);
         Id = Guid.NewGuid();
@@ -29,11 +28,11 @@ public class User
         Password = password;
         IsArtist= isArtist;
         DateRegister = DateTime.Now;
-        Role = role;
+        Role = role ?? "User";
         
     }
 
-    private void ValidateProperties(string? name, string? surname, string? email, string? password, string? role)
+    private void ValidateProperties(string name, string surname, string email, string password, string? role)
     {
         if(string.IsNullOrWhiteSpace(name))
             throw new Exception("name is required");
@@ -47,8 +46,13 @@ public class User
         if (string.IsNullOrWhiteSpace(password))
             throw new Exception("password is required");
 
-        if (string.IsNullOrWhiteSpace(role))
-            throw new Exception("user role is required");
+        if(role != null)
+        {
+            if(string.IsNullOrWhiteSpace(role))
+            {
+                throw new Exception("user role is required");
+            }
+        }
         
 
     }

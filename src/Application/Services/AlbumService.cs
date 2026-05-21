@@ -24,16 +24,12 @@ public class AlbumService : IAlbumService
 
     public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        if (Id == Guid.Empty)
-        {
-            throw new Exception("Id es vacio");
-        }
-
+    
         var album = await _album.GetById(Id, cancellationToken);
 
         if (album == null)
         {
-            throw new Exception("El album no existe");
+            throw new NotFoundException("Album");
         }
 
         return new GetByIdResponse
@@ -65,17 +61,12 @@ public class AlbumService : IAlbumService
 
     public async Task<CreateResponse> Create(CreateRequest albumDto, Guid idUser,CancellationToken cancellationToken)
     {
-        if (albumDto == null)
-        {
-            throw new Exception("El album esta vacio");
-        }
-
 
         var user = await _user.GetById(idUser, cancellationToken);
 
         if(user.IsArtist is false)
         {
-            throw new Exception("El usuario no es un artista");
+            throw new UserIsNotArtistException("The user is not an artist");
         }
 
         var albumData = new Album(
@@ -86,9 +77,6 @@ public class AlbumService : IAlbumService
             albumDto.Description
 
         );
-
-
-
 
         var albumCreated = await _album.Create(albumData, cancellationToken);
 
@@ -112,15 +100,11 @@ public class AlbumService : IAlbumService
     public async Task<UpdateResponse> Update(Guid Id, UpdateRequest albumDto, CancellationToken cancellationToken)
     {
         var existingAlbum = await _album.GetById(Id, cancellationToken);
-        if (existingAlbum == null)
+        if (existingAlbum is null)
         {
-            throw new Exception("The ID is empty");
+            throw new NotFoundException("Album");
         }
 
-        if (albumDto == null)
-        {
-            throw new Exception("The album is empty");
-        }
 
         if (albumDto.Title != null)
         {
@@ -181,12 +165,12 @@ public class AlbumService : IAlbumService
 
         if(album is null)
         {
-            throw new NotFoundException("The album does not exist");
+            throw new NotFoundException("Album");
         }
 
         if(song is null)
         {
-            throw new NotFoundException("The song doesn't exist");
+            throw new NotFoundException("Song");
         }
 
         album.AddSong(song);
