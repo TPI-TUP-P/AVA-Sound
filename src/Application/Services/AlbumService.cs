@@ -49,6 +49,7 @@ public class AlbumService : IAlbumService
     public async Task<List<GetAllResponse>> GetAll()
     {
         var albums = await _album.GetAll();
+        
         return albums.Select(album => new GetAllResponse
         (
             album.Id,
@@ -57,6 +58,29 @@ public class AlbumService : IAlbumService
             album.ReleasteDate,
             album.FrontPage
         )).ToList();
+    }
+
+
+    public async Task<List<GetAllResponse>> GetAllByArtist(Guid idArtist, CancellationToken cancellationToken)
+    {
+
+        var user = await _user.GetById(idArtist, cancellationToken);
+
+        if(user.IsArtist is false)
+        {
+            throw new NotFoundException("User");
+        }
+
+        var albums = await _album.GetAllByArtist(idArtist, cancellationToken);
+        return albums.Select(album => new GetAllResponse
+        (
+            album.Id,
+            album.IdArtist,
+            album.Title,
+            album.ReleasteDate,
+            album.FrontPage
+        )).ToList();
+        
     }
 
     public async Task<CreateResponse> Create(CreateRequest albumDto, Guid idUser,CancellationToken cancellationToken)
@@ -164,7 +188,7 @@ public class AlbumService : IAlbumService
       
 
          await _album.Delete(Id, cancellationToken);
-         
+
     }
 
 
