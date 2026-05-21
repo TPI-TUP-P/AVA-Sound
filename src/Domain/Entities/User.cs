@@ -5,12 +5,12 @@ namespace Domain.Entities;
 
 public class User
 {
-    public Guid Id {get;  init;}
-    public string Name {get; private set;}
-    public string Surname {get; private set;}
-    public string Email { get; private set;}
-    public string Password { get; private set;}
-    public bool IsArtist {get; private set;}
+    public Guid Id {get; private set;}
+    public string? Name {get; set;}
+    public string? Surname {get; set;}
+    public string? Email { get; set;}
+    public string? Password { get; set;}
+    public bool IsArtist {get; set;}
 
     public DateTime DateRegister { get; private set;}
 
@@ -18,21 +18,20 @@ public class User
 
 
 
-    public User(string name, string surname, string email, string password, bool isArtist,string? role)
+    public User(string name, string surname, string email, string password, bool isArtist)
     {
-        ValidateProperties(name, surname, email, password, role);
+        ValidateProperties(name, surname, email, password);
         Id = Guid.NewGuid();
         Name = name;
         Surname = surname;
         Email = email;
         Password = password;
         IsArtist= isArtist;
-        DateRegister = DateTime.Now;
-        Role = role ?? "User";
-        
+        DateRegister = DateTime.Now;  
+        Role="user";      
     }
 
-    private void ValidateProperties(string name, string surname, string email, string password, string? role)
+    private void ValidateProperties(string? name, string? surname, string? email, string? password)
     {
         if(string.IsNullOrWhiteSpace(name))
             throw new Exception("name is required");
@@ -46,19 +45,10 @@ public class User
         if (string.IsNullOrWhiteSpace(password))
             throw new Exception("password is required");
 
-        if(role != null)
-        {
-            if(string.IsNullOrWhiteSpace(role))
-            {
-                throw new Exception("user role is required");
-            }
-        }
-        
-
     }
 
 
-    public void UpdateInfo(string name, string surname, string email, string password, bool isArtist, string role)
+    public void UpdateInfo(string name, string surname, string email, string password, bool isArtist)
 {
     if(string.IsNullOrWhiteSpace(name))
             throw new Exception("name is required");
@@ -72,16 +62,17 @@ public class User
         if (string.IsNullOrWhiteSpace(password))
             throw new Exception("password is required");
 
-        if (string.IsNullOrWhiteSpace(role))
-            throw new Exception("user role is required");
 
     Name = name;
     Surname = surname;
     Email = email;
     Password = password;
     IsArtist = isArtist;
-    Role = role;
 }
-        
+
+    public void MakeAdmin()
+{
+    Role = "admin";
+}
 
 } 

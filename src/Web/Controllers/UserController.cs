@@ -47,7 +47,7 @@ public class UserController : ControllerBase
         return Ok(user);
     }
 
-    [HttpPut("{id}")]
+    [HttpPatch("{id}")]
 
     public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest userDto, CancellationToken cancellationToken)
     {
@@ -63,4 +63,18 @@ public class UserController : ControllerBase
         await _userService.Delete(id, cancellationToken);
         return NoContent();
     }
+
+    [HttpPatch("{id}/make-admin")]
+    public async Task<ActionResult> MakeAdmin(Guid id, CancellationToken cancellationToken)
+{
+    
+    Guid currentUserId = Guid.Parse(User.FindFirst("id")!.Value);
+
+    await _userService.MakeAdmin(
+        id,
+        currentUserId,
+        cancellationToken);
+
+    return Ok("Usuario actualizado a admin");
+}
 }
