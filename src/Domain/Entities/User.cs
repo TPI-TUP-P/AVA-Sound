@@ -6,10 +6,10 @@ namespace Domain.Entities;
 public class User
 {
     public Guid Id { get; private set; }
-    public string? Name { get; set; }
-    public string? Surname { get; set; }
-    public string? Email { get; set; }
-    public string? Password { get; set; }
+    public string Name { get; set; }
+    public string Surname { get; set; }
+    public string Email { get; set; }
+    public string Password { get; set; }
     public bool IsArtist { get; set; }
 
     public DateTime DateRegister { get; private set; }
@@ -28,7 +28,7 @@ public class User
         Password = password;
         IsArtist = isArtist;
         DateRegister = DateTime.Now;
-        Role = role;
+        Role = role ?? "user";
     }
 
     private void ValidateProperties(string? name, string? surname, string? email, string? password)
