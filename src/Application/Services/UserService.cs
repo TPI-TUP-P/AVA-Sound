@@ -32,6 +32,7 @@ public class UserService : IUserService
 
         return new GetByIdResponse
         {
+            Id=user.Id,
             Name = user.Name,
             Surname = user.Surname,
             Email = user.Email,
@@ -41,18 +42,19 @@ public class UserService : IUserService
         };
     }
     
-    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
+    public async Task<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken)
     {
-        if (Id == Guid.Empty)
+        if (id == Guid.Empty)
             throw new Exception("El id no existe");
 
-        var user = await _user.GetById(Id, cancellationToken);
+        var user = await _user.GetById(id, cancellationToken);
 
         if (user == null)
             throw new Exception("El usuario no existe");
 
         return new GetByIdResponse
         {
+            Id=id,
             Name = user.Name,
             Surname = user.Surname,
             Email = user.Email,
@@ -117,8 +119,6 @@ public class UserService : IUserService
         if (string.IsNullOrWhiteSpace(userDto.Password))
             throw new Exception("Contraseña es obligatoria");
 
-        if (string.IsNullOrWhiteSpace(userDto.Role))
-            throw new Exception("Role es obligatorio");
 
 
 
@@ -127,14 +127,14 @@ public class UserService : IUserService
             userDto.Surname,
             userDto.Email,
             userDto.Password,
-            userDto.IsArtist,
-            userDto.Role
+            userDto.IsArtist
         );
 
         await _user.Create(user, cancellationToken);
 
         return new CreateResponse
         {
+            Id=user.Id,
             Name = user.Name,
             Surname = user.Surname,
             Email = user.Email,
@@ -169,27 +169,26 @@ public class UserService : IUserService
         if (string.IsNullOrWhiteSpace(userDto.Password))
             throw new Exception("Contraseña es obligatoria");
 
-        if (string.IsNullOrWhiteSpace(userDto.Role))
-            throw new Exception("Role es obligatorio");
 
         user.UpdateInfo(
             userDto.Name,
             userDto.Surname,
             userDto.Email,
             userDto.Password,
-            userDto.IsArtist,
-            userDto.Role
+            userDto.IsArtist
         );
 
         await _user.Update(user, cancellationToken);
 
         return new UpdateResponse
         {
+            Id=id,
             Name = user.Name,
             Surname = user.Surname,
             Email = user.Email,
             Password = user.Password,
             IsArtist = user.IsArtist,
+            DateRegister = user.DateRegister,
             Role = user.Role
         };
     }
@@ -208,5 +207,24 @@ public class UserService : IUserService
         await _user.Delete(Id, cancellationToken);
     }
 
+    public async Task MakeAdmin(Guid userId, Guid currentUserId, CancellationToken cancellationToken)
+    {
+        var currentUser = await _user.GetById(currentUserId,cancellationToken);
+
+    if (currentUser == null)
+    {
+        throw new Exception("Usuario actual no encontrado");
+    }
+        if (currentUser.Role != "superadmin")
+        {
+            throw new Exception("No autorizado");
+        }
+
+        var user = await _user.GetById(userId, cancellationToken);
+
+        user.MakeAdmin();
+
+        await _user.Update(user, cancellationToken);
+    }
 
 }
