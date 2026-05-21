@@ -1,8 +1,9 @@
 namespace Application.DTOs.Album.Request;
 public class CreateRequest
 {
+    public Guid Id {get; init;}
     public Guid IdArtist { get; init; }
-    public string? Title { get; set; }
+    public string Title { get; set; } = string.Empty;
     public DateTime ReleaseDate { get; set; }
     public string? FrontPage { get; set; }
     public string? Description { get; set; }

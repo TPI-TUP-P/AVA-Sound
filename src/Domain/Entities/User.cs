@@ -14,9 +14,8 @@ public class User
 
     public DateTime DateRegister { get; private set;}
 
-    public string? Role { get; private set;}
+    public string? Role { get; private set;} 
 
-    private User(){}
 
 
     public User(string name, string surname, string email, string password, bool isArtist)

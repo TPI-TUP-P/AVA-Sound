@@ -9,3 +9,7 @@ public class CreateRequest
     public bool IsArtist {get; set;}
     
 }
+
+
+
+

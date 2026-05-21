@@ -3,6 +3,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Application.DTOs.Review.Request;
 using Application.DTOs.Review.Response;
+using Microsoft.AspNetCore.RateLimiting;
 namespace Web.Controllers;
 
 [Route("api/review")]
@@ -19,12 +20,14 @@ public class ReviewController : ControllerBase
 
     [HttpGet("{Id}")]
 
+
     public ActionResult<List<GetBySongResponse>> GetBySong([FromRoute] Guid Id, CancellationToken cancellationToken)
     {
         return Ok(_reviewService.GetBySong(Id, cancellationToken));
     }
 
     [HttpPost]
+    [EnableRateLimiting("PerUser")]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest reviewDto, CancellationToken cancellationToken)
     {
         await _reviewService.Create(reviewDto, cancellationToken);
@@ -40,7 +43,7 @@ public class ReviewController : ControllerBase
         return Ok();
     }
     [HttpPatch]
-
+    [EnableRateLimiting("PerUser")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest reviewDto, CancellationToken cancellationToken)
     {
         await _reviewService.Update(Id, reviewDto, cancellationToken);

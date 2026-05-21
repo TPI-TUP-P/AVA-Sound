@@ -7,7 +7,7 @@ public class Album
 {
    public Guid Id {get;  init;}
     public Guid IdArtist {get; init;}
-    public string? Title {get; set;}
+    public string Title {get; set;}
     public DateTime ReleasteDate {get; set;}
     public string? FrontPage {get;set;}
     public string? Description {get;set;}
@@ -23,19 +23,18 @@ public class Album
 
     
 
-    private Album(){}
 
 
 
-    public Album(Guid idArtist, string? title, DateTime releasteDate, string? frontPage, string? description)
+    public Album(Guid idArtist, string title, DateTime releasteDate, string? frontPage, string? description)
     {
         ValidateProperties(idArtist, title, releasteDate, frontPage, description);
         Id = Guid.NewGuid();
         IdArtist = idArtist;
         Title = title;
         ReleasteDate = releasteDate;
-        FrontPage = frontPage;
-        Description = description;
+        FrontPage = frontPage ?? null;
+        Description = description ?? null;
         
 
     }
@@ -51,28 +50,35 @@ public void AddSong (Song song)
 
     }
 
-    private void ValidateProperties(Guid idArtist, string? title, DateTime releasteDate, string? frontPage, string? description)
+    private void ValidateProperties(Guid idArtist, string title, DateTime releasteDate, string? frontPage, string? description)
     {
         if (idArtist == Guid.Empty)
         {
-            throw new Exception("El IdArtist no puede ser vacio");
+            throw new Exception("The IdArtist cannot be empty");
         }
         if (string.IsNullOrWhiteSpace(title))
         {
-            throw new Exception("El titulo no puede estar vacio");
+            throw new Exception("The title cannot be left blank ");
         }
         if (releasteDate > DateTime.Now)
         {
-            throw new Exception("La fecha de lanzamiento no puede ser futura");
+            throw new Exception("The release date cannot be in the future");
         }
-        if (string.IsNullOrWhiteSpace(frontPage))
+        if (frontPage != null )
         {
-            throw new Exception("La portada no puede estar vacia");
-        }
-        if (string.IsNullOrWhiteSpace(description))
+            if (!string.IsNullOrEmpty(frontPage))
+            {
+                throw new Exception("The front page cannot be empty");
+            }
+        }  
+        if (description != null)
         {
-            throw new Exception("La descripcion no puede estar vacia");
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                throw new Exception("The description cannot be empty");
+            }
         }
+        
     }
     
 

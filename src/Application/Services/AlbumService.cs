@@ -4,33 +4,32 @@ using Application.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
 
+
 namespace Application.Services;
 
 public class AlbumService : IAlbumService
 {
     private IAlbumRepository _album;
+    private IUserRepository _user;
     private readonly ISongRepository _song;
 
 
-    public AlbumService(IAlbumRepository album, ISongRepository song)
+    public AlbumService(IAlbumRepository album, ISongRepository song, IUserRepository user)
     {
         _album = album;
         _song = song;
+        _user = user;
     }
 
 
     public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        if (Id == Guid.Empty)
-        {
-            throw new Exception("Id es vacio");
-        }
-
+    
         var album = await _album.GetById(Id, cancellationToken);
 
         if (album == null)
         {
-            throw new Exception("El album no existe");
+            throw new NotFoundException("Album");
         }
 
         return new GetByIdResponse
@@ -53,21 +52,26 @@ public class AlbumService : IAlbumService
         return albums.Select(album => new GetAllResponse
         (
             album.Id,
+            album.IdArtist,
             album.Title,
             album.ReleasteDate,
             album.FrontPage
         )).ToList();
     }
 
-    public async Task<CreateResponse> Create(CreateRequest albumDto, CancellationToken cancellationToken)
+    public async Task<CreateResponse> Create(CreateRequest albumDto, Guid idUser,CancellationToken cancellationToken)
     {
-        if (albumDto == null)
+
+
+        var user = await _user.GetById(idUser, cancellationToken);
+
+        if(user.IsArtist is false)
         {
-            throw new Exception("El album esta vacio");
+            throw new UserIsNotArtistException("The user is not an artist");
         }
 
         var albumData = new Album(
-            albumDto.IdArtist,
+            user.Id,
             albumDto.Title,
             albumDto.ReleaseDate,
             albumDto.FrontPage,
@@ -79,12 +83,14 @@ public class AlbumService : IAlbumService
 
 
         return new CreateResponse(
-
+            albumCreated.Id,
             albumCreated.IdArtist,
             albumCreated.Title,
             albumCreated.ReleasteDate,
             albumCreated.FrontPage,
             albumCreated.Description
+                
+        
         );
 
 
@@ -95,15 +101,11 @@ public class AlbumService : IAlbumService
     public async Task<UpdateResponse> Update(Guid Id, UpdateRequest albumDto, CancellationToken cancellationToken)
     {
         var existingAlbum = await _album.GetById(Id, cancellationToken);
-        if (existingAlbum == null)
+        if (existingAlbum is null)
         {
-            throw new Exception("El album no existe");
+            throw new NotFoundException("Album");
         }
 
-        if (albumDto == null)
-        {
-            throw new Exception("El album esta vacio");
-        }
 
         if (albumDto.Title != null)
         {
@@ -146,10 +148,10 @@ public class AlbumService : IAlbumService
 
     public Task Delete(Guid Id, CancellationToken cancellationToken)
     {
-
+        
         if (Id == Guid.Empty)
         {
-            throw new Exception("Id es vacio");
+            throw new Exception("The ID is empty");
         }
 
         return _album.Delete(Id, cancellationToken);
@@ -162,15 +164,18 @@ public class AlbumService : IAlbumService
         var album = await _album.GetById(id, cancellationToken);
         var song = await _song.GetById(idSong, cancellationToken);
 
+        if(album is null)
+        {
+            throw new NotFoundException("Album");
+        }
 
+        if(song is null)
+        {
+            throw new NotFoundException("Song");
+        }
 
         album.AddSong(song);
         await _album.Update(album, cancellationToken);
-
-
-
-        // var songs = await _song.GetById(idSong);
-
 
         return new GetByIdResponse
         (
@@ -188,14 +193,5 @@ public class AlbumService : IAlbumService
 
     }
 
-    // Este metodo no se puede completar porque falta el ABM de song 
-
-    // public Task AddSong(Guid id, Song song)
-    // {
-    //     var album = _album.GetById(id);
-
-    //     _album.AddSong(song);
-
-
-    // }
+  
 }

@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Application.DTOs.Review.Request;
 using Application.DTOs.Review.Response;
+using Domain.Exceptions;
 namespace Application.Services;
 
 
@@ -66,7 +67,7 @@ public class ReviewService : IReviewService
         var reviewsExist = await _review.GetBySong(reviewDto.IdSong, cancellationToken);
         if (reviewsExist.Any(x => x.IdUser == reviewDto.IdUser))
         {
-            throw new ArgumentException("Theres already a review done on this song.");
+            throw new ReviewAlreadyExistExcepction(songExists.Title);
         }
 
 

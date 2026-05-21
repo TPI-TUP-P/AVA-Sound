@@ -1,18 +1,20 @@
 // using Microsoft.AspNetCore.Components;
+using System.Security.Claims;
 using Application.DTOs.Album.Request;
 using Application.DTOs.Album.Response;
 
 using Application.Interfaces;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.RateLimiting;
 namespace Web.Controllers;
 
 
 
-
-[Route("api/album")]
 [ApiController]
+[Route("api/[controller]")]
+
 
 public class AlbumController : ControllerBase
 {
@@ -24,9 +26,9 @@ public class AlbumController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<GetByIdResponse>> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var album = _albumService.GetById(id, cancellationToken);
+        var album = await _albumService.GetById(id, cancellationToken);
 
         return Ok(album);
     }
@@ -40,14 +42,29 @@ public class AlbumController : ControllerBase
         return Ok(albums);
     }
 
-
+    
+    [Authorize]
     [HttpPost]
+    [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest albumDto, CancellationToken cancellationToken)
     {
-        return await _albumService.Create(albumDto, cancellationToken);
 
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                  ?? User.FindFirst("id")?.Value 
+                  ?? User.FindFirst("sub")?.Value;
+        if (string.IsNullOrEmpty(idUserToken))
+        {
+            return Unauthorized("User ID not found in token.");
+        }
+        
+        var idUser = Guid.Parse(idUserToken);
+     
+        
+        var album=  await _albumService.Create(albumDto, idUser ,cancellationToken);
+        return CreatedAtAction(nameof(GetById),new { id = album.Id }, album);
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest albumDto, CancellationToken cancellationToken)
     {
@@ -55,7 +72,7 @@ public class AlbumController : ControllerBase
 
     }
 
-
+    [Authorize]
     [HttpPost("{id}/add-song/{idSong}")]
     public async Task<ActionResult<GetByIdResponse>> AddSong(Guid id, Guid idSong, CancellationToken cancellationToken)
     {
@@ -75,7 +92,7 @@ public class AlbumController : ControllerBase
 
 
 
-
+    [Authorize]
     [HttpDelete("{id}")]
 
     public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)

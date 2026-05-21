@@ -7,14 +7,13 @@ public class Song
     public Guid Id {get; private set;}
     public Guid IdArtist {get; private set;}
     public Guid? IdAlbum {get; private set;}
-    public string? Title {get; set;}
-    public string? Gender {get; set;}
-    public string? Duration{get; set;}
-    public string? AudioBig {get; set;}
+    public string Title {get; set;}
+    public string Gender {get; set;}
+    public string Duration{get; set;}
+    public string AudioBig {get; set;}
     public DateTime DateUpload {get; set;}
     public int Views {get; set;}
 
-    private Song(){}
 
 
     public Song( Guid idArtist, Guid? idAlbum, string title, string gender, string duration, string audioBig)
