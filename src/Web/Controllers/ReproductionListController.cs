@@ -25,6 +25,13 @@ public class ReproductionListController : ControllerBase
         return Ok(reproductionList);
     }
 
+    [HttpPatch("{id}")]
+    public async Task<ActionResult<UpdateResponse>> Update(Guid id,[FromBody] UpdateRequest updateRequest, CancellationToken cancellationToken)
+    {
+        var result= await _reproductionListservice.Update(id, updateRequest, cancellationToken);
+        return Ok(result);
+    }
+
     [HttpPost]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest reproductionListDto, CancellationToken cancellationToken)
     {

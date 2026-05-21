@@ -49,6 +49,46 @@ public class ReproductionListService : IReproductionListService
     }
 
 
+    public async Task<UpdateResponse> Update(Guid id, UpdateRequest updateRequest, CancellationToken cancellationToken)
+    {
+        if (id == Guid.Empty)
+        {
+            throw new Exception("id no encontrado");
+        }
+
+         var reproductionsList= await _reproductionList.GetById(id, cancellationToken);
+
+         
+
+        if (reproductionsList == null)
+        {
+            throw new Exception("Lista no encontrada");
+        }
+
+
+        reproductionsList.UpdateInfo(
+            updateRequest.Name,
+            updateRequest.Description,
+            updateRequest.IsPublic
+        );
+
+
+         var result= new UpdateResponse
+         {
+             Id=id,
+             IdUser=reproductionsList.IdUser,
+             Name=updateRequest.Name,
+             Description=updateRequest.Description,
+             IsPublic=updateRequest.IsPublic
+         };
+
+        await _reproductionList.Update(reproductionsList, cancellationToken);
+
+         return result;
+        
+    }
+
+
 
 
 

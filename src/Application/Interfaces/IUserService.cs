@@ -14,4 +14,7 @@ public interface IUserService
     Task<CreateResponse> Create(CreateRequest UserDto, CancellationToken cancellationToken);
     Task<UpdateResponse> Update(Guid Id, UpdateRequest UsermDto, CancellationToken cancellationToken);
     Task Delete(Guid id, CancellationToken cancellationToken);
+
+    Task MakeAdmin(Guid userId, Guid currentUserId, CancellationToken cancellationToken);
+
 }
