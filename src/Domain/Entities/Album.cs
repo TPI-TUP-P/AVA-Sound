@@ -33,8 +33,8 @@ public class Album
         IdArtist = idArtist;
         Title = title;
         ReleasteDate = releasteDate;
-        FrontPage = frontPage ?? null;
-        Description = description ?? null;
+        FrontPage = frontPage ;
+        Description = description ;
 
 
     }
