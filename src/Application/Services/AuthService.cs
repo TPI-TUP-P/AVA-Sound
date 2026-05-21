@@ -2,10 +2,10 @@ using Application.DTOs.Auth.Request;
 using Application.DTOs.Auth.Response;
 using Application.Interfaces;
 using Domain.Entities;
-using BCrypt.Net;
 using Domain.Interfaces;
 using Application.Interfaces.IJwtService;
 using Application.DTOs.User.Request;
+using Domain.Exceptions;
 namespace Application.Services;
 
 public class AuthService : IAuthService
@@ -23,16 +23,18 @@ public class AuthService : IAuthService
 
     public async Task<RegisterResponse> Register (RegisterRequest registerRequest, CancellationToken cancellationToken)
     {
+        
         var existingUserEmail = await _userRepository.GetByEmail(registerRequest.Email, cancellationToken);
 
 
         if(existingUserEmail != null)
         {
-            throw new Exception("El email ya se encuentra registrado");
+            throw new NotFoundException("Email");
         }
 
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password);
 
+      
         var user = new User(
             registerRequest.Name,
             registerRequest.Surname,
@@ -57,36 +59,42 @@ public class AuthService : IAuthService
 
     public async Task<LoginResponse> Login(LoginRequest loginRequest, CancellationToken cancellationToken)
     {
+    
+
         var user = await _userRepository.GetByEmail(loginRequest.Email, cancellationToken);
 
         if (user == null)
-        {
-            throw new Exception("Credenciales incorrectas");
+        {   
+            throw new NotFoundException("User");
         }
 
         var validatePassword = BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password);
 
         if (!validatePassword)
         {
-            throw new Exception("Credenciales incorrectas");
+            throw new InvalidCredentialsException();
         }
 
-        var token = _jwtService.GenerateToken(new CreateRequest
+        var createRequest = new CreateRequest(
+            user.Name!,
+            user.Surname!,
+            user.Email!,
+            user.Password!,
+            user.IsArtist,
+            user.Role!
+        )
         {
-            Name = user.Name,
-            Surname = user.Surname,
-            Email = user.Email,
-            Role = user.Role,
-            IsArtist = user.IsArtist
-        }
-        );
+            Id = user.Id
+        };
 
+        var token = _jwtService.GenerateToken(createRequest);
+        
             
 
         return new LoginResponse(
             token: token,  
             email: user.Email,
-            role: user.Role
+            role: user.Role!
         );
         
 

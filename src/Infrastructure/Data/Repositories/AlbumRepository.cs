@@ -40,10 +40,11 @@ public class AlbumRepository : IAlbumRepository
         var album = await _context.Albums.FindAsync(id);
         if (album == null)
         {
-            new Exception($"El album con el ID {id} no fue encontrado.");
-
+            new NotFoundException($"El album con el ID {id} no fue encontrado.");
         }
-        album.AddSong(song);
+
+
+        album!.AddSong(song);
 
         await _context.SaveChangesAsync();
 
@@ -67,9 +68,9 @@ public class AlbumRepository : IAlbumRepository
 
     public async Task<Album> Create(Album album, CancellationToken cancellationToken)
     {
-        await _context.Albums.AddAsync(album, cancellationToken);
-        await _context.SaveChangesAsync();
-        return album;
+        var albumCreated = await _context.Albums.AddAsync(album, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+        return albumCreated.Entity;
 
     }
 
@@ -77,9 +78,15 @@ public class AlbumRepository : IAlbumRepository
 
     public async Task<Album> GetById(Guid id, CancellationToken cancellationToken)
     {
-        return await _context.Albums.
-            Include(a => a.Songs)
-        .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
+        var result = await _context.Albums.
+             Include(a => a.Songs)
+         .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
+
+        if (result is null)
+        {
+            throw new Exception();
+        }
+        return result;
 
         //     if(album == null)
         //     {

@@ -32,14 +32,14 @@ public class StatisticService : IStatisticService
     {
         if (Id == Guid.Empty)
         {
-            throw new Exception("Id es vacio");
+            throw new Exception("The ID is empty");
         }
 
         var statistic = await _statistic.GetById(Id, cancellationToken);
 
         if (statistic == null)
         {
-            throw new Exception("La estadística no existe");
+            throw new Exception("There are no statistics");
         }
 
 
@@ -60,7 +60,7 @@ public class StatisticService : IStatisticService
     {
         if (statisticDto == null)
         {
-            throw new Exception("La estadística esta vacia");
+            throw new Exception("The table is empty");
         }
 
 
@@ -129,12 +129,12 @@ public class StatisticService : IStatisticService
         var existingAlbum = await _statistic.GetById(Id, cancellationToken);
         if (existingAlbum == null)
         {
-            throw new Exception("El album no existe");
+            throw new Exception("The album does not exist");
         }
 
         if (statisticDto == null)
         {
-            throw new Exception("El album esta vacio");
+            throw new Exception("The album is empty");
         }
 
 
@@ -164,7 +164,7 @@ public class StatisticService : IStatisticService
     {
         if (Id == Guid.Empty)
         {
-            throw new Exception("Id es vacio");
+            throw new Exception("The ID is empty");
         }
 
         await _statistic.Delete(Id, cancellationToken);
