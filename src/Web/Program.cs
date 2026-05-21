@@ -10,7 +10,7 @@ using Core.Middlewares;
 using Application.Interfaces.IJwtService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Microsoft.AspNetCore.RateLimiting;
 
 using System.Text;
@@ -26,43 +26,52 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
-builder.Services.AddSwaggerGen(setupAct =>
+builder.Services.AddOpenApi(options =>
 {
-    setupAct.CustomSchemaIds(type => type.FullName);
-
-    setupAct.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Mi API",
-        Version = "v1",
-        Description = "API para AVA-Sound"
-    });
-
-    setupAct.AddSecurityDefinition("ApiBearerAuth", new OpenApiSecurityScheme()
-    {
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        Description = "Acá debe pegar el token"
-
-    });
-
-    setupAct.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
+    options.AddDocumentTransformer(
+        (document, context, cancellationToken) =>
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "ApiBearerAuth"
-                }
-            },
-            new List<string>()
-        }
+            var schemeName = "ApiBearerAuth";
 
-    }
-    );
+            var securityScheme =
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Description = "Acá pegar el token"
+                };
+
+            document.Components ??= new OpenApiComponents();
+
+            document.Components.SecuritySchemes ??=
+                new Dictionary<string, IOpenApiSecurityScheme>();
+
+            document.Components.SecuritySchemes[schemeName] =
+                securityScheme;
+
+            var schemeReference =
+                new OpenApiSecuritySchemeReference(
+                    schemeName,
+                    document);
+
+            var requirement =
+                new OpenApiSecurityRequirement
+                {
+                    [schemeReference] = []
+                };
+
+            document.Security =
+                new List<OpenApiSecurityRequirement>
+                {
+                    requirement
+                };
+
+            return Task.CompletedTask;
+        });
 });
+
+
 
 var connection = new SqliteConnection("Data Source=AVA_Sound.db");
 connection.Open();
@@ -113,11 +122,16 @@ builder.Services.AddAuthentication(
             ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
+
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not found")))
 
         };
     });
+builder.Services.AddAuthorization();
 
 
 var app = builder.Build();
@@ -126,17 +140,20 @@ app.UseDeveloperExceptionPage();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    // app.MapOpenApi(); // Se comenta el endpoint nativo de .NET 9
-    app.UseSwagger(); // Asegura que se genere el JSON de Swashbuckle
-
     app.UseSwaggerUI(options =>
-{
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-});
+    {
+        options.SwaggerEndpoint(
+            "/openapi/v1.json",
+            "My API V1");
+
+        options.RoutePrefix = string.Empty;
+    });
+
+    app.MapOpenApi();
 }
 
 app.UseRateLimiter();
-app.MapControllers();
+
 
 
 
@@ -147,7 +164,7 @@ app.UseHttpsRedirection();
 
 
 
-
+app.UseRouting();
 
 app.UseAuthentication();
 
