@@ -5,12 +5,12 @@ namespace Domain.Entities;
 
 public class Album
 {
-   public Guid Id {get;  init;}
-    public Guid IdArtist {get; init;}
-    public string Title {get; set;}
-    public DateTime ReleasteDate {get; set;}
-    public string? FrontPage {get;set;}
-    public string? Description {get;set;}
+    public Guid Id { get; init; }
+    public Guid IdArtist { get; init; }
+    public string Title { get; set; }
+    public DateTime ReleasteDate { get; set; }
+    public string? FrontPage { get; set; }
+    public string? Description { get; set; }
 
 
     // private readonly List<Guid> _songs = [];
@@ -18,10 +18,10 @@ public class Album
     private readonly List<Song> _songs = [];
     public IReadOnlyCollection<Song> Songs => _songs.AsReadOnly();
     // public List<Song> Songs {get; private set;} = new();
-    
 
 
-    
+
+
 
 
 
@@ -35,18 +35,19 @@ public class Album
         ReleasteDate = releasteDate;
         FrontPage = frontPage ?? null;
         Description = description ?? null;
-        
+
 
     }
 
-public void AddSong (Song song)
+    public void AddSong(Song song)
     {
-    if (Songs.Contains(song))   {
+        if (Songs.Contains(song))
+        {
             throw new SongAlredyExistAlbumExcepction(song.Title);
         }
 
         _songs.Add(song);
-        
+
 
     }
 
@@ -64,13 +65,9 @@ public void AddSong (Song song)
         {
             throw new Exception("The release date cannot be in the future");
         }
-        if (frontPage != null )
-        {
-            if (!string.IsNullOrEmpty(frontPage))
-            {
-                throw new Exception("The front page cannot be empty");
-            }
-        }  
+
+
+
         if (description != null)
         {
             if (string.IsNullOrWhiteSpace(description))
@@ -78,9 +75,9 @@ public void AddSong (Song song)
                 throw new Exception("The description cannot be empty");
             }
         }
-        
+
     }
-    
+
 
 
 }
