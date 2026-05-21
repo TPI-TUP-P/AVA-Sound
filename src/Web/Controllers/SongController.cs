@@ -40,7 +40,7 @@ public class SongController : ControllerBase
         return Ok(song);
     }
 
-    [HttpPut("{id}")]
+    [HttpPatch("{id}")]
 
     public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest songDto, CancellationToken cancellationToken)
     {

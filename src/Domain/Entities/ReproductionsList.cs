@@ -6,12 +6,12 @@ public class ReproductionsList
 {
     public Guid Id {get; private set;}
     public Guid IdUser {get; private set;}
-    public string Name {get; private set;}=null!;
-    public string Description {get; private set;}=null!;
-    public bool IsPublic {get; private set;}
-    public DateTime Creation {get; private set;}
+    public string Name {get; set;}=null!;
+    public string Description {get; set;}=null!;
+    public bool IsPublic {get; set;}
+    public DateTime Creation {get; set;}
     // public string? SoundList {get; set;}
-    public List<Song> Songs { get; private set; } = new();
+    public List<Song> Songs { get; set; } = new();
 
 
     private ReproductionsList(){}
@@ -59,6 +59,20 @@ public class ReproductionsList
             throw new Exception("Song not found");
         Songs.Remove(existing);
     }
+
+
+    public void UpdateInfo(string name, string description, bool isPublic)
+{
+    if (string.IsNullOrWhiteSpace(name))
+        throw new Exception("name obligatorio");
+
+    if (string.IsNullOrWhiteSpace(description))
+        throw new Exception("description obligatorio");
+
+    Name = name;
+    Description = description;
+    IsPublic = isPublic;
+}
 
 
 }
