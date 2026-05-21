@@ -2,10 +2,10 @@ using Application.DTOs.Auth.Request;
 using Application.DTOs.Auth.Response;
 using Application.Interfaces;
 using Domain.Entities;
-using BCrypt.Net;
 using Domain.Interfaces;
 using Application.Interfaces.IJwtService;
 using Application.DTOs.User.Request;
+using Domain.Exceptions;
 namespace Application.Services;
 
 public class AuthService : IAuthService
@@ -23,26 +23,18 @@ public class AuthService : IAuthService
 
     public async Task<RegisterResponse> Register (RegisterRequest registerRequest, CancellationToken cancellationToken)
     {
-        if (registerRequest.Email == null || registerRequest.Password == null)
-        {
-            throw new Exception("Your email address and password are required");
-        }
         
         var existingUserEmail = await _userRepository.GetByEmail(registerRequest.Email, cancellationToken);
 
 
         if(existingUserEmail != null)
         {
-            throw new Exception("The email address is already registered");
+            throw new NotFoundException("Email");
         }
 
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password);
 
-        if (registerRequest.Name == null || registerRequest.Surname == null || registerRequest.Role == null)
-        {
-            throw new Exception("All fields are required");
-        }
-        
+      
         var user = new User(
             registerRequest.Name,
             registerRequest.Surname,
@@ -67,24 +59,20 @@ public class AuthService : IAuthService
 
     public async Task<LoginResponse> Login(LoginRequest loginRequest, CancellationToken cancellationToken)
     {
-        if (loginRequest.Email == null || loginRequest.Password == null)
-        {
-            throw new Exception("Your email address and password are required");
-        }
-        
+    
 
         var user = await _userRepository.GetByEmail(loginRequest.Email, cancellationToken);
 
         if (user == null)
-        {
-            throw new Exception("Invalid credentials");
+        {   
+            throw new NotFoundException("User");
         }
 
         var validatePassword = BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password);
 
         if (!validatePassword)
         {
-            throw new Exception("Invalid credentials");
+            throw new InvalidCredentialsException();
         }
 
         var createRequest = new CreateRequest(
@@ -106,7 +94,7 @@ public class AuthService : IAuthService
         return new LoginResponse(
             token: token,  
             email: user.Email,
-            role: user.Role
+            role: user.Role!
         );
         
 
