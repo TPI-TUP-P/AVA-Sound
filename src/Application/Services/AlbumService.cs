@@ -62,6 +62,7 @@ public class AlbumService : IAlbumService
     public async Task<CreateResponse> Create(CreateRequest albumDto, Guid idUser,CancellationToken cancellationToken)
     {
 
+
         var user = await _user.GetById(idUser, cancellationToken);
 
         if(user.IsArtist is false)
