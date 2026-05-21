@@ -50,9 +50,17 @@ public class AlbumRepository : IAlbumRepository
 
 
         return album;
+    }
 
 
-
+    public async Task<List<Album>> GetAllByArtist(Guid idArtist, CancellationToken cancellationToken)
+    {
+        // return await _context.Albums.Where(a=> a.IdArtist == idArtist).ToListAsync();
+        return await _context.Albums
+            .Where(a => a.IdArtist == idArtist)
+            .Include(a => a.Songs)
+            .ToListAsync(cancellationToken);
+            
     }
 
     public async Task Delete(Guid id, CancellationToken cancellationToken)

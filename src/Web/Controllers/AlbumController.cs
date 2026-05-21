@@ -4,7 +4,6 @@ using Application.DTOs.Album.Request;
 using Application.DTOs.Album.Response;
 
 using Application.Interfaces;
-using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -34,7 +33,21 @@ public class AlbumController : ControllerBase
     }
 
 
+    [HttpGet("artist/{idArtist}")]
+    [Authorize]
+    [EnableRateLimiting("HeavyEndpoint")]
+    public async Task<ActionResult<List<GetAllResponse>>> GetAllBydArtist (Guid idArtist, CancellationToken cancellationToken)
+    {
+        var albums = await _albumService.GetAllByArtist(idArtist, cancellationToken);
+        return Ok(albums);
+    ;
+    }
+    
+
+
     [HttpGet]
+    [Authorize(Roles = "Admin")]
+    [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<List<GetAllResponse>>> GetAll()
     {
 
@@ -46,23 +59,8 @@ public class AlbumController : ControllerBase
     [Authorize]
     [HttpPost]
     [EnableRateLimiting("HeavyEndpoint")]
-    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest albumDto, CancellationToken cancellationToken)
-    {
+  
 
-        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
-                  ?? User.FindFirst("id")?.Value 
-                  ?? User.FindFirst("sub")?.Value;
-        if (string.IsNullOrEmpty(idUserToken))
-        {
-            return Unauthorized("User ID not found in token.");
-        }
-        
-        var idUser = Guid.Parse(idUserToken);
-     
-        
-        var album=  await _albumService.Create(albumDto, idUser ,cancellationToken);
-        return CreatedAtAction(nameof(GetById),new { id = album.Id }, album);
-    }
 
     [Authorize]
     [HttpPut("{id}")]
