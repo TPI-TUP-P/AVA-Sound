@@ -47,7 +47,16 @@ public class Album
         }
 
         _songs.Add(song);
+    }
 
+
+    public void DeleteSong(Song song)
+    {
+        if (!Songs.Contains(song))
+        {
+            throw new NotFoundException("Song");
+        }
+        _songs.Remove(song);
 
     }
 

@@ -222,9 +222,36 @@ public class AlbumService : IAlbumService
             album.Songs.ToList()
 
         );
+    }
 
 
+    public async Task<GetByIdResponse> DeleteSong(Guid id, Guid idSong, CancellationToken cancellationToken)
+    {
+        var album = await _album.GetById(id, cancellationToken);
+        var song = await _song.GetById(idSong, cancellationToken);
+        if(album is null)
+        {
+            throw new NotFoundException("Album");
+        }
 
+        if(song is null)
+        {
+            throw new NotFoundException("Song");
+        }
+
+        album.DeleteSong(song);
+        await _album.Update(album, cancellationToken);
+
+        return new GetByIdResponse(
+            album.Id,
+            album.IdArtist,
+            album.Title,
+            album.ReleasteDate,
+            album.FrontPage,
+            album.Description,
+            album.Songs.ToList()
+            
+        );
     }
 
   
