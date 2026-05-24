@@ -38,16 +38,24 @@ public class AlbumRepository : IAlbumRepository
     public async Task<Album> AddSong(Guid id, Song song)
     {
         var album = await _context.Albums.FindAsync(id);
-        if (album == null)
-        {
-            new NotFoundException($"El album con el ID {id} no fue encontrado.");
-        }
+       
 
 
         album!.AddSong(song);
 
         await _context.SaveChangesAsync();
 
+
+        return album;
+    }
+
+
+    public async Task<Album> DeleteSong(Guid id, Song song)
+    {
+        var album = await _context.Albums.FindAsync(id);
+
+        album!.DeleteSong(song);
+        await _context.SaveChangesAsync();
 
         return album;
     }

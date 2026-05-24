@@ -74,20 +74,24 @@ public class AlbumController : ControllerBase
     [HttpPost("{id}/add-song/{idSong}")]
     public async Task<ActionResult<GetByIdResponse>> AddSong(Guid id, Guid idSong, CancellationToken cancellationToken)
     {
-        try
-        {
+      
             var result = await _albumService.AddSong(id, idSong, cancellationToken);
             return CreatedAtAction(nameof(GetById), new { id }, result
             );
 
-        }
+        
 
-        catch (Exception ex)
-        {
-            return this.StatusCode(500, ex.Message);
-        }
+       
+}
+
+
+    [Authorize]
+    [HttpPost("{id}/delete-song/{idSong}")]
+    public async Task<ActionResult<GetByIdResponse>> DeleteSong(Guid id, Guid idSong, CancellationToken cancellationToken)
+    {   
+        var result = await _albumService.DeleteSong(id, idSong, cancellationToken);
+        return CreatedAtAction(nameof(GetById), new { id }, result);
     }
-
 
 
     [Authorize]
