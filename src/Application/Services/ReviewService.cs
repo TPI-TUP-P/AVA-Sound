@@ -24,7 +24,7 @@ public class ReviewService : IReviewService
     {
         if (Id == Guid.Empty)
         {
-            throw new Exception("id is empety");
+            throw new FieldEmpetyExcepction("Id");
         }
         var review = await _review.GetBySong(Id, cancellationToken);
         // The r refers to reviews
@@ -45,11 +45,11 @@ public class ReviewService : IReviewService
         }
         if (reviewDto.IdUser == Guid.Empty || reviewDto.IdSong == Guid.Empty)
         {
-            throw new Exception("Not all fields are correct.");
+            throw new FieldEmpetyExcepction("Id");
         }
         if (string.IsNullOrWhiteSpace(reviewDto.Comment))
         {
-            throw new ArgumentException("The comment cannot be empty.");
+            throw new FieldEmpetyExcepction("Comment");
         }
         if (reviewDto.Comment.Length > 800)
         {
@@ -57,17 +57,17 @@ public class ReviewService : IReviewService
         }
         if (reviewDto.Comment.Length < 3)
         {
-            throw new ArgumentException("It must have at least 3 characters.");
+            throw new FieldIsNotLongException("Comment", 3);
         }
         var songExists = await _song.GetById(reviewDto.IdSong, cancellationToken);
         if (songExists is null)
         {
-            throw new KeyNotFoundException("Song not found.");
+            throw new NotFoundException("Song"); ;
         }
         var reviewsExist = await _review.GetBySong(reviewDto.IdSong, cancellationToken);
         if (reviewsExist.Any(x => x.IdUser == reviewDto.IdUser))
         {
-            throw new ReviewAlreadyExistExcepction(songExists.Title);
+            throw new AlreadyExistExcepction("Review", songExists.Title);
         }
 
 
@@ -94,11 +94,11 @@ public class ReviewService : IReviewService
     {
         if (Id == Guid.Empty)
         {
-            throw new Exception("empty id");
+            throw new FieldEmpetyExcepction("Id");
         }
         if (reviewDto is null)
         {
-            throw new Exception("review is empety.");
+            throw new FieldEmpetyExcepction("Review");
         }
         var existReview = await _review.GetById(Id, cancellationToken);
         if (reviewDto.Comment != null && reviewDto.Comment.Length > 3)
@@ -107,7 +107,7 @@ public class ReviewService : IReviewService
         }
         else
         {
-            throw new Exception("It must have at least 3 characters.");
+            throw new FieldIsNotLongException("Comment", 3);
         }
 
         await _review.Update(existReview, cancellationToken);
@@ -121,7 +121,7 @@ public class ReviewService : IReviewService
     {
         if (Id == Guid.Empty)
         {
-            throw new Exception("id empety.");
+            throw new FieldEmpetyExcepction("Id");
         }
         return _review.Delete(Id, cancellationToken);
     }
