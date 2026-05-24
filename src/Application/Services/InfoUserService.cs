@@ -3,23 +3,24 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Application.DTOs.InfoUser.Request;
 using Application.DTOs.InfoUser.Response;
-
+using Domain.Exceptions;
 namespace Application.Services;
 
 public class InfoUserService : IInfoUserService
 {
     private IInfoUserRepository _InfoUser;
-
-    public InfoUserService(IInfoUserRepository infouser)
+    private IUserRepository _user;
+    public InfoUserService(IInfoUserRepository infouser, IUserRepository user)
     {
         _InfoUser = infouser;
+        _user = user;
     }
 
     public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
-            throw new ArgumentException("Id cannot be empty");
+            throw new FieldEmpetyExcepction("Id");
         }
 
         var infouser = await _InfoUser.GetById(Id, cancellationToken);
@@ -36,22 +37,27 @@ public class InfoUserService : IInfoUserService
 
     public async Task<CreateResponse> Create(CreateRequest infouserDto, CancellationToken cancellationToken)
     {
+        var userExist = _user.GetById(infouserDto.IdUser, cancellationToken);
+        if (userExist is null)
+        {
+            throw new NotFoundException("User");
+        }
         if (infouserDto == null)
         {
-            throw new Exception("empty information.");
+            throw new FieldEmpetyExcepction("Fields");
         }
         if (infouserDto.ProfilePicture is null)
         {
-            throw new Exception("ProfilePicture is null.");
+            throw new FieldEmpetyExcepction("Profile Picture");
         }
         if (infouserDto.Biography is null || infouserDto.Country is null)
         {
-            throw new Exception("empty information.");
+            throw new FieldEmpetyExcepction("Biography");
         }
         var existingInfoUser = _InfoUser.GetById(infouserDto.IdUser, cancellationToken);
         if (existingInfoUser is not null)
         {
-            throw new Exception("already have info user");
+            throw new AlreadyExistExcepction("infouser", "user");
         }
         var newInfoUser = new InfoUser(
             infouserDto.IdUser,
@@ -72,9 +78,14 @@ public class InfoUserService : IInfoUserService
 
     public async Task<UpdateResponse> Update(Guid Id, UpdateRequest infouserDto, CancellationToken cancellationToken)
     {
+        var userExist = _user.GetById(infouserDto.IdUser, cancellationToken);
+        if (userExist is null)
+        {
+            throw new NotFoundException("User");
+        }
         if (Id == Guid.Empty)
         {
-            throw new ArgumentException("Id cannot be empty");
+            throw new FieldEmpetyExcepction("Id");
         }
         var existingInfo = await _InfoUser.GetById(Id, cancellationToken);
         if (infouserDto.Biography != null && infouserDto.Country != null && infouserDto.ProfilePicture != null)
@@ -97,7 +108,7 @@ public class InfoUserService : IInfoUserService
     {
         if (Id == Guid.Empty)
         {
-            throw new ArgumentException("Id cannot be empty");
+            throw new FieldEmpetyExcepction("Id");
         }
         return _InfoUser.Delete(Id, cancellationToken);
     }
