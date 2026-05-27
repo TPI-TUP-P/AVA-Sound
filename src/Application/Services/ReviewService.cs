@@ -24,7 +24,7 @@ public class ReviewService : IReviewService
     {
         if (Id == Guid.Empty)
         {
-            throw new FieldEmpetyExcepction("Id");
+            throw new FieldEmptyExcepction("Id");
         }
         var review = await _review.GetBySong(Id, cancellationToken);
         // The r refers to reviews
@@ -45,11 +45,11 @@ public class ReviewService : IReviewService
         }
         if (reviewDto.IdUser == Guid.Empty || reviewDto.IdSong == Guid.Empty)
         {
-            throw new FieldEmpetyExcepction("Id");
+            throw new FieldEmptyExcepction("Id");
         }
         if (string.IsNullOrWhiteSpace(reviewDto.Comment))
         {
-            throw new FieldEmpetyExcepction("Comment");
+            throw new FieldEmptyExcepction("Comment");
         }
         if (reviewDto.Comment.Length > 800)
         {
@@ -94,11 +94,11 @@ public class ReviewService : IReviewService
     {
         if (Id == Guid.Empty)
         {
-            throw new FieldEmpetyExcepction("Id");
+            throw new FieldEmptyExcepction("Id");
         }
         if (reviewDto is null)
         {
-            throw new FieldEmpetyExcepction("Review");
+            throw new FieldEmptyExcepction("Review");
         }
         var existReview = await _review.GetById(Id, cancellationToken);
         if (reviewDto.Comment != null && reviewDto.Comment.Length > 3)
@@ -121,7 +121,7 @@ public class ReviewService : IReviewService
     {
         if (Id == Guid.Empty)
         {
-            throw new FieldEmpetyExcepction("Id");
+            throw new FieldEmptyExcepction("Id");
         }
         return _review.Delete(Id, cancellationToken);
     }
