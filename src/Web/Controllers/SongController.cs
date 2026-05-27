@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Application.DTOs.Song.Request;
 using Application.DTOs.Song.Response;
 using Application.Interfaces;
@@ -5,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
 
-[Route("api/Song")]
+[Route("api/[controller]")]
 [ApiController]
 
 public class SongController : ControllerBase
@@ -36,7 +37,18 @@ public class SongController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest songDto, CancellationToken cancellationToken)
     {
-        var song = await _songService.Create(songDto, cancellationToken);
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                          ?? User.FindFirst("id")?.Value 
+                          ?? User.FindFirst("sub")?.Value;
+
+        if (string.IsNullOrEmpty(idUserToken))
+        {
+            return Unauthorized("User ID not found in token.");
+        }
+
+        var idUser = Guid.Parse(idUserToken);
+
+        var song = await _songService.Create(songDto, idUser, cancellationToken);
         return Ok(song);
     }
 
