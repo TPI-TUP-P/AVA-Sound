@@ -4,6 +4,7 @@ using Application.Interfaces;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces;
+using Infrastructure.Interfaces;
 
 
 
@@ -14,10 +15,13 @@ public class SongService : ISongService
     private ISongRepository _song;
     private IUserRepository _user;
 
-    public SongService(ISongRepository song, IUserRepository user)
+    private IStorageService _storage;
+
+    public SongService(ISongRepository song, IUserRepository user, IStorageService storage)
     {
         _song = song;
         _user = user;
+        _storage = storage;
     }
 
     public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
