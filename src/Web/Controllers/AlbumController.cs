@@ -59,8 +59,23 @@ public class AlbumController : ControllerBase
     [Authorize]
     [HttpPost]
     [EnableRateLimiting("HeavyEndpoint")]
-  
+    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest albumDto, CancellationToken cancellationToken)
+    {   
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                          ?? User.FindFirst("id")?.Value 
+                          ?? User.FindFirst("sub")?.Value;
 
+        if (string.IsNullOrEmpty(idUserToken))
+        {
+            return Unauthorized("User ID not found in token.");
+        }
+
+        var idUser = Guid.Parse(idUserToken);
+        var album = await _albumService.Create(albumDto, idUser, cancellationToken);
+        
+        return CreatedAtAction(nameof(GetById), new { id = album.Id }, album);
+        
+    }
 
     [Authorize]
     [HttpPut("{id}")]
