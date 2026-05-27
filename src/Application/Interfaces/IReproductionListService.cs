@@ -12,4 +12,7 @@ public interface IReproductionListService
     Task AddSong(Guid listId, Guid songId, CancellationToken cancellationToken);
     Task RemoveSong(Guid listId, Guid songId, CancellationToken cancellationToken);
     Task Delete(Guid id, CancellationToken cancellationToken);
+
+    Task<List<GetAllResponse>> GetByIdUser(Guid idUser, CancellationToken cancellationToken);
 }
+

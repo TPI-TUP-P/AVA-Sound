@@ -13,17 +13,24 @@ public class ReproductionsListRepository : IReproductionsListRepository
         _context = context;
     }
 
+
     public async Task<ReproductionsList> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var lista = await _context.ReproductionsLists.FindAsync(id, cancellationToken);
-        // .Include(r => r.Songs)
-        // .FirstOrDefaultAsync(r => r.Id == id);
-        if (lista == null)
-            throw new KeyNotFoundException($"La lista con el ID {id} no fue encontrado.");
-
-        return lista;
+        var lista = await _context.ReproductionsLists.Include(r => r.Songs)
+            .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
+            
+        return lista!;
     }
 
+
+   public async Task<List<ReproductionsList>> GetByIdUser(Guid idUser, CancellationToken cancellationToken)
+{
+    return await _context.ReproductionsLists
+            .Where(r => r.IdUser == idUser)
+
+        .Include(r => r.Songs) 
+        .ToListAsync(cancellationToken);
+}
     public async Task<ReproductionsList> Create(ReproductionsList list, CancellationToken cancellationToken)
     {
         _context.ReproductionsLists.Add(list);
@@ -48,4 +55,31 @@ public class ReproductionsListRepository : IReproductionsListRepository
             await _context.SaveChangesAsync(cancellationToken);
         }
     }
+
+
+    public async Task<ReproductionsList> AddSong(Guid id, Song song)
+    {
+        var list = await _context.ReproductionsLists.FindAsync(id);
+        list!.AddSong(song);
+
+        await _context.SaveChangesAsync();
+
+        return list;
+    }
+
+
+    public async Task<ReproductionsList> RemoveSong(Guid id, Song song)
+    {
+        var list = await _context.ReproductionsLists.Include(r => r.Songs)
+            .FirstOrDefaultAsync(r => r.Id == id);
+
+        list!.RemoveSong(song);
+
+        await _context.SaveChangesAsync();
+
+        return list;
+        
+
+    }
+
 }

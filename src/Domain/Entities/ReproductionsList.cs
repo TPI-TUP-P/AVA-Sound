@@ -1,4 +1,6 @@
 
+using Domain.Exceptions;
+
 namespace Domain.Entities;
 
 
@@ -11,7 +13,10 @@ public class ReproductionsList
     public bool IsPublic {get; set;}
     public DateTime Creation {get; set;}
     // public string? SoundList {get; set;}
-    public List<Song> Songs { get; set; } = new();
+  
+    private readonly List<Song> _songs = [];
+    public IReadOnlyCollection<Song> Songs => _songs.AsReadOnly();
+    // public List<Song> Songs {get; private set;} = new();
 
 
     private ReproductionsList(){}
@@ -25,7 +30,6 @@ public class ReproductionsList
         Description = description;
         IsPublic = isPublic;
         Creation = DateTime.Now;
-        Songs = new List<Song>();
         // SoundList = soundList;
     }
 
@@ -46,8 +50,8 @@ public class ReproductionsList
         if (song == null)
             throw new Exception("Song is required");
         if (Songs.Any(s => s.Id == song.Id))
-            throw new Exception("Song already exists");
-        Songs.Add(song);
+            throw new AlreadyExistExcepction("Song", "ReproductionsList ");
+        _songs.Add(song);
     }
 
     public void RemoveSong(Song song)
@@ -57,7 +61,7 @@ public class ReproductionsList
         var existing = Songs.FirstOrDefault(s => s.Id == song.Id);
         if (existing == null)
             throw new Exception("Song not found");
-        Songs.Remove(existing);
+        _songs.Remove(existing);
     }
 
 
