@@ -68,7 +68,7 @@ public class SongService : ISongService
         
     }
 
-    public async Task<CreateResponse> Create(CreateRequest songDto, CancellationToken cancellationToken)
+    public async Task<CreateResponse> Create(CreateRequest songDto, Guid idUser,CancellationToken cancellationToken)
     {
         if (songDto == null)
         {
@@ -77,7 +77,7 @@ public class SongService : ISongService
         var idAlbum = songDto.IdAlbum;
 
 
-        if (songDto.IdArtist == Guid.Empty)
+        if (idUser == Guid.Empty)
             throw new Exception("IdArtist inválido");
 
 
@@ -96,7 +96,7 @@ public class SongService : ISongService
 
 
         var song = new Song(
-            songDto.IdArtist,
+            idUser,
             idAlbum,
             songDto.Title,
             songDto.Gender,
