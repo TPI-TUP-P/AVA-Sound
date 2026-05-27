@@ -6,6 +6,7 @@ using Domain.Exceptions;
 using Domain.Interfaces;
 
 
+
 namespace Application.Services;
 
 public class SongService : ISongService
@@ -16,12 +17,12 @@ public class SongService : ISongService
     public SongService(ISongRepository song, IUserRepository user)
     {
         _song = song;
-        _user= user;
+        _user = user;
     }
 
     public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
-       
+
 
         var song = await _song.GetById(Id, cancellationToken);
 
@@ -44,34 +45,34 @@ public class SongService : ISongService
 
     public async Task<PagerSongResponse<GetByIdResponse>> GetAll(PagerRequest pagerRequest, CancellationToken cancellationToken)
     {
-        var songs = await _song.GetAll(pagerRequest.Page,pagerRequest.PageSize, cancellationToken);
+        var songs = await _song.GetAll(pagerRequest.Page, pagerRequest.PageSize, cancellationToken);
         var page = pagerRequest.Page;
         var pageSize = pagerRequest.PageSize;
-        var songTotal= await _song.Count();
-        var response= new PagerSongResponse<GetByIdResponse>
+        var songTotal = await _song.Count();
+        var response = new PagerSongResponse<GetByIdResponse>
         {
             Songs = songs.Select(s => new GetByIdResponse
-        {
-            IdArtist = s.IdArtist,
-            IdAlbum = s.IdAlbum ?? Guid.Empty,
-            Title = s.Title,
-            Gender = s.Gender,
-            Duration = s.Duration,
-            AudioBig = s.AudioBig,
-            DateUpload = s.DateUpload,
-            Views = s.Views
-        }).ToList(),
+            {
+                IdArtist = s.IdArtist,
+                IdAlbum = s.IdAlbum ?? Guid.Empty,
+                Title = s.Title,
+                Gender = s.Gender,
+                Duration = s.Duration,
+                AudioBig = s.AudioBig,
+                DateUpload = s.DateUpload,
+                Views = s.Views
+            }).ToList(),
 
-        Page=page,
-        PageSize=pageSize,
-        SongTotal=songTotal,
-        PageTotal=(int) Math.Ceiling(songTotal/(double)pageSize)
+            Page = page,
+            PageSize = pageSize,
+            SongTotal = songTotal,
+            PageTotal = (int)Math.Ceiling(songTotal / (double)pageSize)
         };
         return response;
-        
+
     }
 
-    public async Task<CreateResponse> Create(CreateRequest songDto, Guid idUser,CancellationToken cancellationToken)
+    public async Task<CreateResponse> Create(CreateRequest songDto, Guid idUser, CancellationToken cancellationToken)
     {
         if (songDto == null)
         {
@@ -85,7 +86,7 @@ public class SongService : ISongService
 
         var user = await _user.GetById(idUser, cancellationToken);
 
-        if(user == null)
+        if (user == null)
             throw new NotFoundException("User");
 
         if (string.IsNullOrWhiteSpace(songDto.Title))
