@@ -20,7 +20,7 @@ public class InfoUserService : IInfoUserService
     {
         if (Id == Guid.Empty)
         {
-            throw new FieldEmpetyExcepction("Id");
+            throw new FieldEmptyExcepction("Id");
         }
 
         var infouser = await _InfoUser.GetById(Id, cancellationToken);
@@ -44,15 +44,15 @@ public class InfoUserService : IInfoUserService
         }
         if (infouserDto == null)
         {
-            throw new FieldEmpetyExcepction("Fields");
+            throw new FieldEmptyExcepction("Fields");
         }
         if (infouserDto.ProfilePicture is null)
         {
-            throw new FieldEmpetyExcepction("Profile Picture");
+            throw new FieldEmptyExcepction("Profile Picture");
         }
         if (infouserDto.Biography is null || infouserDto.Country is null)
         {
-            throw new FieldEmpetyExcepction("Biography");
+            throw new FieldEmptyExcepction("Biography");
         }
         var existingInfoUser = _InfoUser.GetById(infouserDto.IdUser, cancellationToken);
         if (existingInfoUser is not null)
@@ -85,7 +85,7 @@ public class InfoUserService : IInfoUserService
         }
         if (Id == Guid.Empty)
         {
-            throw new FieldEmpetyExcepction("Id");
+            throw new FieldEmptyExcepction("Id");
         }
         var existingInfo = await _InfoUser.GetById(Id, cancellationToken);
         if (infouserDto.Biography != null && infouserDto.Country != null && infouserDto.ProfilePicture != null)
@@ -108,7 +108,7 @@ public class InfoUserService : IInfoUserService
     {
         if (Id == Guid.Empty)
         {
-            throw new FieldEmpetyExcepction("Id");
+            throw new FieldEmptyExcepction("Id");
         }
         return _InfoUser.Delete(Id, cancellationToken);
     }

@@ -2,6 +2,7 @@ using Application.DTOs.Song.Request;
 using Application.DTOs.Song.Response;
 using Application.Interfaces;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Interfaces;
 
 
@@ -10,20 +11,22 @@ namespace Application.Services;
 public class SongService : ISongService
 {
     private ISongRepository _song;
-    public SongService(ISongRepository song)
+    private IUserRepository _user;
+
+    public SongService(ISongRepository song, IUserRepository user)
     {
         _song = song;
+        _user= user;
     }
 
     public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        if (Id == Guid.Empty)
-            throw new Exception("el id no existe");
+       
 
         var song = await _song.GetById(Id, cancellationToken);
 
         if (song == null)
-            throw new Exception("la cancion no existe");
+            throw new NotFoundException("Song");
 
         return new GetByIdResponse
         {
@@ -74,26 +77,29 @@ public class SongService : ISongService
         {
             throw new Exception("Datos inválidos");
         }
+
         var idAlbum = songDto.IdAlbum;
 
-
         if (idUser == Guid.Empty)
-            throw new Exception("IdArtist inválido");
+            throw new FieldEmptyExcepction("idUser");
 
+        var user = await _user.GetById(idUser, cancellationToken);
+
+        if(user == null)
+            throw new NotFoundException("User");
 
         if (string.IsNullOrWhiteSpace(songDto.Title))
-            throw new Exception("Title es obligatorio");
+            throw new FieldEmptyExcepction("Title");
 
         if (string.IsNullOrWhiteSpace(songDto.Gender))
-            throw new Exception("Gender es obligatoria");
+            throw new FieldEmptyExcepction("Gender");
+
 
         if (string.IsNullOrWhiteSpace(songDto.Duration))
-            throw new Exception("Duration es obligatoria");
+            throw new FieldEmptyExcepction("Duration");
 
         if (string.IsNullOrWhiteSpace(songDto.AudioBig))
-            throw new Exception("AudioBig es obligatoria");
-
-
+            throw new FieldEmptyExcepction("AudioBig");
 
         var song = new Song(
             idUser,
@@ -133,16 +139,17 @@ public class SongService : ISongService
             throw new Exception("La canción no existe");
 
         if (string.IsNullOrWhiteSpace(songDto.Title))
-            throw new Exception("Title es obligatorio");
+            throw new FieldEmptyExcepction("Title");
 
         if (string.IsNullOrWhiteSpace(songDto.Gender))
-            throw new Exception("Gender es obligatoria");
+            throw new FieldEmptyExcepction("Gender");
 
         if (string.IsNullOrWhiteSpace(songDto.Duration))
-            throw new Exception("Duration es obligatoria");
+            throw new FieldEmptyExcepction("Duration");
 
         if (string.IsNullOrWhiteSpace(songDto.AudioBig))
-            throw new Exception("AudioBig es obligatoria");
+            throw new FieldEmptyExcepction("AudioBig");
+
 
         song.UpdateInfo(
             songDto.Title,
@@ -166,7 +173,7 @@ public class SongService : ISongService
     public async Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
-            throw new Exception("el id no existe");
+            throw new FieldEmptyExcepction("Id");
 
         var song = await _song.GetById(Id, cancellationToken);
 
