@@ -12,25 +12,26 @@ public class StorageService : IStorageService
     private readonly IConfiguration? _configuration;
 
 
-    public StorageService(HttpClient httpClient, IConfiguration configuration)
+    public StorageService(HttpClient httpClient)
     // le tengo que agregar credenciales reales mi king
     {
-        var keyLogin = "ACA VA LA CLAVE MISTICA";
-        if (keyLogin is null)
-        {
-            throw new Exception("ASDA");
-        }
-        _httpClient = httpClient;
-        _httpClient.DefaultRequestHeaders.Add(
-            "apikey",
-            keyLogin
-        );
+        // var keyLogin = "sb_secret_RFdNBdaxSoHMtbIXFYMOxA_ov3hlA6k";
+        // if (keyLogin is null)
+        // {
+        //     throw new Exception("ASDA");
+        // }
+        // _httpClient = httpClient;
+        // _httpClient.DefaultRequestHeaders.Add(
+        //     "apikey",
+        //     keyLogin
+        // );
 
-        _httpClient.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue(
-                "Bearer",
-                keyLogin
-            );
+        // _httpClient.DefaultRequestHeaders.Authorization =
+        //     new AuthenticationHeaderValue(
+        //         "Bearer",
+        //         keyLogin
+        //     );
+        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     }
 
     public async Task<string> UploadSong(

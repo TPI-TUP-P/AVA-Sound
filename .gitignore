@@ -5,6 +5,9 @@
 ./appsettings.json
 # dotenv files
 .env
+
+# Ignorar configuraciones locales con credenciales
+**/appsettings.Development.json
 # Infrastructure
 src/Infrastructure/Services/StorageService.cs
 

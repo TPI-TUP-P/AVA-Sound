@@ -17,6 +17,7 @@ using System.Text;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Net.Http.Headers;
 
 // using System.Text;
 // using Application.Interfaces;
@@ -149,7 +150,25 @@ builder.Services.AddCustomRateLimit(
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 
-builder.Services.AddHttpClient<IStorageService, StorageService>();
+builder.Services.AddHttpClient<IStorageService, StorageService>(client=>
+{
+    var keyLogin = builder.Configuration["SUPABASE_KEY"] ?? builder.Configuration["Supabase:Key"];
+    if(string.IsNullOrEmpty(keyLogin))
+    {
+        throw new Exception("The key is empty");
+    }
+
+    client.DefaultRequestHeaders.Add(
+        "apikey",
+        keyLogin
+    );
+    client.DefaultRequestHeaders.Authorization =
+        new AuthenticationHeaderValue(
+            "Bearer",
+            keyLogin
+        );
+
+});
 
 builder.Services.Configure<FormOptions>(options =>
 {
