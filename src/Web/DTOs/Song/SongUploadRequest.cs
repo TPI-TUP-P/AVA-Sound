@@ -1,4 +1,6 @@
-// Web/DTOs/Song/SongUploadRequest.cs
+namespace Web.DTOs.Song;
+
+
 public class SongUploadRequest
 {
     public Guid IdAlbum { get; set; }
