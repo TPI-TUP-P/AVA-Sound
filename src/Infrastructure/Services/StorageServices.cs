@@ -4,15 +4,18 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Infrastructure.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 public class StorageService : IStorageService
 {
     private readonly HttpClient? _httpClient;
+    private readonly IConfiguration? _configuration;
 
-    public StorageService(HttpClient httpClient)
+
+    public StorageService(HttpClient httpClient, IConfiguration configuration)
     // le tengo que agregar credenciales reales mi king
     {
-        var keyLogin = "SUPABASE_KEY_REMOVED";
+        var keyLogin = configuration["Supabase:Url"];
         if (keyLogin is null)
         {
             throw new Exception("ASDA");
