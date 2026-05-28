@@ -14,14 +14,16 @@ public class SongService : ISongService
 {
     private ISongRepository _song;
     private IUserRepository _user;
+    private IStorageService _storageService;
 
     private IStorageService _storage;
 
-    public SongService(ISongRepository song, IUserRepository user, IStorageService storage)
+    public SongService(ISongRepository song, IUserRepository user, IStorageService storage, IStorageService storageService)
     {
         _song = song;
         _user = user;
         _storage = storage;
+        _storageService = storageService;
     }
 
     public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
@@ -75,61 +77,58 @@ public class SongService : ISongService
         return response;
 
     }
+public async Task<CreateResponse> Create(
+    CreateRequest songDto,
+    Stream audioStream,        // ← nuevo
+    string fileName,           // ← nuevo
+    string contentType,        // ← nuevo
+    Guid idUser,
+    CancellationToken cancellationToken)
+{
+    if (songDto == null)
+        throw new Exception("Datos inválidos");
 
-    public async Task<CreateResponse> Create(CreateRequest songDto, Guid idUser, CancellationToken cancellationToken)
+    if (idUser == Guid.Empty)
+        throw new FieldEmptyExcepction("idUser");
+
+    var user = await _user.GetById(idUser, cancellationToken);
+    if (user == null)
+        throw new NotFoundException("User");
+
+    if (string.IsNullOrWhiteSpace(songDto.Title))
+        throw new FieldEmptyExcepction("Title");
+    if (string.IsNullOrWhiteSpace(songDto.Gender))
+        throw new FieldEmptyExcepction("Gender");
+    if (string.IsNullOrWhiteSpace(songDto.Duration))
+        throw new FieldEmptyExcepction("Duration");
+
+    // 1. Sube el audio a Supabase → te devuelve "uuid.mp3"
+    var audioBig = await _storageService.UploadSong(audioStream, fileName, contentType);
+
+    // 2. Crea la entidad con el path
+    var song = new Song(
+        idUser,
+        songDto.IdAlbum,
+        songDto.Title,
+        songDto.Gender,
+        songDto.Duration,
+        audioBig  // ← el path que vino de Supabase
+    );
+
+    await _song.Create(song, cancellationToken);
+
+    return new CreateResponse
     {
-        if (songDto == null)
-        {
-            throw new Exception("Datos inválidos");
-        }
-
-        var idAlbum = songDto.IdAlbum;
-
-        if (idUser == Guid.Empty)
-            throw new FieldEmptyExcepction("idUser");
-
-        var user = await _user.GetById(idUser, cancellationToken);
-
-        if (user == null)
-            throw new NotFoundException("User");
-
-        if (string.IsNullOrWhiteSpace(songDto.Title))
-            throw new FieldEmptyExcepction("Title");
-
-        if (string.IsNullOrWhiteSpace(songDto.Gender))
-            throw new FieldEmptyExcepction("Gender");
-
-
-        if (string.IsNullOrWhiteSpace(songDto.Duration))
-            throw new FieldEmptyExcepction("Duration");
-
-        if (string.IsNullOrWhiteSpace(songDto.AudioBig))
-            throw new FieldEmptyExcepction("AudioBig");
-
-        var song = new Song(
-            idUser,
-            idAlbum,
-            songDto.Title,
-            songDto.Gender,
-            songDto.Duration,
-            songDto.AudioBig
-        );
-
-        await _song.Create(song, cancellationToken);
-
-        return new CreateResponse
-        {
-            IdArtist = song.IdArtist,
-            IdAlbum = song.IdAlbum,
-            Title = song.Title,
-            Gender = song.Gender,
-            Duration = song.Duration,
-            AudioBig = song.AudioBig,
-            DateUpload = song.DateUpload,
-            Views = song.Views
-        };
-    }
-
+        IdArtist = song.IdArtist,
+        IdAlbum = song.IdAlbum,
+        Title = song.Title,
+        Gender = song.Gender,
+        Duration = song.Duration,
+        AudioBig = song.AudioBig,
+        DateUpload = song.DateUpload,
+        Views = song.Views
+    };
+}
     public async Task<UpdateResponse> Update(Guid id, UpdateRequest songDto, CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)

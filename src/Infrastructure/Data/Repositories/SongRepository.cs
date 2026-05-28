@@ -22,6 +22,13 @@ public class SongRepository : ISongRepository
         return song;
     }
 
+    public async Task Add (Song song)
+    {
+        await _context.Songs.AddAsync(song);
+        await _context.SaveChangesAsync();
+    }
+
+
 
     public async Task<List<Song>> GetAll(int Page,int PageSize,CancellationToken cancellationToken)
     {

@@ -34,24 +34,44 @@ public class SongController : ControllerBase
         return Ok(songs);
     }
 
-    [HttpPost]
-    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest songDto, CancellationToken cancellationToken)
+        [HttpPost]
+        [Consumes("multipart/form-data")]  // ← le decís explícitamente que es multipart
+        [DisableRequestSizeLimit]
+public async Task<ActionResult<CreateResponse>> Create(
+    [FromForm] SongUploadRequest request,  // ← el DTO de Web
+    CancellationToken cancellationToken)
+{
+    var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+        ?? User.FindFirst("id")?.Value
+        ?? User.FindFirst("sub")?.Value;
+
+    if (string.IsNullOrEmpty(idUserToken))
+        return Unauthorized("User ID not found in token.");
+
+    var idUser = Guid.Parse(idUserToken);
+
+    // convierte IFormFile → Stream acá en el controller
+    using var stream = request.AudioFile.OpenReadStream();
+
+    var songDto = new CreateRequest
     {
-        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
-                          ?? User.FindFirst("id")?.Value 
-                          ?? User.FindFirst("sub")?.Value;
+        IdAlbum = request.IdAlbum,
+        Title = request.Title,
+        Gender = request.Gender,
+        Duration = request.Duration
+    };
 
-        if (string.IsNullOrEmpty(idUserToken))
-        {
-            return Unauthorized("User ID not found in token.");
-        }
+    var song = await _songService.Create(
+        songDto,
+        stream,
+        request.AudioFile.FileName,
+        request.AudioFile.ContentType,
+        idUser,
+        cancellationToken
+    );
 
-        var idUser = Guid.Parse(idUserToken);
-
-        var song = await _songService.Create(songDto, idUser, cancellationToken);
-        return Ok(song);
-    }
-
+    return Ok(song);
+}
     [HttpPatch("{id}")]
 
     public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest songDto, CancellationToken cancellationToken)

@@ -3,14 +3,16 @@ namespace Infrastructure.Data.Services;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-public class StorageService
+using Infrastructure.Interfaces;
+
+public class StorageService : IStorageService
 {
     private readonly HttpClient? _httpClient;
 
     public StorageService(HttpClient httpClient)
     // le tengo que agregar credenciales reales mi king
     {
-        var keyLogin = "dale andresito ";
+        var keyLogin = "SUPABASE_KEY_REMOVED";
         if (keyLogin is null)
         {
             throw new Exception("ASDA");
@@ -52,10 +54,17 @@ public class StorageService
                 content
             );
 
+
+            if(!response.IsSuccessStatusCode)
+        {
+            var errorbody = await response.Content.ReadAsStringAsync();
+            throw new Exception(errorbody);
+        }
+
         response.EnsureSuccessStatusCode();
         var filePath = $"{url}{nombreArchivo}";
 
-        return filePath;
+        return nombreArchivo;
     }
 
     public async Task<string> GetSongUrl(

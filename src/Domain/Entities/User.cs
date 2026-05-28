@@ -12,6 +12,8 @@ public class User
     public string Password { get; set; }
     public bool IsArtist { get; set; }
 
+    public bool IsActive { get; private set; }
+
     public DateTime DateRegister { get; private set; }
 
     public string? Role { get; private set; }
@@ -29,6 +31,7 @@ public class User
         IsArtist = isArtist;
         DateRegister = DateTime.Now;
         Role = role ?? "user";
+        IsActive = true;
     }
 
     private void ValidateProperties(string? name, string? surname, string? email, string? password)
@@ -47,6 +50,15 @@ public class User
 
     }
 
+    public void Desactive()
+    {
+        if(!IsActive)
+        {
+            throw new InvalidOperationException("The user is already inactive");
+        }
+
+        IsActive = false;
+    }
 
     public void UpdateInfo(string name, string surname, string email, string password, bool isArtist)
     {

@@ -42,8 +42,8 @@ public class UserRepository : IUserRepository
     public async Task<User?> GetByEmail(string email, CancellationToken cancellationToken)
     {   
         
-        return await _context.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
-        
+        return await _context.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken );
+
     }
 
 

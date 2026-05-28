@@ -1,0 +1,1 @@
+public record GetSongUrlQuery(Guid SongId);

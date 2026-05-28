@@ -205,7 +205,8 @@ public class UserService : IUserService
         if (user == null)
             throw new Exception("el usuario no existe");
 
-        await _user.Delete(Id, cancellationToken);
+        user.Desactive();
+        await _user.Update(user, cancellationToken);
     }
 
     public async Task MakeAdmin(Guid userId, Guid currentUserId, CancellationToken cancellationToken)

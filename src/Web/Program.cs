@@ -12,16 +12,37 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Microsoft.AspNetCore.RateLimiting;
-
+using Infrastructure.Data.Services;
 using System.Text;
+using Infrastructure.Interfaces;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 
-builder.Services.AddControllers();
+// builder.Services.AddControllers();
+
+builder.Services.AddControllers(options =>
+{
+    // saca el formatter que intenta parsear como JQuery
+    var jqueryFormValueProviderFactory = options.ValueProviderFactories
+        .OfType<JQueryFormValueProviderFactory>()
+        .FirstOrDefault();
+
+    if (jqueryFormValueProviderFactory != null)
+        options.ValueProviderFactories.Remove(jqueryFormValueProviderFactory);
+});
+
+
+
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
@@ -110,6 +131,13 @@ builder.Services.AddCustomRateLimit(
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 
+builder.Services.AddHttpClient<IStorageService, StorageService>();
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.ValueCountLimit = int.MaxValue;
+    options.MultipartBodyLengthLimit = long.MaxValue; // permite archivos grandes
+});
 
 builder.Services.AddAuthentication(
     JwtBearerDefaults.AuthenticationScheme)
@@ -173,3 +201,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+
+
