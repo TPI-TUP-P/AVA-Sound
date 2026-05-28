@@ -204,10 +204,10 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-app.UseDeveloperExceptionPage();
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+// app.UseDeveloperExceptionPage();
+// // Configure the HTTP request pipeline.
+// if (app.Environment.IsDevelopment())
+// {
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint(
@@ -218,7 +218,7 @@ if (app.Environment.IsDevelopment())
     });
 
     app.MapOpenApi();
-}
+// }
 
 app.UseRateLimiter();
 
