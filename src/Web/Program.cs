@@ -112,8 +112,9 @@ builder.Services.AddOpenApi(options =>
 });
 
 
-
-var connection = new SqliteConnection("Data Source=AVA_Sound.db");
+    var connectionString = builder.Configuration["CONNECTION_STRING"] 
+                        ?? builder.Configuration.GetConnectionString("DefaultConnection");
+    var connection = new SqliteConnection(connectionString);
 connection.Open();
 
 using (var command = connection.CreateCommand())
