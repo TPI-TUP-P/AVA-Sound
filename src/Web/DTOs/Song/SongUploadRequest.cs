@@ -7,5 +7,5 @@ public class SongUploadRequest
     public string Title { get; set; } = "";
     public string Gender { get; set; } = "";
     public string Duration { get; set; } = "";
-    public IFormFile AudioFile { get; set; } = null!; // ← solo en Web
+    public IFormFile AudioFile { get; set; } = null!;
 }
