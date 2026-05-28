@@ -55,8 +55,9 @@ public class JwtService : IJwtService
 
         // Obtener la clave secreta desde la configuración
 
-        string secretKey = _config["Jwt:Key"] ?? throw new InvalidOperationException("The destination of the secret key does not match");
-
+string secretKey = _config["JWT_SECRET_KEY"] 
+                           ?? _config["Jwt:Key"] 
+                           ?? throw new InvalidOperationException("JWT Secret Key is missing in configuration.");
 
         // Validar que la clave tenga el tamaño minimo requerido para HS256 (lo use para testear un problema que estaba teniendo)
 
