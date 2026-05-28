@@ -15,7 +15,7 @@ public class StorageService : IStorageService
     public StorageService(HttpClient httpClient, IConfiguration configuration)
     // le tengo que agregar credenciales reales mi king
     {
-        var keyLogin = "No se olviden la clave";
+        var keyLogin = "ACA VA LA CLAVE MISTICA";
         if (keyLogin is null)
         {
             throw new Exception("ASDA");
@@ -58,7 +58,7 @@ public class StorageService : IStorageService
             );
 
 
-            if(!response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
         {
             var errorbody = await response.Content.ReadAsStringAsync();
             throw new Exception(errorbody);
@@ -93,7 +93,7 @@ public class StorageService : IStorageService
                 .ReadFromJsonAsync<SignedResponse>();
 
         return
-            $"https://etwseuwniupcpuigerkw.supabase.co{result!.SignedUrl}";
+            $"https://etwseuwniupcpuigerkw.supabase.co/storage/v1/{result!.SignedUrl}";
     }
 
     public class SignedResponse
