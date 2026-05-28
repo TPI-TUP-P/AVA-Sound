@@ -55,7 +55,7 @@ public class JwtService : IJwtService
 
         // Obtener la clave secreta desde la configuración
 
-string secretKey = _config["JWT_SECRET_KEY"] 
+        string secretKey = _config["JWT_SECRET_KEY"] 
                            ?? _config["Jwt:Key"] 
                            ?? throw new InvalidOperationException("JWT Secret Key is missing in configuration.");
 
