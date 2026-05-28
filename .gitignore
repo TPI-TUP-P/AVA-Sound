@@ -5,6 +5,8 @@
 ./appsettings.json
 # dotenv files
 .env
+# Infrastructure
+src/Infrastructure/Services/StorageService.cs
 
 .lscache
 # User-specific files

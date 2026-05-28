@@ -188,4 +188,16 @@ public async Task<CreateResponse> Create(
     }
 
 
+    public async Task<string> GetSongUrl(Guid songId, CancellationToken cancellationToken)
+{
+    if (songId == Guid.Empty)
+        throw new FieldEmptyExcepction("songId");
+
+    var song = await _song.GetById(songId, cancellationToken);
+    if (song is null)
+        throw new NotFoundException("Song");
+
+    return await _storageService.GetSongUrl(song.AudioBig);
+}
+
 }

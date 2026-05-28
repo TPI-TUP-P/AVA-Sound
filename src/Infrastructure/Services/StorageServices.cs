@@ -15,7 +15,7 @@ public class StorageService : IStorageService
     public StorageService(HttpClient httpClient, IConfiguration configuration)
     // le tengo que agregar credenciales reales mi king
     {
-        var keyLogin = configuration["Supabase:Url"];
+        var keyLogin = "No se olviden la clave";
         if (keyLogin is null)
         {
             throw new Exception("ASDA");

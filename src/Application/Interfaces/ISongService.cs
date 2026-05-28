@@ -19,4 +19,7 @@ Task<CreateResponse> Create(
 );
     Task<UpdateResponse> Update(Guid Id, UpdateRequest songDto, CancellationToken cancellationToken);
     Task Delete(Guid id, CancellationToken cancellationToken);
+
+
+        Task<string> GetSongUrl(Guid songId, CancellationToken cancellationToken); // ← nuevo
 }
