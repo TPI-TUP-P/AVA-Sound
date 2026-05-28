@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
-COPY AVA_Sound.slnx ./          # <-- nombre exacto con .slnx
+COPY AVA_Sound.slnx AVA_Sound.slnx   # <-- destino explícito
 COPY src/Web/Web.csproj ./src/Web/
 COPY src/Application/Application.csproj ./src/Application/
 COPY src/Domain/Domain.csproj ./src/Domain/
