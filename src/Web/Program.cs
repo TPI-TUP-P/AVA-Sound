@@ -193,8 +193,10 @@ builder.Services.AddAuthentication(
             ValidAudience = builder.Configuration["Jwt:Audience"],
 
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not found")))
-
+    Encoding.UTF8.GetBytes(
+        builder.Configuration["JWT_SECRET_KEY"] 
+        ?? builder.Configuration["Jwt:Key"] 
+        ?? throw new InvalidOperationException("JWT Key not found")))
         };
     });
 builder.Services.AddAuthorization();
