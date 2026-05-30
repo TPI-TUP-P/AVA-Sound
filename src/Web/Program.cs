@@ -12,16 +12,65 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Microsoft.AspNetCore.RateLimiting;
-
+using Infrastructure.Data.Services;
 using System.Text;
+using Infrastructure.Interfaces;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Net.Http.Headers;
+
+// using System.Text;
+// using Application.Interfaces;
+// using Application.Interfaces.IJwtService;
+// using Application.Services;
+// using Core.Middlewares;
+// using Domain.Interfaces;
+// using Infrastructure.Data;
+// using Infrastructure.Data.Repositories;
+// using Infrastructure.Data.Services;
+// using Infrastructure.Interfaces;
+// using Microsoft.AspNetCore.Authentication.JwtBearer;
+// using Microsoft.AspNetCore.Http.Features;
+// using Microsoft.Data.Sqlite;
+// using Microsoft.EntityFrameworkCore;
+// using Microsoft.IdentityModel.Tokens;
+// using Microsoft.OpenApi;
+// using Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 
-builder.Services.AddControllers();
+// builder.Services.AddControllers();
+
+builder.Services.AddControllers(options =>
+{
+    // saca el formatter que intenta parsear como JQuery
+    var jqueryFormValueProviderFactory = options.ValueProviderFactories
+        .OfType<JQueryFormValueProviderFactory>()
+        .FirstOrDefault();
+
+    if (jqueryFormValueProviderFactory != null)
+        options.ValueProviderFactories.Remove(jqueryFormValueProviderFactory);
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
@@ -69,11 +118,24 @@ builder.Services.AddOpenApi(options =>
 
             return Task.CompletedTask;
         });
+options.AddDocumentTransformer((document, context, cancellationToken) =>
+    {
+        document.Servers = new List<OpenApiServer>
+        {
+            new OpenApiServer { Url = "https://ava-sound.onrender.com" }
+        };
+
+        
+        return Task.CompletedTask;
+    });
+
+  
 });
 
 
-
-var connection = new SqliteConnection("Data Source=AVA_Sound.db");
+    var connectionString = builder.Configuration["CONNECTION_STRING"] 
+                        ?? builder.Configuration.GetConnectionString("DefaultConnection");
+    var connection = new SqliteConnection(connectionString);
 connection.Open();
 
 using (var command = connection.CreateCommand())
@@ -110,6 +172,31 @@ builder.Services.AddCustomRateLimit(
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 
+builder.Services.AddHttpClient<IStorageService, StorageService>(client=>
+{
+    var keyLogin = builder.Configuration["SUPABASE_KEY"] ?? builder.Configuration["Supabase:Key"];
+    if(string.IsNullOrEmpty(keyLogin))
+    {
+        throw new Exception("The key is empty");
+    }
+
+    client.DefaultRequestHeaders.Add(
+        "apikey",
+        keyLogin
+    );
+    client.DefaultRequestHeaders.Authorization =
+        new AuthenticationHeaderValue(
+            "Bearer",
+            keyLogin
+        );
+
+});
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.ValueCountLimit = int.MaxValue;
+    options.MultipartBodyLengthLimit = long.MaxValue; // permite archivos grandes
+});
 
 builder.Services.AddAuthentication(
     JwtBearerDefaults.AuthenticationScheme)
@@ -127,8 +214,10 @@ builder.Services.AddAuthentication(
             ValidAudience = builder.Configuration["Jwt:Audience"],
 
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not found")))
-
+    Encoding.UTF8.GetBytes(
+        builder.Configuration["JWT_SECRET_KEY"] 
+        ?? builder.Configuration["Jwt:Key"] 
+        ?? throw new InvalidOperationException("JWT Key not found")))
         };
     });
 builder.Services.AddAuthorization();
@@ -136,10 +225,10 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-app.UseDeveloperExceptionPage();
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+// app.UseDeveloperExceptionPage();
+// // Configure the HTTP request pipeline.
+// if (app.Environment.IsDevelopment())
+// {
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint(
@@ -150,7 +239,7 @@ if (app.Environment.IsDevelopment())
     });
 
     app.MapOpenApi();
-}
+// }
 
 app.UseRateLimiter();
 
@@ -163,7 +252,8 @@ app.UseHttpsRedirection();
 
 
 
-
+app.UseCors("AllowAll"); 
+app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
@@ -172,4 +262,17 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+    db.Database.Migrate();
+}
+
 app.Run();
+
+app.Run();
+
+
+
+

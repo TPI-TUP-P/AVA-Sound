@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AVA Sound — Player</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #f5f5f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    .card { background: white; border-radius: 12px; border: 1px solid #e0e0e0; padding: 2rem; width: 100%; max-width: 480px; }
+    h1 { font-size: 20px; font-weight: 600; margin-bottom: 1.5rem; color: #111; }
+    label { font-size: 13px; color: #666; display: block; margin-bottom: 6px; margin-top: 1rem; }
+    input { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+    input:focus { outline: none; border-color: #888; }
+    button { width: 100%; padding: 12px; margin-top: 1.5rem; background: #111; color: white; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; }
+    button:hover { background: #333; }
+    button:disabled { background: #999; cursor: not-allowed; }
+    .error { color: #c0392b; font-size: 13px; margin-top: 10px; }
+    .player { margin-top: 1.5rem; border-top: 1px solid #eee; padding-top: 1.5rem; display: none; }
+    .song-title { font-size: 16px; font-weight: 600; color: #111; }
+    .song-meta { font-size: 13px; color: #888; margin-top: 4px; margin-bottom: 1rem; }
+    audio { width: 100%; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎵 AVA Sound</h1>
+
+    <label>JWT Token</label>
+    <input type="text" id="token" placeholder="Pegá tu token acá..." />
+
+    <label>Song ID (GUID)</label>
+    <input type="text" id="songId" placeholder="ej: 3fa85f64-5717-4562-b3fc-2c963f66afa6" />
+
+    <button id="btn" onclick="loadSong()">▶ Cargar canción</button>
+    <p class="error" id="error"></p>
+
+    <div class="player" id="player">
+      <p class="song-title" id="songTitle">—</p>
+      <p class="song-meta" id="songMeta">—</p>
+      <audio id="audio" controls></audio>
+    </div>
+  </div>
+
+  <script>
+    const BASE = 'http://localhost:5155';
+
+    async function loadSong() {
+      const token = document.getElementById('token').value.trim();
+      const songId = document.getElementById('songId').value.trim();
+      const err = document.getElementById('error');
+      const btn = document.getElementById('btn');
+      err.textContent = '';
+
+      if (!token) { err.textContent = 'Ingresá el JWT token.'; return; }
+      if (!songId) { err.textContent = 'Ingresá el Song ID.'; return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Cargando...';
+
+      try {
+        const headers = { 'Authorization': 'Bearer ' + token };
+
+        const infoRes = await fetch(BASE + '/api/Song/' + songId, { headers });
+        if (!infoRes.ok) throw new Error('Error al obtener canción: ' + infoRes.status);
+        const info = await infoRes.json();
+
+        const urlRes = await fetch(BASE + '/api/Song/' + songId + '/url', { headers });
+        if (!urlRes.ok) throw new Error('Error al obtener URL: ' + urlRes.status);
+        const signedUrl = (await urlRes.text()).replace(/^"|"$/g, '');
+
+        document.getElementById('songTitle').textContent = info.title || 'Sin título';
+        document.getElementById('songMeta').textContent =
+          (info.gender || '—') + ' · ' + (info.duration || '—') + ' · ' + (info.views ?? 0) + ' reproducciones';
+        document.getElementById('audio').src = signedUrl;
+        document.getElementById('player').style.display = 'block';
+
+      } catch (e) {
+        err.textContent = e.message;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '▶ Cargar canción';
+      }
+    }
+  </script>
+</body>
+</html>

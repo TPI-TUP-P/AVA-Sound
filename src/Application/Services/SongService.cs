@@ -4,6 +4,8 @@ using Application.Interfaces;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces;
+using Infrastructure.Interfaces;
+
 
 
 namespace Application.Services;
@@ -12,16 +14,20 @@ public class SongService : ISongService
 {
     private ISongRepository _song;
     private IUserRepository _user;
+    private IStorageService _storageService;
 
-    public SongService(ISongRepository song, IUserRepository user)
+    private IStorageService _storage;
+
+    public SongService(ISongRepository song, IUserRepository user, IStorageService storage, IStorageService storageService)
     {
         _song = song;
-        _user= user;
+        _user = user;
+        _storage = storage;
+        _storageService = storageService;
     }
 
     public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
-       
 
         var song = await _song.GetById(Id, cancellationToken);
 
@@ -44,70 +50,68 @@ public class SongService : ISongService
 
     public async Task<PagerSongResponse<GetByIdResponse>> GetAll(PagerRequest pagerRequest, CancellationToken cancellationToken)
     {
-        var songs = await _song.GetAll(pagerRequest.Page,pagerRequest.PageSize, cancellationToken);
+        var songs = await _song.GetAll(pagerRequest.Page, pagerRequest.PageSize, cancellationToken);
         var page = pagerRequest.Page;
         var pageSize = pagerRequest.PageSize;
-        var songTotal= await _song.Count();
-        var response= new PagerSongResponse<GetByIdResponse>
+        var songTotal = await _song.Count();
+        var response = new PagerSongResponse<GetByIdResponse>
         {
             Songs = songs.Select(s => new GetByIdResponse
-        {
-            IdArtist = s.IdArtist,
-            IdAlbum = s.IdAlbum ?? Guid.Empty,
-            Title = s.Title,
-            Gender = s.Gender,
-            Duration = s.Duration,
-            AudioBig = s.AudioBig,
-            DateUpload = s.DateUpload,
-            Views = s.Views
-        }).ToList(),
+            {
+                IdArtist = s.IdArtist,
+                IdAlbum = s.IdAlbum ?? Guid.Empty,
+                Title = s.Title,
+                Gender = s.Gender,
+                Duration = s.Duration,
+                AudioBig = s.AudioBig,
+                DateUpload = s.DateUpload,
+                Views = s.Views
+            }).ToList(),
 
-        Page=page,
-        PageSize=pageSize,
-        SongTotal=songTotal,
-        PageTotal=(int) Math.Ceiling(songTotal/(double)pageSize)
+            Page = page,
+            PageSize = pageSize,
+            SongTotal = songTotal,
+            PageTotal = (int)Math.Ceiling(songTotal / (double)pageSize)
         };
         return response;
-        
-    }
 
-    public async Task<CreateResponse> Create(CreateRequest songDto, Guid idUser,CancellationToken cancellationToken)
+    }
+    public async Task<CreateResponse> Create(
+        CreateRequest songDto,
+        Stream audioStream,
+        string fileName,
+        string contentType,
+        Guid idUser,
+        CancellationToken cancellationToken)
     {
         if (songDto == null)
-        {
             throw new Exception("Datos inválidos");
-        }
-
-        var idAlbum = songDto.IdAlbum;
 
         if (idUser == Guid.Empty)
             throw new FieldEmptyExcepction("idUser");
 
         var user = await _user.GetById(idUser, cancellationToken);
-
-        if(user == null)
+        if (user == null)
             throw new NotFoundException("User");
 
         if (string.IsNullOrWhiteSpace(songDto.Title))
             throw new FieldEmptyExcepction("Title");
-
         if (string.IsNullOrWhiteSpace(songDto.Gender))
             throw new FieldEmptyExcepction("Gender");
-
-
         if (string.IsNullOrWhiteSpace(songDto.Duration))
             throw new FieldEmptyExcepction("Duration");
 
-        if (string.IsNullOrWhiteSpace(songDto.AudioBig))
-            throw new FieldEmptyExcepction("AudioBig");
+
+        var audioBig = await _storageService.UploadSong(audioStream, fileName, contentType);
+
 
         var song = new Song(
             idUser,
-            idAlbum,
+            songDto.IdAlbum,
             songDto.Title,
             songDto.Gender,
             songDto.Duration,
-            songDto.AudioBig
+            audioBig
         );
 
         await _song.Create(song, cancellationToken);
@@ -124,7 +128,6 @@ public class SongService : ISongService
             Views = song.Views
         };
     }
-
     public async Task<UpdateResponse> Update(Guid id, UpdateRequest songDto, CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)
@@ -183,5 +186,17 @@ public class SongService : ISongService
         await _song.Delete(Id, cancellationToken);
     }
 
+
+    public async Task<string> GetSongUrl(Guid songId, CancellationToken cancellationToken)
+    {
+        if (songId == Guid.Empty)
+            throw new FieldEmptyExcepction("songId");
+
+        var song = await _song.GetById(songId, cancellationToken);
+        if (song is null)
+            throw new NotFoundException("Song");
+
+        return await _storageService.GetSongUrl(song.AudioBig);
+    }
 
 }
