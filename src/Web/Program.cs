@@ -55,6 +55,15 @@ builder.Services.AddControllers(options =>
         options.ValueProviderFactories.Remove(jqueryFormValueProviderFactory);
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 
 
@@ -109,6 +118,18 @@ builder.Services.AddOpenApi(options =>
 
             return Task.CompletedTask;
         });
+options.AddDocumentTransformer((document, context, cancellationToken) =>
+    {
+        document.Servers = new List<OpenApiServer>
+        {
+            new OpenApiServer { Url = "https://ava-sound.onrender.com" }
+        };
+
+        
+        return Task.CompletedTask;
+    });
+
+  
 });
 
 
@@ -231,7 +252,8 @@ app.UseHttpsRedirection();
 
 
 
-
+app.UseCors("AllowAll"); 
+app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
