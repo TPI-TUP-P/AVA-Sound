@@ -1,14 +1,6 @@
 namespace Infrastructure.Data.Services;
 
 using System.Net.Http;
-<<<<<<< HEAD
-
-public class StorageService
-{
-    private readonly HttpClient? _httpClient;
-
-
-=======
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Infrastructure.Interfaces;
@@ -109,5 +101,4 @@ public class StorageService : IStorageService
     {
         public string SignedUrl { get; set; } = "";
     }
->>>>>>> d66b2d5cdc48eab7f7f26792940d37042e60bd29
 }

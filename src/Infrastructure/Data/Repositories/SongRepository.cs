@@ -28,11 +28,8 @@ public class SongRepository : ISongRepository
         await _context.SaveChangesAsync();
     }
 
-<<<<<<< HEAD
-=======
 
 
->>>>>>> d66b2d5cdc48eab7f7f26792940d37042e60bd29
     public async Task<List<Song>> GetAll(int Page,int PageSize,CancellationToken cancellationToken)
     {
         return await _context.Songs

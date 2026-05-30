@@ -12,15 +12,10 @@ public class User
     public string Password { get; set; }
     public bool IsArtist { get; set; }
 
-<<<<<<< HEAD
-    public DateTime DateRegister { get; private set; }
-
-=======
     public bool IsActive { get; private set; }
 
     public DateTime DateRegister { get; private set; }
 
->>>>>>> d66b2d5cdc48eab7f7f26792940d37042e60bd29
     public string? Role { get; private set; }
 
 
@@ -36,10 +31,7 @@ public class User
         IsArtist = isArtist;
         DateRegister = DateTime.Now;
         Role = role ?? "user";
-<<<<<<< HEAD
-=======
         IsActive = true;
->>>>>>> d66b2d5cdc48eab7f7f26792940d37042e60bd29
     }
 
     private void ValidateProperties(string? name, string? surname, string? email, string? password)
@@ -65,12 +57,9 @@ public class User
             throw new InvalidOperationException("The user is already inactive");
         }
 
-<<<<<<< HEAD
-=======
         IsActive = false;
     }
 
->>>>>>> d66b2d5cdc48eab7f7f26792940d37042e60bd29
     public void UpdateInfo(string name, string surname, string email, string password, bool isArtist)
     {
         if (string.IsNullOrWhiteSpace(name))

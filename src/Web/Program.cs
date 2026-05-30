@@ -172,7 +172,7 @@ builder.Services.AddCustomRateLimit(
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 
-builder.Services.AddHttpClient<IStorageService, StorageService>(client=>
+builder.Services.AddHttpClient<IStorageService, StorageService>(client => 
 {
     var keyLogin = builder.Configuration["SUPABASE_KEY"] ?? builder.Configuration["Supabase:Key"];
     if(string.IsNullOrEmpty(keyLogin))
