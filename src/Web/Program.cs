@@ -120,10 +120,21 @@ builder.Services.AddOpenApi(options =>
         });
 options.AddDocumentTransformer((document, context, cancellationToken) =>
     {
+          if (builder.Environment.IsDevelopment())
+    {
+        document.Servers = new List<OpenApiServer>
+        {
+            new OpenApiServer { Url = "http://localhost:5155" }
+        };
+    }
+    else
+    {
         document.Servers = new List<OpenApiServer>
         {
             new OpenApiServer { Url = "https://ava-sound.onrender.com" }
         };
+    }
+
 
         
         return Task.CompletedTask;
