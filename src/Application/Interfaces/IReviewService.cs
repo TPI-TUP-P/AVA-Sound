@@ -9,5 +9,5 @@ public interface IReviewService
     Task<List<GetBySongResponse>> GetBySong(Guid Id, CancellationToken cancellationToken);
     Task<CreateResponse> Create(CreateRequest reviewDto, CancellationToken cancellationToken);
     Task<UpdateResponse> Update(Guid Id, UpdateRequest reviewDto, CancellationToken cancellationToken);
-    Task Delete(Guid id, CancellationToken cancellationToken);
+    Task Delete(Guid id, Guid idUserToken, CancellationToken cancellationToken);
 }

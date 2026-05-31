@@ -4,6 +4,7 @@ using Domain.Interfaces;
 using Application.DTOs.Review.Request;
 using Application.DTOs.Review.Response;
 using Domain.Exceptions;
+using System.IO.Pipelines;
 namespace Application.Services;
 
 
@@ -117,12 +118,28 @@ public class ReviewService : IReviewService
         };
     }
 
-    public Task Delete(Guid Id, CancellationToken cancellationToken)
+    public async Task Delete(Guid Id, Guid IdUser, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new FieldEmptyExcepction("Id");
         }
-        return _review.Delete(Id, cancellationToken);
+        var review = await _review.GetById(Id, cancellationToken);
+        if (review is null)
+        {
+            throw new FieldEmptyExcepction("Review");
+        }
+        if (review.IdUser == Guid.Empty)
+        {
+            throw new FieldEmptyExcepction("IdUser");
+        }
+        if (review.IdUser != IdUser)
+        {
+            throw new IdNotMatchException();
+        }
+
+
+        await _review.Delete(Id, cancellationToken);
+
     }
 }
