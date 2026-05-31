@@ -116,21 +116,23 @@ public class AlbumService : IAlbumService
                 
         
         );
-
-
-
     }
-
 
     public async Task<UpdateResponse> Update(Guid Id, UpdateRequest albumDto, CancellationToken cancellationToken)
     {
         var existingAlbum = await _album.GetById(Id, cancellationToken);
+        var user = await _user.GetById(existingAlbum.IdArtist, cancellationToken);
+        
         if (existingAlbum is null)
         {
             throw new NotFoundException("Album");
         }
 
-
+        if(user.IsArtist is false)
+        {
+            throw new UserIsNotArtistException("The user is not an artist");
+        }
+    
         if (albumDto.Title != null)
         {
 
@@ -174,6 +176,9 @@ public class AlbumService : IAlbumService
     {
         
         var album = await _album.GetById(Id, cancellationToken);
+        var user = await _user.GetById(idUser, cancellationToken);
+
+
 
         if(album is null)
         {
@@ -185,8 +190,12 @@ public class AlbumService : IAlbumService
             throw new Exception("You are not the owner of this album");
         }
 
-      
 
+        if(user.IsArtist is false)
+        {
+            throw new UserIsNotArtistException("The user is not an artist");
+        }
+    
          await _album.Delete(Id, cancellationToken);
 
     }
