@@ -118,35 +118,35 @@ builder.Services.AddOpenApi(options =>
 
             return Task.CompletedTask;
         });
-options.AddDocumentTransformer((document, context, cancellationToken) =>
-    {
-          if (builder.Environment.IsDevelopment())
-    {
-        document.Servers = new List<OpenApiServer>
+    options.AddDocumentTransformer((document, context, cancellationToken) =>
         {
+            if (builder.Environment.IsDevelopment())
+            {
+                document.Servers = new List<OpenApiServer>
+            {
             new OpenApiServer { Url = "http://localhost:5155" }
-        };
-    }
-    else
-    {
-        document.Servers = new List<OpenApiServer>
-        {
+            };
+            }
+            else
+            {
+                document.Servers = new List<OpenApiServer>
+            {
             new OpenApiServer { Url = "https://ava-sound.onrender.com" }
-        };
-    }
+            };
+            }
 
 
-        
-        return Task.CompletedTask;
-    });
 
-  
+            return Task.CompletedTask;
+        });
+
+
 });
 
 
-    var connectionString = builder.Configuration["CONNECTION_STRING"] 
-                        ?? builder.Configuration.GetConnectionString("DefaultConnection");
-    var connection = new SqliteConnection(connectionString);
+var connectionString = builder.Configuration["CONNECTION_STRING"]
+                    ?? builder.Configuration.GetConnectionString("DefaultConnection");
+var connection = new SqliteConnection(connectionString);
 connection.Open();
 
 using (var command = connection.CreateCommand())
@@ -181,33 +181,34 @@ builder.Services.AddScoped<ISongService, SongService>();
 builder.Services.AddCustomRateLimit(
     builder.Configuration);
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IJwtService, JwtService>();  
+builder.Services.AddScoped<IJwtService, JwtService>();
 
-if(builder.Environment.IsDevelopment())
+if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddScoped<IStorageService, LocalStorageService>();
-} else
+}
+else
 {
-builder.Services.AddHttpClient<IStorageService, StorageService>(client => 
-{
-    var keyLogin = builder.Configuration["SUPABASE_KEY"] ?? builder.Configuration["Supabase:Key"];
-    if(string.IsNullOrEmpty(keyLogin))
+    builder.Services.AddHttpClient<IStorageService, StorageService>(client =>
     {
-        throw new Exception("The key is empty");
-    }
+        var keyLogin = builder.Configuration["SUPABASE_KEY"] ?? builder.Configuration["Supabase:Key"];
+        if (string.IsNullOrEmpty(keyLogin))
+        {
+            throw new Exception("The key is empty");
+        }
 
-    client.DefaultRequestHeaders.Add(
-        "apikey",
-        keyLogin
-    );
-    client.DefaultRequestHeaders.Authorization =
-        new AuthenticationHeaderValue(
-            "Bearer",
+        client.DefaultRequestHeaders.Add(
+            "apikey",
             keyLogin
         );
+        client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue(
+                "Bearer",
+                keyLogin
+            );
 
-});
-    
+    });
+
 }
 
 builder.Services.Configure<FormOptions>(options =>
@@ -233,8 +234,8 @@ builder.Services.AddAuthentication(
 
             IssuerSigningKey = new SymmetricSecurityKey(
     Encoding.UTF8.GetBytes(
-        builder.Configuration["JWT_SECRET_KEY"] 
-        ?? builder.Configuration["Jwt:Key"] 
+        builder.Configuration["JWT_SECRET_KEY"]
+        ?? builder.Configuration["Jwt:Key"]
         ?? throw new InvalidOperationException("JWT Key not found")))
         };
     });
@@ -247,16 +248,16 @@ var app = builder.Build();
 // // Configure the HTTP request pipeline.
 // if (app.Environment.IsDevelopment())
 // {
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint(
-            "/openapi/v1.json",
-            "My API V1");
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint(
+        "/openapi/v1.json",
+        "My API V1");
 
-        options.RoutePrefix = string.Empty;
-    });
+    options.RoutePrefix = string.Empty;
+});
 
-    app.MapOpenApi();
+app.MapOpenApi();
 // }
 
 app.UseRateLimiter();
@@ -270,7 +271,7 @@ app.UseHttpsRedirection();
 
 
 
-app.UseCors("AllowAll"); 
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.UseRouting();
 
