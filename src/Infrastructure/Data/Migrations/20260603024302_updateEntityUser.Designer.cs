@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260603024302_updateEntityUser")]
+    partial class updateEntityUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.7");
@@ -123,6 +126,9 @@ namespace Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("ArtistId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("AudioBig")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -153,9 +159,9 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdAlbum");
+                    b.HasIndex("ArtistId");
 
-                    b.HasIndex("IdArtist");
+                    b.HasIndex("IdAlbum");
 
                     b.ToTable("Songs");
                 });
@@ -242,15 +248,15 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.Song", b =>
                 {
+                    b.HasOne("Domain.Entities.User", "Artist")
+                        .WithMany("Songs")
+                        .HasForeignKey("ArtistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Album", null)
                         .WithMany("Songs")
                         .HasForeignKey("IdAlbum");
-
-                    b.HasOne("Domain.Entities.User", "Artist")
-                        .WithMany("Songs")
-                        .HasForeignKey("IdArtist")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Artist");
                 });

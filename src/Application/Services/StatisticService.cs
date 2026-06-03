@@ -28,31 +28,46 @@ public class StatisticService : IStatisticService
     }
 
 
-    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
+    public async Task<List<GetTopSongsResponse>> GetTopSongs(CancellationToken cancellationToken)
     {
-        if (Id == Guid.Empty)
-        {
-            throw new Exception("The ID is empty");
-        }
-
-        var statistic = await _statistic.GetById(Id, cancellationToken);
-
-        if (statistic == null)
-        {
-            throw new Exception("There are no statistics");
-        }
-
-
-        return new GetByIdResponse
+        var songs = await _statistic.GetTopSongs(cancellationToken);
+        return songs.Select(song => new GetTopSongsResponse
         (
-            statistic.Id,
-            statistic.IdUser,
-            statistic.SongTop,
-            statistic.FavoriteGender,
-            statistic.TotalReproductions
-
-        );
+            song.Id,
+            song.Title,
+            song.Gender,
+            song.Duration,
+            song.Views,
+            song.IdArtist,
+            song.IdAlbum
+        )).ToList();
     }
+
+    // public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
+    // {
+    //     if (Id == Guid.Empty)
+    //     {
+    //         throw new Exception("The ID is empty");
+    //     }
+
+    //     var statistic = await _statistic.GetById(Id, cancellationToken);
+
+    //     if (statistic == null)
+    //     {
+    //         throw new Exception("There are no statistics");
+    //     }
+
+
+    //     return new GetByIdResponse
+    //     (
+    //         statistic.Id,
+    //         statistic.IdUser,
+    //         statistic.SongTop,
+    //         statistic.FavoriteGender,
+    //         statistic.TotalReproductions
+
+    //     );
+    // }
 
 
 

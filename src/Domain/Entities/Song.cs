@@ -7,12 +7,16 @@ public class Song
     public Guid Id {get; private set;}
     public Guid IdArtist {get; private set;}
     public Guid? IdAlbum {get; private set;}
+    
+    public User Artist {get; set;}
+
     public string Title {get; set;}
     public string Gender {get; set;}
     public string Duration{get; set;}
     public string AudioBig {get; set;}
     public DateTime DateUpload {get; set;}
     public int Views {get; set;}
+
 
 
 
@@ -30,6 +34,15 @@ public class Song
         DateUpload=DateTime.Now;
         Views=0;
     }
+
+
+
+
+    public void AddView()
+    {
+        Views++;
+    }
+
 
     private void ValidateProperties(Guid idArtist, Guid? idAlbum, string title, string gender, string duration, string audioBig)
     {

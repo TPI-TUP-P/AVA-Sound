@@ -13,6 +13,35 @@ public class StatisticRepository : IStatisticRepository
         _context = context;
     }
 
+    public async Task<List<Song>> GetTopSongs(CancellationToken cancellationToken)
+    {
+        return await _context.Songs.OrderByDescending(s=> s.Views).Take(10).ToListAsync(cancellationToken);
+        
+    }
+
+    public async Task<List<Song>> GetTopArtist(CancellationToken cancellationToken)
+    {
+        return await _context.Songs
+        .GroupBy( s=> new {s.IdArtist,NameArtist = s.Artist.Name})
+        .Select(g=> new
+        {
+            IdArtist = g.Key.IdArtist,
+            NameArtist = g.Key.NameArtist,
+            TotalSongs = g.Count(),
+            TotalViews = g.Sum(s => s.Views)
+            
+        }).OrderByDescending(a => a.TotalViews)
+        .Take(10)
+        .Select(a => _context.Songs.First(s => s.IdArtist == a.IdArtist))
+        .ToListAsync(cancellationToken);
+        
+
+        
+        
+    
+        }
+
+
     public async Task<List<Statistic>> GetAll()
     {
         return await _context.Statistics.ToListAsync();

@@ -22,12 +22,14 @@ public class StatisticController : ControllerBase
         _statisticService = statisticService;
     }
 
-    [HttpGet("{id}")]
-    public ActionResult<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken)
-    {
-        var album = _statisticService.GetById(id, cancellationToken);
 
-        return Ok(album);
+    [HttpGet]
+    public async Task<ActionResult<GetTopSongsResponse>> GetTopSongs(CancellationToken cancellationToken)
+    {   
+        var result = await _statisticService.GetTopSongs(cancellationToken);
+        return Ok(result);
+
+        
     }
 
 
