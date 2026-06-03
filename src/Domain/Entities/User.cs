@@ -18,6 +18,8 @@ public class User
 
     public string? Role { get; private set; }
 
+    public ICollection<Song> Songs { get; private set; } =[];
+    
 
 
     public User(string name, string surname, string email, string password, bool isArtist, string role)

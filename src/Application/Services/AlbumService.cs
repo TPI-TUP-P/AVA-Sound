@@ -27,10 +27,7 @@ public class AlbumService : IAlbumService
     
         var album = await _album.GetById(Id, cancellationToken);
 
-        if (album == null)
-        {
-            throw new NotFoundException("Album");
-        }
+    
 
         return new GetByIdResponse
         (

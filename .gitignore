@@ -6,6 +6,8 @@
 # dotenv files
 .env
 
+*.mp3
+
 # Ignorar configuraciones locales con credenciales
 **/appsettings.Development.json
 # Infrastructure
