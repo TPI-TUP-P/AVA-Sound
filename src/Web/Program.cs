@@ -181,8 +181,13 @@ builder.Services.AddScoped<ISongService, SongService>();
 builder.Services.AddCustomRateLimit(
     builder.Configuration);
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IJwtService, JwtService>();  
 
+if(builder.Environment.IsDevelopment())
+{
+    builder.Services.AddScoped<IStorageService, LocalStorageService>();
+} else
+{
 builder.Services.AddHttpClient<IStorageService, StorageService>(client => 
 {
     var keyLogin = builder.Configuration["SUPABASE_KEY"] ?? builder.Configuration["Supabase:Key"];
@@ -202,6 +207,8 @@ builder.Services.AddHttpClient<IStorageService, StorageService>(client =>
         );
 
 });
+    
+}
 
 builder.Services.Configure<FormOptions>(options =>
 {

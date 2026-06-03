@@ -46,7 +46,11 @@ namespace Infrastructure.Data
                 entity.Property(e => e.DateUpload).IsRequired();
                 entity.Property(e => e.Views).IsRequired();
                 entity.Property(e => e.IdArtist).IsRequired();
-                entity.Property(e => e.IdAlbum);
+                entity.HasOne(e => e.Artist)
+                    .WithMany(u => u.Songs)
+                    .HasForeignKey(e => e.IdArtist);
+
+             
             });
 
             modelBuilder.Entity<ReproductionsList>(entity =>

@@ -94,6 +94,8 @@ public class SongService : ISongService
         if (user == null)
             throw new NotFoundException("User");
 
+
+
         if (string.IsNullOrWhiteSpace(songDto.Title))
             throw new FieldEmptyExcepction("Title");
         if (string.IsNullOrWhiteSpace(songDto.Gender))
@@ -107,7 +109,7 @@ public class SongService : ISongService
 
         var song = new Song(
             idUser,
-            songDto.IdAlbum,
+            songDto.IdAlbum == Guid.Empty ? null : songDto.IdAlbum,
             songDto.Title,
             songDto.Gender,
             songDto.Duration,
@@ -196,7 +198,11 @@ public class SongService : ISongService
         if (song is null)
             throw new NotFoundException("Song");
 
+        song.AddView();
+        await _song.Update(song, cancellationToken);
+
         return await _storageService.GetSongUrl(song.AudioBig);
+
     }
 
 }
