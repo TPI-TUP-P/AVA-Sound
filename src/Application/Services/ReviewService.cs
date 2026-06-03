@@ -91,7 +91,7 @@ public class ReviewService : IReviewService
         };
     }
 
-    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest reviewDto, CancellationToken cancellationToken)
+    public async Task<UpdateResponse> Update(Guid Id, Guid IdUser, UpdateRequest reviewDto, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
@@ -109,6 +109,10 @@ public class ReviewService : IReviewService
         else
         {
             throw new FieldIsNotLongException("Comment", 3);
+        }
+        if (existReview.IdUser != IdUser)
+        {
+            throw new IdNotMatchException();
         }
 
         await _review.Update(existReview, cancellationToken);
