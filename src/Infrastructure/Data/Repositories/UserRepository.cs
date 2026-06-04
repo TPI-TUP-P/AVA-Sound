@@ -17,7 +17,7 @@ public class UserRepository : IUserRepository
     {
         var user = await _context.Users.FindAsync(id, cancellationToken);
         if (user == null)
-            throw new Exception($"El usuario con el ID {id} no fue encontrado.");
+            throw new KeyNotFoundException($"The user with ID {id} was not found.");
 
         return user;
     }

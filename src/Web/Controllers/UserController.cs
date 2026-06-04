@@ -75,6 +75,6 @@ public class UserController : ControllerBase
         currentUserId,
         cancellationToken);
 
-    return Ok("Usuario actualizado a admin");
+    return Ok("User updated as administrator");
 }
 }
