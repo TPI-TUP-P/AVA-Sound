@@ -78,7 +78,7 @@ public class ReproductionListController : ControllerBase
     {
 
         await _reproductionListservice.AddSong(listId, songId, cancellationToken);
-        return Ok("cancion agregada a la lista");
+        return Ok("song added to the list");
 
 
     }
@@ -87,7 +87,7 @@ public class ReproductionListController : ControllerBase
     public async Task<ActionResult> RemoveSong(Guid listId, Guid songId, CancellationToken cancellationToken)
     {
         await _reproductionListservice.RemoveSong(listId, songId, cancellationToken);
-        return Ok("cancion eliminada de la lista");
+        return Ok("song removed from the list");
 
     }
 
@@ -95,6 +95,6 @@ public class ReproductionListController : ControllerBase
     public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         await _reproductionListservice.Delete(id, cancellationToken);
-        return Ok("lista borrada");
+        return Ok("deleted list");
     }
 }

@@ -68,10 +68,10 @@ public class ReproductionsList
     public void UpdateInfo(string name, string description, bool isPublic)
 {
     if (string.IsNullOrWhiteSpace(name))
-        throw new Exception("name obligatorio");
+        throw new Exception("name is required");
 
     if (string.IsNullOrWhiteSpace(description))
-        throw new Exception("description obligatorio");
+        throw new Exception("description is required");
 
     Name = name;
     Description = description;

@@ -53,7 +53,7 @@ public class Song
         {
             if(idAlbum.Value == Guid.Empty)
             {
-                throw new Exception("El IdAlbum no puede ser un Guid vacío si se proporciona");
+                throw new Exception("AlbumId cannot be an empty Guid if provided");
             }
             
         }
@@ -75,16 +75,16 @@ public class Song
 public void UpdateInfo(string title, string gender, string duration, string audioBig)
 {
     if (string.IsNullOrWhiteSpace(title))
-        throw new Exception("Title obligatorio");
+        throw new Exception("Title is required");
 
     if (string.IsNullOrWhiteSpace(gender))
-        throw new Exception("Gender obligatorio");
+        throw new Exception("Gender is required");
 
     if (string.IsNullOrWhiteSpace(duration))
-        throw new Exception("Duration obligatoria");
+        throw new Exception("Duration is required");
 
     if (string.IsNullOrWhiteSpace(audioBig))
-        throw new Exception("Audio obligatorio");
+        throw new Exception("Audio file is required");
 
     Title = title;
     Gender = gender;
