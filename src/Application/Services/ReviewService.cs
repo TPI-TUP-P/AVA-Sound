@@ -4,7 +4,6 @@ using Domain.Interfaces;
 using Application.DTOs.Review.Request;
 using Application.DTOs.Review.Response;
 using Domain.Exceptions;
-using System.IO.Pipelines;
 namespace Application.Services;
 
 
@@ -42,7 +41,7 @@ public class ReviewService : IReviewService
     {
         if (reviewDto is null)
         {
-            throw new Exception("Review is null");
+            throw new FieldEmptyExcepction(nameof(reviewDto));
         }
         if (reviewDto.IdUser == Guid.Empty || reviewDto.IdSong == Guid.Empty)
         {
@@ -52,11 +51,11 @@ public class ReviewService : IReviewService
         {
             throw new FieldEmptyExcepction("Comment");
         }
-        if (reviewDto.Comment.Length > 800)
+        if (reviewDto.Comment.Length >= 800)
         {
             throw new ArgumentException("The comment cannot exceed 800 characters.");
         }
-        if (reviewDto.Comment.Length < 3)
+        if (reviewDto.Comment.Length <= 3)
         {
             throw new FieldIsNotLongException("Comment", 3);
         }
@@ -102,7 +101,7 @@ public class ReviewService : IReviewService
             throw new FieldEmptyExcepction("Review");
         }
         var existReview = await _review.GetById(Id, cancellationToken);
-        if (reviewDto.Comment != null && reviewDto.Comment.Length > 3)
+        if (reviewDto.Comment != null && reviewDto.Comment.Length >= 3)
         {
             existReview.Comment = reviewDto.Comment;
         }
