@@ -76,7 +76,7 @@ public class InfoUserService : IInfoUserService
         };
     }
 
-    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest infouserDto, CancellationToken cancellationToken)
+    public async Task<UpdateResponse> Update(Guid Id, Guid IdUser, UpdateRequest infouserDto, CancellationToken cancellationToken)
     {
         var userExist = _user.GetById(infouserDto.IdUser, cancellationToken);
         if (userExist is null)
@@ -88,6 +88,11 @@ public class InfoUserService : IInfoUserService
             throw new FieldEmptyExcepction("Id");
         }
         var existingInfo = await _InfoUser.GetById(Id, cancellationToken);
+        if (existingInfo.IdUser != IdUser)
+        {
+            throw new IdNotMatchException();
+        }
+
         if (infouserDto.Biography != null && infouserDto.Country != null && infouserDto.ProfilePicture != null)
         {
             existingInfo.Biography = infouserDto.Biography;
@@ -104,13 +109,19 @@ public class InfoUserService : IInfoUserService
         };
     }
 
-    public Task Delete(Guid Id, CancellationToken cancellationToken)
+    public async Task Delete(Guid Id, Guid IdUser, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new FieldEmptyExcepction("Id");
         }
-        return _InfoUser.Delete(Id, cancellationToken);
+        var existingInfo = await _InfoUser.GetById(Id, cancellationToken);
+        if (existingInfo.IdUser != IdUser)
+        {
+            throw new IdNotMatchException();
+        }
+
+        await _InfoUser.Delete(Id, cancellationToken);
     }
 
 }
