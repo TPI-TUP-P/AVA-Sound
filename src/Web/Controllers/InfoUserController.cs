@@ -5,6 +5,8 @@ using Application.DTOs.InfoUser.Request;
 using Application.DTOs.InfoUser.Response;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Domain.Exceptions;
 namespace Web.Controllers;
 
 [ApiController]
@@ -29,7 +31,15 @@ public class InfoUserController : ControllerBase
     [HttpPatch("{Id}")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest infouserDto, CancellationToken cancellationToken)
     {
-        return Ok(await _infouservice.Update(Id, infouserDto, cancellationToken));
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                        ?? User.FindFirst("id")?.Value
+                        ?? User.FindFirst("sub")?.Value;
+        if (idUserToken is null)
+        {
+            throw new FieldEmptyExcepction("Id From token");
+        }
+        var idUser = Guid.Parse(idUserToken);
+        return Ok(await _infouservice.Update(Id, idUser, infouserDto, cancellationToken));
     }
     [HttpPost]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest infouserDto, CancellationToken cancellationToken)
@@ -43,7 +53,15 @@ public class InfoUserController : ControllerBase
 
     public async Task<ActionResult> Delete(Guid Id, CancellationToken cancellationToken)
     {
-        await _infouservice.Delete(Id, cancellationToken);
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                       ?? User.FindFirst("id")?.Value
+                       ?? User.FindFirst("sub")?.Value;
+        if (idUserToken is null)
+        {
+            throw new FieldEmptyExcepction("Id From token");
+        }
+        var idUser = Guid.Parse(idUserToken);
+        await _infouservice.Delete(Id, idUser, cancellationToken);
 
         return NoContent();
     }

@@ -41,7 +41,7 @@ public class ReviewService : IReviewService
     {
         if (reviewDto is null)
         {
-            throw new Exception("Review is null");
+            throw new FieldEmptyExcepction(nameof(reviewDto));
         }
         if (reviewDto.IdUser == Guid.Empty || reviewDto.IdSong == Guid.Empty)
         {
@@ -51,11 +51,11 @@ public class ReviewService : IReviewService
         {
             throw new FieldEmptyExcepction("Comment");
         }
-        if (reviewDto.Comment.Length > 800)
+        if (reviewDto.Comment.Length >= 800)
         {
             throw new ArgumentException("The comment cannot exceed 800 characters.");
         }
-        if (reviewDto.Comment.Length < 3)
+        if (reviewDto.Comment.Length <= 3)
         {
             throw new FieldIsNotLongException("Comment", 3);
         }
@@ -90,7 +90,7 @@ public class ReviewService : IReviewService
         };
     }
 
-    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest reviewDto, CancellationToken cancellationToken)
+    public async Task<UpdateResponse> Update(Guid Id, Guid IdUser, UpdateRequest reviewDto, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
@@ -101,13 +101,17 @@ public class ReviewService : IReviewService
             throw new FieldEmptyExcepction("Review");
         }
         var existReview = await _review.GetById(Id, cancellationToken);
-        if (reviewDto.Comment != null && reviewDto.Comment.Length > 3)
+        if (reviewDto.Comment != null && reviewDto.Comment.Length >= 3)
         {
             existReview.Comment = reviewDto.Comment;
         }
         else
         {
             throw new FieldIsNotLongException("Comment", 3);
+        }
+        if (existReview.IdUser != IdUser)
+        {
+            throw new IdNotMatchException();
         }
 
         await _review.Update(existReview, cancellationToken);
@@ -117,12 +121,28 @@ public class ReviewService : IReviewService
         };
     }
 
-    public Task Delete(Guid Id, CancellationToken cancellationToken)
+    public async Task Delete(Guid Id, Guid IdUser, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
             throw new FieldEmptyExcepction("Id");
         }
-        return _review.Delete(Id, cancellationToken);
+        var review = await _review.GetById(Id, cancellationToken);
+        if (review is null)
+        {
+            throw new FieldEmptyExcepction("Review");
+        }
+        if (review.IdUser == Guid.Empty)
+        {
+            throw new FieldEmptyExcepction("IdUser");
+        }
+        if (review.IdUser != IdUser)
+        {
+            throw new IdNotMatchException();
+        }
+
+
+        await _review.Delete(Id, cancellationToken);
+
     }
 }

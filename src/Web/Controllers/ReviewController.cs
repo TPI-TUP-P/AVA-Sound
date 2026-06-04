@@ -5,6 +5,8 @@ using Application.DTOs.Review.Request;
 using Application.DTOs.Review.Response;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Domain.Exceptions;
 namespace Web.Controllers;
 
 [Route("api/review")]
@@ -39,7 +41,15 @@ public class ReviewController : ControllerBase
 
     public async Task<ActionResult> Delete(Guid Id, CancellationToken cancellationToken)
     {
-        await _reviewService.Delete(Id, cancellationToken);
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                            ?? User.FindFirst("id")?.Value
+                            ?? User.FindFirst("sub")?.Value;
+        if (idUserToken is null)
+        {
+            throw new FieldEmptyExcepction("Id From token");
+        }
+        var idUser = Guid.Parse(idUserToken);
+        await _reviewService.Delete(Id, idUser, cancellationToken);
 
         return Ok();
     }
@@ -47,7 +57,15 @@ public class ReviewController : ControllerBase
     [EnableRateLimiting("PerUser")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest reviewDto, CancellationToken cancellationToken)
     {
-        await _reviewService.Update(Id, reviewDto, cancellationToken);
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                           ?? User.FindFirst("id")?.Value
+                           ?? User.FindFirst("sub")?.Value;
+        if (idUserToken is null)
+        {
+            throw new FieldEmptyExcepction("Id From token");
+        }
+        var idUser = Guid.Parse(idUserToken);
+        await _reviewService.Update(Id, idUser, reviewDto, cancellationToken);
         return Ok();
     }
 
