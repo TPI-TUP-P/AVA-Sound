@@ -130,18 +130,22 @@ public class SongService : ISongService
             Views = song.Views
         };
     }
-    public async Task<UpdateResponse> Update(Guid id, UpdateRequest songDto, CancellationToken cancellationToken)
+    public async Task<UpdateResponse> Update(Guid id, UpdateRequest songDto, Guid idUser,  CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)
-            throw new Exception("Id inválido");
+            throw new FieldEmptyExcepction("Id");
 
         if (songDto == null)
-            throw new Exception("Datos inválidos");
+            throw new FieldEmptyExcepction("Dto");
 
         var song = await _song.GetById(id, cancellationToken);
 
+        if(idUser!=song.IdArtist)
+            throw new IdNotMatchException();
+
+
         if (song == null)
-            throw new Exception("La canción no existe");
+            throw new FieldEmptyExcepction("song");
 
         if (string.IsNullOrWhiteSpace(songDto.Title))
             throw new FieldEmptyExcepction("Title");
@@ -175,12 +179,16 @@ public class SongService : ISongService
     }
 
 
-    public async Task Delete(Guid Id, CancellationToken cancellationToken)
+    public async Task Delete(Guid Id, Guid idUser, CancellationToken cancellationToken)
     {
+        
         if (Id == Guid.Empty)
             throw new FieldEmptyExcepction("Id");
 
         var song = await _song.GetById(Id, cancellationToken);
+
+        if(song.Id != idUser)
+            throw new IdNotMatchException();
 
         if (song == null)
             throw new Exception("la cancion no existe");

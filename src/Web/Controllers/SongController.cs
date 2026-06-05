@@ -80,14 +80,32 @@ public class SongController : ControllerBase
     [HttpPatch("{id}")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest songDto, CancellationToken cancellationToken)
     {
-        var song = await _songService.Update(id, songDto, cancellationToken);
+        var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("id")?.Value
+            ?? User.FindFirst("sur")?.Value;
+
+        if(string.IsNullOrEmpty(idUserToken))
+            return Unauthorized("User not foun");
+
+        var idUser=Guid.Parse(idUserToken);
+        
+        var song = await _songService.Update(id, songDto, idUser,  cancellationToken);
         return Ok(song);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        await _songService.Delete(id, cancellationToken);
+        var idUserToken= User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("id")?.Value
+            ?? User.FindFirst("sur")?.Value;
+
+        if(string.IsNullOrEmpty(idUserToken))
+            return Unauthorized("User not found");
+
+        var idUser=Guid.Parse(idUserToken);
+
+        await _songService.Delete(id, idUser, cancellationToken);
         return NoContent();
     }
 }

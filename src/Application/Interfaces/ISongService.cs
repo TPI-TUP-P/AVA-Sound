@@ -17,8 +17,8 @@ public interface ISongService
         Guid idUser,
         CancellationToken cancellationToken
     );
-    Task<UpdateResponse> Update(Guid Id, UpdateRequest songDto, CancellationToken cancellationToken);
-    Task Delete(Guid id, CancellationToken cancellationToken);
+    Task<UpdateResponse> Update(Guid Id, UpdateRequest songDto, Guid idUser, CancellationToken cancellationToken);
+    Task Delete(Guid id, Guid idUser ,CancellationToken cancellationToken);
 
 
     Task<string> GetSongUrl(Guid songId, CancellationToken cancellationToken);

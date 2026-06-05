@@ -13,24 +13,26 @@ public class ReproductionListService : IReproductionListService
 {
     private IReproductionsListRepository _reproductionList;
     private ISongRepository _song;
-    public ReproductionListService(IReproductionsListRepository reproductionList, ISongRepository song)
+    private IUserRepository _user;
+    public ReproductionListService(IReproductionsListRepository reproductionList, ISongRepository song, IUserRepository user)
     {
         _reproductionList = reproductionList;
         _song = song;
+        _user = user;
     }
 
     public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
-            throw new Exception("Id es vacio");
+            throw new FieldEmptyExcepction("Id");
         }
 
         var reproductionsList = await _reproductionList.GetById(Id, cancellationToken);
 
         if (reproductionsList == null)
         {
-            throw new Exception("La lista no existe");
+            throw new NotFoundException("reproduction list");
         }
 
         return new GetByIdResponse
@@ -54,16 +56,47 @@ public class ReproductionListService : IReproductionListService
     {
         if (id == Guid.Empty)
         {
-            throw new Exception("id no encontrado");
+            throw new FieldEmptyExcepction("Id");
+        }
+        if (updateRequest is null)
+        {
+            throw new Exception("updateRequest is null");
+        }
+        if (updateRequest.Name.Length < 2 )
+        {
+            throw new FieldIsNotLongException("Name", 2);
+        }
+        if(updateRequest.Name.Length > 50)
+        {
+            throw new FieldTooLongException("Name", 50);
+        }
+        if (updateRequest.Description.Length < 5)
+        {
+            throw new FieldIsNotLongException("Description", 5);
+        }
+        if(updateRequest.Description.Length > 200)
+        {
+            throw new FieldTooLongException("Description", 200);
         }
 
+
+
          var reproductionsList= await _reproductionList.GetById(id, cancellationToken);
+
+         if (
+        reproductionsList.Name == updateRequest.Name &&
+        reproductionsList.Description == updateRequest.Description &&
+        reproductionsList.IsPublic == updateRequest.IsPublic
+        )
+        {
+        throw new Exception("No hay cambios para actualizar");
+        }
 
          
 
         if (reproductionsList == null)
         {
-            throw new Exception("Lista no encontrada");
+            throw new NotFoundException("reproduction list");
         }
 
 
