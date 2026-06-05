@@ -124,7 +124,7 @@ builder.Services.AddOpenApi(options =>
             {
                 document.Servers = new List<OpenApiServer>
             {
-            new OpenApiServer { Url = "http://localhost:5155" }
+            new OpenApiServer { Url = "https://localhost:7105" }
             };
             }
             else

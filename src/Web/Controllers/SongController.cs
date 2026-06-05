@@ -73,7 +73,17 @@ public class SongController : ControllerBase
     [HttpGet("{id}/url")]
     public async Task<ActionResult<string>> GetSongUrl(Guid id, CancellationToken cancellationToken)
     {
-        var url = await _songService.GetSongUrl(id, cancellationToken);
+
+           var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("id")?.Value
+            ?? User.FindFirst("sub")?.Value;
+
+        if (string.IsNullOrEmpty(idUserToken))
+            return Unauthorized("User ID not found in token.");
+
+        var idUser = Guid.Parse(idUserToken);
+
+        var url = await _songService.GetSongUrl(id,idUser, cancellationToken);
         return Ok(url);
     }
 

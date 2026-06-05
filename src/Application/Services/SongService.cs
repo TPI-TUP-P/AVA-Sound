@@ -14,16 +14,17 @@ public class SongService : ISongService
 {
     private ISongRepository _song;
     private IUserRepository _user;
+    private IStatisticService  _statistic;
+
     private IStorageService _storageService;
 
-    private IStorageService _storage;
 
-    public SongService(ISongRepository song, IUserRepository user, IStorageService storage, IStorageService storageService)
+    public SongService(ISongRepository song, IUserRepository user, IStorageService storage, IStorageService storageService, IStatisticService statistic)
     {
         _song = song;
         _user = user;
-        _storage = storage;
         _storageService = storageService;
+        _statistic = statistic;
     }
 
     public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
@@ -189,7 +190,7 @@ public class SongService : ISongService
     }
 
 
-    public async Task<string> GetSongUrl(Guid songId, CancellationToken cancellationToken)
+    public async Task<string> GetSongUrl(Guid songId,Guid IdUser, CancellationToken cancellationToken)
     {
         if (songId == Guid.Empty)
             throw new FieldEmptyExcepction("songId");
@@ -199,7 +200,11 @@ public class SongService : ISongService
             throw new NotFoundException("Song");
 
         song.AddView();
+       await _statistic.RegisterReproductionAsync(songId, IdUser,cancellationToken);
+
         await _song.Update(song, cancellationToken);
+
+
 
         return await _storageService.GetSongUrl(song.AudioBig);
 

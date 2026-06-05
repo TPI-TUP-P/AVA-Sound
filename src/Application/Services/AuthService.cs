@@ -11,12 +11,15 @@ namespace Application.Services;
 public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
+    private readonly IStatisticRepository _statisticRepository;
+
     private readonly IJwtService _jwtService;
 
-    public AuthService(IUserRepository userRepository, IJwtService jwtService)
+    public AuthService(IUserRepository userRepository, IJwtService jwtService, IStatisticRepository statisticRepository)
     {
         _userRepository = userRepository;
         _jwtService = jwtService;
+        _statisticRepository = statisticRepository;
     }
 
 
@@ -44,7 +47,19 @@ public class AuthService : IAuthService
             registerRequest.Role!
         );
 
+
+
+
         await _userRepository.Create(user, cancellationToken);
+
+        var statistic =new Statistic(
+            user.Id
+        );
+
+
+
+        await _statisticRepository.Create(statistic, cancellationToken);
+
 
         return new RegisterResponse(
             user.Name,
