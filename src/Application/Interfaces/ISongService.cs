@@ -21,5 +21,5 @@ public interface ISongService
     Task Delete(Guid id, CancellationToken cancellationToken);
 
 
-    Task<string> GetSongUrl(Guid songId, CancellationToken cancellationToken);
+    Task<string> GetSongUrl(Guid songId,Guid IdUser,  CancellationToken cancellationToken);
 }

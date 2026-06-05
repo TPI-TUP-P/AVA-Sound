@@ -1,3 +1,5 @@
+using Domain.Objects.Statistics;
+
 namespace Domain.Entities;
 
 
@@ -5,49 +7,77 @@ public class Statistic
 {
   public  Guid Id { get; init; }
   public  Guid IdUser { get; init; }
-   public Guid SongTop {get; set;}
-   public string? FavoriteGender {get; set;}
-   
-   public int TotalReproductions {get; set;}
+
+    public List<SongReproduction> Reproductions { get; set; } = new();
 
 
-    private Statistic(){}
-
-
-    public  Statistic (Guid id, Guid idUser, Guid songTop, string? favoriteGender, int totalReproductions)
+    public  Statistic (Guid idUser)
     {
         
-        ValidateProperties(idUser, songTop, favoriteGender, totalReproductions);
-        Id = id;
+        Id =Guid.NewGuid();
         IdUser = idUser;
-        SongTop = songTop;
-        FavoriteGender = favoriteGender;
-        TotalReproductions = totalReproductions;
+     
+
+        ValidateProperties(idUser);
+
     }
 
-    private void ValidateProperties( Guid idUser, Guid songTop, string? favoriteGender, int totalReproductions)
+    private void ValidateProperties( Guid idUser)
     {
             if(idUser == Guid.Empty)
         {
             throw new Exception("The Iduser cannot be empty");
         }
-        if(songTop == Guid.Empty)
-        {
-            throw new Exception("The IdSongTop cannot be empty");
-        }
-        if (string.IsNullOrWhiteSpace(favoriteGender))
-        {
-            throw new Exception("The Favorite field cannot be left blank");
-        }
-        if (totalReproductions < 0)
-        {
-            throw new Exception("The total number of views cannot be negative");
-        }
+
         
+   
+   
 
     }
+
+
+
+    public string  GetFavoriteGender()
+    {
+        var gender = Reproductions.OrderByDescending(s=> s.ViewsCount).FirstOrDefault();
+        return gender!.Gender;
+
+
+    } 
+
+
+    public Guid GetFavoriteSong()
+    {
+        var favoriteSong = Reproductions.OrderByDescending(s=> s.ViewsCount).FirstOrDefault();
+        return favoriteSong!.IdSong;
+
+
+    }
+
+
+
+    public void RegisterViewGender(Guid idSong, string gender)
+    {
+        var existingSong = Reproductions.FirstOrDefault(s=> s.IdSong == idSong);
+
+      if( existingSong == null)
+      {
+        var songReproduction = new SongReproduction
+        {
+            IdSong = idSong,
+            Gender = gender,
+            ViewsCount = 1
+        };
+        Reproductions.Add(songReproduction);
+      }
+      else
+        {
+            existingSong.ViewsCount++;
+        }
+        
+    }
+
+
     
-
-
     
 }

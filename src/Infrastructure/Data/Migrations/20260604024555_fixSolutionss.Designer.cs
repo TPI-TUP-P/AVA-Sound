@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260604024555_fixSolutionss")]
+    partial class fixSolutionss
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.7");
@@ -166,10 +169,16 @@ namespace Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("FavoriteGender")
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("IdUser")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Reproductions")
+                    b.Property<Guid?>("SongTop")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TotalReproductioByGender")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
