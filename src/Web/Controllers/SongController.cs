@@ -27,7 +27,7 @@ public class SongController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<PagerSongResponse<GetByIdResponse>>> GetAll([FromBody] PagerRequest pagerRequest, CancellationToken cancellationToken)
+    public async Task<ActionResult<PagerSongResponse<GetByIdResponse>>> GetAll([FromQuery] PagerRequest pagerRequest, CancellationToken cancellationToken)
     {
         var songs = await _songService.GetAll(pagerRequest, cancellationToken);
         return Ok(songs);
@@ -82,10 +82,10 @@ public class SongController : ControllerBase
     {
         var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? User.FindFirst("id")?.Value
-            ?? User.FindFirst("sur")?.Value;
+            ?? User.FindFirst("sub")?.Value;
 
         if(string.IsNullOrEmpty(idUserToken))
-            return Unauthorized("User not foun");
+            return Unauthorized("User id not found in token");
 
         var idUser=Guid.Parse(idUserToken);
         
@@ -98,10 +98,10 @@ public class SongController : ControllerBase
     {
         var idUserToken= User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? User.FindFirst("id")?.Value
-            ?? User.FindFirst("sur")?.Value;
+            ?? User.FindFirst("sub")?.Value;
 
         if(string.IsNullOrEmpty(idUserToken))
-            return Unauthorized("User not found");
+            return Unauthorized("User id not found in token");
 
         var idUser=Guid.Parse(idUserToken);
 

@@ -5,6 +5,7 @@ using Application.DTOs.User.response;
 using Application.DTOs.User.Response;
 using Application.Interfaces;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Interfaces;
 
 
@@ -23,12 +24,12 @@ public class UserService : IUserService
     public async Task<GetByIdResponse> GetByEmail(string email, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(email))
-            throw new Exception("El email es obligatorio");
+            throw new FieldEmptyExcepction("Email");
 
         var user = await _user.GetByEmail(email, cancellationToken);
 
         if (user is null)
-            throw new Exception("El usuario no existe");
+            throw new NotFoundException("user");
 
         return new GetByIdResponse
         {
@@ -45,12 +46,12 @@ public class UserService : IUserService
     public async Task<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)
-            throw new Exception("El id no existe");
+            throw new FieldEmptyExcepction("Id");
 
         var user = await _user.GetById(id, cancellationToken);
 
         if (user == null)
-            throw new Exception("El usuario no existe");
+            throw new NotFoundException("user");
 
         return new GetByIdResponse
         {
@@ -102,22 +103,22 @@ public class UserService : IUserService
     {
         if (userDto == null)
         {
-            throw new Exception("Datos inválidos");
+            throw new FieldEmptyExcepction("User data");
         }
 
 
 
         if (string.IsNullOrWhiteSpace(userDto.Name))
-            throw new Exception("Name es obligatorio");
+            throw new FieldEmptyExcepction("Name");
 
         if (string.IsNullOrWhiteSpace(userDto.Surname))
-            throw new Exception("Surname es obligatorio");
+            throw new FieldEmptyExcepction("Surname");
 
         if (string.IsNullOrWhiteSpace(userDto.Email))
-            throw new Exception("Email es obligatorio");
+            throw new FieldEmptyExcepction("Email");
 
         if (string.IsNullOrWhiteSpace(userDto.Password))
-            throw new Exception("Contraseña es obligatoria");
+            throw new FieldEmptyExcepction("Password");
 
 
 
@@ -145,30 +146,33 @@ public class UserService : IUserService
         };
     }
 
-    public async Task<UpdateResponse> Update(Guid id, UpdateRequest userDto, CancellationToken cancellationToken)
+    public async Task<UpdateResponse> Update(Guid id, UpdateRequest userDto, Guid userId, CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)
-            throw new Exception("Id inválido");
+            throw new FieldEmptyExcepction("Id");
 
         if (userDto == null)
-            throw new Exception("Datos inválidos");
+            throw new FieldEmptyExcepction("userDto");
 
         var user = await _user.GetById(id, cancellationToken);
 
         if (user == null)
-            throw new Exception("el usuario no existe");
+            throw new NotFoundException("user");
+
+        if(user.Id != userId)
+            throw new IdNotMatchException();
 
         if (string.IsNullOrWhiteSpace(userDto.Name))
-            throw new Exception("Name es obligatorio");
+            throw new FieldEmptyExcepction("Name");
 
         if (string.IsNullOrWhiteSpace(userDto.Surname))
-            throw new Exception("Surname es obligatorio");
+            throw new FieldEmptyExcepction("Surname");
 
         if (string.IsNullOrWhiteSpace(userDto.Email))
-            throw new Exception("Email es obligatorio");
+            throw new FieldEmptyExcepction("Email");
 
         if (string.IsNullOrWhiteSpace(userDto.Password))
-            throw new Exception("Contraseña es obligatoria");
+            throw new FieldEmptyExcepction("Password");
 
 
         user.UpdateInfo(
@@ -198,12 +202,12 @@ public class UserService : IUserService
     public async Task Delete(Guid Id, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
-            throw new Exception("el id no existe");
+            throw new FieldEmptyExcepction("Id");
 
         var user = await _user.GetById(Id, cancellationToken);
 
         if (user == null)
-            throw new Exception("el usuario no existe");
+            throw new NotFoundException("user");
 
         user.Desactive();
         await _user.Update(user, cancellationToken);
@@ -215,7 +219,7 @@ public class UserService : IUserService
 
         if (currentUser == null)
         {
-            throw new Exception("Usuario actual no encontrado");
+            throw new NotFoundException("current user");
         }
         if (currentUser.Role != "superadmin")
         {

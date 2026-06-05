@@ -32,7 +32,7 @@ public class ReproductionListController : ControllerBase
     {
         var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? User.FindFirst("id")?.Value
-            ?? User.FindFirst("sur")?.Value;
+            ?? User.FindFirst("sub")?.Value;
 
         if(string.IsNullOrEmpty(idUserToken))
             return Unauthorized("user id not found in token");
@@ -89,7 +89,7 @@ public class ReproductionListController : ControllerBase
 
         var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? User.FindFirst("id")?.Value
-            ?? User.FindFirst("sur")?.Value;
+            ?? User.FindFirst("sub")?.Value;
 
         if(string.IsNullOrEmpty(idUserToken))
             return Unauthorized("user id not found in token");
@@ -108,7 +108,7 @@ public class ReproductionListController : ControllerBase
 
         var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? User.FindFirst("id")?.Value
-            ?? User.FindFirst("sur")?.Value;
+            ?? User.FindFirst("sub")?.Value;
 
         if(string.IsNullOrEmpty(idUserToken))
             return Unauthorized("user id not found in token");
@@ -126,7 +126,7 @@ public class ReproductionListController : ControllerBase
     {
         var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? User.FindFirst("id")?.Value
-            ?? User.FindFirst("sur")?.Value;
+            ?? User.FindFirst("sub")?.Value;
 
         if(string.IsNullOrEmpty(idUserToken))
             return Unauthorized("user id not found in token");
