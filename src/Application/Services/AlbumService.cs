@@ -1,6 +1,7 @@
 using Application.DTOs.Album.Request;
 using Application.DTOs.Album.Response;
 using Application.Interfaces;
+
 using Domain.Entities;
 using Domain.Interfaces;
 
@@ -10,11 +11,11 @@ namespace Application.Services;
 public class AlbumService : IAlbumService
 {
     private IAlbumRepository _album;
-    private IUserRepository _user;
+    private IUserService _user;
     private readonly ISongRepository _song;
 
 
-    public AlbumService(IAlbumRepository album, ISongRepository song, IUserRepository user)
+    public AlbumService(IAlbumRepository album, ISongRepository song, IUserService user)
     {
         _album = album;
         _song = song;
@@ -176,16 +177,17 @@ public class AlbumService : IAlbumService
         var user = await _user.GetById(idUser, cancellationToken);
 
 
-
         if(album is null)
         {
             throw new NotFoundException("Album");
         }
 
-        if (idUser !=  album.IdArtist)
+        if (idUser !=  album.IdArtist || user.Role != "Admin")
         {
-            throw new Exception("You are not the owner of this album");
+            throw new Exception("You don't have permission to delete this album");
         }
+
+
 
 
         if(user.IsArtist is false)
@@ -199,11 +201,13 @@ public class AlbumService : IAlbumService
 
 
 
-    public async Task<GetByIdResponse> AddSong(Guid id, Guid idSong, CancellationToken cancellationToken)
+    public async Task<GetByIdResponse> AddSong(Guid id, Guid idSong, Guid idUser,CancellationToken cancellationToken)
     {
         var album = await _album.GetById(id, cancellationToken);
         var song = await _song.GetById(idSong, cancellationToken);
+        var user = await _user.GetById(idUser, cancellationToken);
 
+        
         if(album is null)
         {
             throw new NotFoundException("Album");
@@ -214,7 +218,35 @@ public class AlbumService : IAlbumService
             throw new NotFoundException("Song");
         }
 
+
+
+        if(user.Id != idUser)
+        {
+            throw new Exception("You don't have permission to add this song");
+        }
+        // AuthValidator.ValidateOwner(album.IdArtist, idUser, "You don't have permission to add this song");
+        // AuthValidator.ValidateOwner(song.IdArtist, idUser, "You don't have permission to add this song");
+
+        //
+
+        if(user.Id != song.IdArtist)
+        {
+            throw new Exception("You don't have permission to add this song");
+        }
+
+        if(song.IdAlbum != Guid.Empty)
+        {
+            throw new Exception("The song is already in an album");
+        }
+
+        if(song.IdAlbum == album.Id)
+        {
+            throw new Exception("The song is already in this album");
+        }
+
+
         album.AddSong(song);
+        
         await _album.Update(album, cancellationToken);
 
         return new GetByIdResponse
@@ -231,10 +263,13 @@ public class AlbumService : IAlbumService
     }
 
 
-    public async Task<GetByIdResponse> DeleteSong(Guid id, Guid idSong, CancellationToken cancellationToken)
+    public async Task<GetByIdResponse> DeleteSong(Guid id, Guid idSong, Guid idUser,CancellationToken cancellationToken)
     {
         var album = await _album.GetById(id, cancellationToken);
         var song = await _song.GetById(idSong, cancellationToken);
+        var user = await _user.GetById(idUser, cancellationToken);
+
+        
         if(album is null)
         {
             throw new NotFoundException("Album");
@@ -245,7 +280,16 @@ public class AlbumService : IAlbumService
             throw new NotFoundException("Song");
         }
 
+        if(user.Id != idUser && user.Role != "Admin" )
+        {
+            throw new Exception("You don't have permission to delete this song");
+        }
+        // AuthValidator.ValidateAdminOrOwner(album.IdArtist, idUser, user.Role!, "You don't have permission to delete this song");
+        
+
+
         album.DeleteSong(song);
+        song.RemoveFromAlbum();
         await _album.Update(album, cancellationToken);
 
         return new GetByIdResponse(

@@ -60,7 +60,7 @@ public class StatisticRepository : IStatisticRepository
     public async Task<Statistic> GetByIdUser(Guid IdUser, CancellationToken cancellationToken)
     {
         var statistic = await _context.Statistics.FirstOrDefaultAsync(s => s.IdUser == IdUser, cancellationToken);
-        return statistic;
+        return statistic!;
 
     }
 

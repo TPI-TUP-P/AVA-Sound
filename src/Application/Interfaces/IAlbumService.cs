@@ -13,9 +13,9 @@ public interface        IAlbumService
     Task<UpdateResponse> Update(Guid Id, UpdateRequest albumDto, CancellationToken cancellationToken);
     Task Delete(Guid id,Guid idUser, CancellationToken cancellationToken);
 
-    Task<GetByIdResponse> AddSong(Guid id, Guid idSong, CancellationToken cancellationToken);
+    Task<GetByIdResponse> AddSong(Guid id, Guid idSong,Guid idUser,  CancellationToken cancellationToken);
 
-    Task<GetByIdResponse> DeleteSong(Guid id, Guid idSong, CancellationToken cancellationToken);
+    Task<GetByIdResponse> DeleteSong(Guid id, Guid idSong, Guid idUser, CancellationToken cancellationToken);
 
 }
 
