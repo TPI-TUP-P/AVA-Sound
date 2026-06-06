@@ -3,12 +3,14 @@ using Application.DTOs.Statistic.Response;
 using Application.Interfaces;
 using Domain.Interfaces;
 using Domain.Entities;
+using Application.Validators;
 namespace Application.Services;
 
 public class StatisticService : IStatisticService
 {
     private IStatisticRepository _statistic;
     private ISongRepository _song;
+
     public StatisticService(IStatisticRepository statistic, ISongRepository song)
     {
         _statistic = statistic;
@@ -50,6 +52,9 @@ public class StatisticService : IStatisticService
     public async Task<GetFavoriteSongResponse> GetFavoriteSong(Guid IdUser, CancellationToken cancellationToken)
     {
         var statistic = await _statistic.GetByIdUser(IdUser, cancellationToken);
+
+
+        AuthValidator.ValidateOwner(statistic.IdUser, IdUser, "You don't have permission to access these statistics");
 
         if(statistic is null)
         {
@@ -120,10 +125,17 @@ public class StatisticService : IStatisticService
     {
         var statistic = await _statistic.GetByIdUser(IdUser, cancellationToken);
         
+        AuthValidator.ValidateOwner(statistic.IdUser, IdUser, "You don't have permission to access these statistics");
+
         if(statistic is null)
         {
             throw new NotFoundException("Statistic");
         }
+
+
+
+
+
 
         return statistic.GetFavoriteGender();
     }

@@ -1,6 +1,8 @@
 using Application.DTOs.Album.Request;
 using Application.DTOs.Album.Response;
 using Application.Interfaces;
+using Application.Validators;
+
 using Domain.Entities;
 using Domain.Interfaces;
 
@@ -176,16 +178,18 @@ public class AlbumService : IAlbumService
         var user = await _user.GetById(idUser, cancellationToken);
 
 
-
         if(album is null)
         {
             throw new NotFoundException("Album");
         }
 
-        if (idUser !=  album.IdArtist)
-        {
-            throw new Exception("You are not the owner of this album");
-        }
+        // if (idUser !=  album.IdArtist || user.Role != "Admin")
+        // {
+        //     throw new Exception("You don't have permission to delete this album");
+        // }
+
+        AuthValidator.ValidateAdminOrOwner(album.IdArtist, idUser, user.Role!, "You don't have permission to delete this album");
+
 
 
         if(user.IsArtist is false)
@@ -199,11 +203,13 @@ public class AlbumService : IAlbumService
 
 
 
-    public async Task<GetByIdResponse> AddSong(Guid id, Guid idSong, CancellationToken cancellationToken)
+    public async Task<GetByIdResponse> AddSong(Guid id, Guid idSong, Guid idUser,CancellationToken cancellationToken)
     {
         var album = await _album.GetById(id, cancellationToken);
         var song = await _song.GetById(idSong, cancellationToken);
+        var user = await _user.GetById(idUser, cancellationToken);
 
+        
         if(album is null)
         {
             throw new NotFoundException("Album");
@@ -213,6 +219,21 @@ public class AlbumService : IAlbumService
         {
             throw new NotFoundException("Song");
         }
+
+        // if(user.Id != idUser)
+        // {
+        //     throw new Exception("You don't have permission to add this song");
+        // }
+        AuthValidator.ValidateOwner(album.IdArtist, idUser, "You don't have permission to add this song");
+        AuthValidator.ValidateOwner(song.IdArtist, idUser, "You don't have permission to add this song");
+
+        //
+
+        // if(user.Id != song.IdArtist)
+        // {
+        //     throw new Exception("You don't have permission to add this song");
+        // }
+
 
         album.AddSong(song);
         await _album.Update(album, cancellationToken);
@@ -231,10 +252,13 @@ public class AlbumService : IAlbumService
     }
 
 
-    public async Task<GetByIdResponse> DeleteSong(Guid id, Guid idSong, CancellationToken cancellationToken)
+    public async Task<GetByIdResponse> DeleteSong(Guid id, Guid idSong, Guid idUser,CancellationToken cancellationToken)
     {
         var album = await _album.GetById(id, cancellationToken);
         var song = await _song.GetById(idSong, cancellationToken);
+        var user = await _user.GetById(idUser, cancellationToken);
+
+        
         if(album is null)
         {
             throw new NotFoundException("Album");
@@ -244,6 +268,14 @@ public class AlbumService : IAlbumService
         {
             throw new NotFoundException("Song");
         }
+
+        // if(user.Id != idUser || user.Role != "Admin" )
+        // {
+        //     throw new Exception("You don't have permission to delete this song");
+        // }
+        AuthValidator.ValidateAdminOrOwner(album.IdArtist, idUser, user.Role!, "You don't have permission to delete this song");
+        
+
 
         album.DeleteSong(song);
         await _album.Update(album, cancellationToken);
