@@ -43,6 +43,10 @@ public class Song
         Views++;
     }
 
+    public void RemoveFromAlbum()
+    {
+        IdAlbum = null;
+    }
 
     private void ValidateProperties(Guid idArtist, Guid? idAlbum, string title, string gender, string duration, string audioBig)
     {
