@@ -28,8 +28,8 @@ public class InfoUserController : ControllerBase
         return Ok(await _infouservice.GetById(Id, cancellationToken));
     }
 
-    [HttpPatch("{Id}")]
-    public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest infouserDto, CancellationToken cancellationToken)
+    [HttpPatch("{id:guid}")]
+    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest infouserDto, CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                         ?? User.FindFirst("id")?.Value
@@ -39,7 +39,7 @@ public class InfoUserController : ControllerBase
             throw new FieldEmptyExcepction("Id From token");
         }
         var idUser = Guid.Parse(idUserToken);
-        return Ok(await _infouservice.Update(Id, idUser, infouserDto, cancellationToken));
+        return Ok(await _infouservice.Update(id, idUser, infouserDto, cancellationToken));
     }
     [HttpPost]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest infouserDto, CancellationToken cancellationToken)
@@ -54,8 +54,8 @@ public class InfoUserController : ControllerBase
     public async Task<ActionResult> Delete(Guid Id, CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                       ?? User.FindFirst("id")?.Value
-                       ?? User.FindFirst("sub")?.Value;
+                    ?? User.FindFirst("id")?.Value
+                    ?? User.FindFirst("sub")?.Value;
         if (idUserToken is null)
         {
             throw new FieldEmptyExcepction("Id From token");

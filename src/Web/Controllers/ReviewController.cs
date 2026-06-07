@@ -58,8 +58,8 @@ public class ReviewController : ControllerBase
     public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest reviewDto, CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                           ?? User.FindFirst("id")?.Value
-                           ?? User.FindFirst("sub")?.Value;
+                        ?? User.FindFirst("id")?.Value
+                        ?? User.FindFirst("sub")?.Value;
         if (idUserToken is null)
         {
             throw new FieldEmptyExcepction("Id From token");
