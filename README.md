@@ -11,13 +11,15 @@ Emiliano Falabrini, Melina Bueno.<br>
 **INTEGRANTES**<br>
 Sosa Agustin, Volpe Andres, Barthelemy Tomás<br>
 **Descripcion Del Proyecto**<br>
-Realizamos una API de una plataforma web enfocada en artistas independientes, permitiéndoles publicar su música, recibir feedback de la comunidad y ganar visibilidad sin depender de grandes discográficas.
+Realizamos una API de una plataforma web enfocada en artistas independientes, permitiéndoles publicar su música, recibir feedback de la comunidad y ganar visibilidad sin depender de grandes discográficas.<br>
+**Proba Nuestra API**<br>
+Demo Online | [Abrir Demo](https://ava-sound.onrender.com/)
 
 ## Funcionalidades
 
 - Reproduccion de musica.
 - Publicacion de Canciones.
-- Sistema de calificacion y comentarios.
+- Sistema de Review.
 - Perfiles de usuarios y artista.
 - Busqueda por genero, artista, cancion.
 
