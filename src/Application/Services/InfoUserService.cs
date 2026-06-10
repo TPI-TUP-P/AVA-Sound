@@ -59,6 +59,7 @@ public class InfoUserService : IInfoUserService
         {
             throw new NotFoundException("User");
         }
+        ValidateId(infouserDto.IdUser);
         var existingInfoUser = await _InfoUser.GetById(infouserDto.IdUser, cancellationToken);
         if (existingInfoUser is not null)
         {
@@ -96,7 +97,7 @@ public class InfoUserService : IInfoUserService
         }
         if (existingInfo.IdUser != IdUser)
         {
-            throw new IdNotMatchException();
+            throw new ForbiddenException("InfoUser");
         }
         if (infouserDto.Biography != null)
         {

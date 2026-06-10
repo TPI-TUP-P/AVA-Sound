@@ -43,10 +43,9 @@ public class ReviewService : IReviewService
         {
             throw new FieldEmptyExcepction(nameof(reviewDto));
         }
-        if (reviewDto.IdUser == Guid.Empty || reviewDto.IdSong == Guid.Empty)
-        {
-            throw new FieldEmptyExcepction("Id");
-        }
+        ValidateId(reviewDto.IdUser);
+        ValidateId(reviewDto.IdSong);
+
         if (string.IsNullOrWhiteSpace(reviewDto.Comment))
         {
             throw new FieldEmptyExcepction("Comment");
@@ -92,10 +91,8 @@ public class ReviewService : IReviewService
 
     public async Task<UpdateResponse> Update(Guid Id, Guid IdUser, UpdateRequest reviewDto, CancellationToken cancellationToken)
     {
-        if (Id == Guid.Empty)
-        {
-            throw new FieldEmptyExcepction("Id");
-        }
+        ValidateId(Id);
+        ValidateId(IdUser);
         if (reviewDto is null)
         {
             throw new FieldEmptyExcepction("Review");
@@ -123,19 +120,15 @@ public class ReviewService : IReviewService
 
     public async Task Delete(Guid Id, Guid IdUser, CancellationToken cancellationToken)
     {
-        if (Id == Guid.Empty)
-        {
-            throw new FieldEmptyExcepction("Id");
-        }
+        ValidateId(Id);
+        ValidateId(IdUser);
         var review = await _review.GetById(Id, cancellationToken);
         if (review is null)
         {
             throw new FieldEmptyExcepction("Review");
         }
-        if (review.IdUser == Guid.Empty)
-        {
-            throw new FieldEmptyExcepction("IdUser");
-        }
+        ValidateId(review.IdUser);
+
         if (review.IdUser != IdUser)
         {
             throw new ForbiddenException("Review");
@@ -144,5 +137,11 @@ public class ReviewService : IReviewService
 
         await _review.Delete(Id, cancellationToken);
 
+    }
+
+    private static void ValidateId(Guid id)
+    {
+        if (id == Guid.Empty)
+            throw new FieldEmptyExcepction("Id");
     }
 }
