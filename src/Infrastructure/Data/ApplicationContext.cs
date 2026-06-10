@@ -92,13 +92,6 @@ namespace Infrastructure.Data
             .WithOne()
             .HasForeignKey<Statistic>(s => s.IdUser);
 
-            // (entity =>
-            // {
-                
-            //     entity.HasKey(e => e.Id);
-            //     entity.Property(e => e.IdUser).IsRequired();
-
-            // });
 
             modelBuilder.Entity<InfoUser>(entity =>
             {
