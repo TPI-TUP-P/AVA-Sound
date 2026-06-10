@@ -43,33 +43,35 @@ public class ReviewService : IReviewService
         {
             throw new FieldEmptyExcepction(nameof(reviewDto));
         }
-        if (reviewDto.IdUser == Guid.Empty || reviewDto.IdSong == Guid.Empty)
-        {
-            throw new FieldEmptyExcepction("Id");
-        }
+        ValidateId(reviewDto.IdUser);
+        ValidateId(reviewDto.IdSong);
+
         if (string.IsNullOrWhiteSpace(reviewDto.Comment))
         {
             throw new FieldEmptyExcepction("Comment");
         }
-        if (reviewDto.Comment.Length >= 800)
+        if (reviewDto.Comment.Length > 800)
         {
             throw new FieldTooLongException("Comment", 800);
         }
-        if (reviewDto.Comment.Length <= 3)
+        if (reviewDto.Comment.Length < 3)
         {
             throw new FieldIsNotLongException("Comment", 3);
         }
         var songExists = await _song.GetById(reviewDto.IdSong, cancellationToken);
         if (songExists is null)
         {
-            throw new NotFoundException("Song"); ;
+            throw new NotFoundException("Song");
         }
         var reviewsExist = await _review.GetBySong(reviewDto.IdSong, cancellationToken);
         if (reviewsExist.Any(x => x.IdUser == reviewDto.IdUser))
         {
             throw new AlreadyExistExcepction("Review", songExists.Title);
         }
-
+        if (reviewDto.DateCreated > DateTime.UtcNow)
+        {
+            throw new futureDateException();
+        }
 
 
 
@@ -92,16 +94,22 @@ public class ReviewService : IReviewService
 
     public async Task<UpdateResponse> Update(Guid Id, Guid IdUser, UpdateRequest reviewDto, CancellationToken cancellationToken)
     {
-        if (Id == Guid.Empty)
-        {
-            throw new FieldEmptyExcepction("Id");
-        }
+        ValidateId(Id);
+        ValidateId(IdUser);
         if (reviewDto is null)
         {
             throw new FieldEmptyExcepction("Review");
         }
         var existReview = await _review.GetById(Id, cancellationToken);
-        if (reviewDto.Comment != null && reviewDto.Comment.Length >= 3)
+        if (existReview is null)
+        {
+            throw new NotFoundException("Review");
+        }
+        if (existReview.IdUser != IdUser)
+        {
+            throw new ForbiddenException("Review");
+        }
+        if (reviewDto.Comment != null && reviewDto.Comment.Length > 3)
         {
             existReview.Comment = reviewDto.Comment;
         }
@@ -109,10 +117,8 @@ public class ReviewService : IReviewService
         {
             throw new FieldIsNotLongException("Comment", 3);
         }
-        if (existReview.IdUser != IdUser)
-        {
-            throw new ForbiddenException("Review");
-        }
+
+
 
         await _review.Update(existReview, cancellationToken);
         return new UpdateResponse
@@ -123,19 +129,15 @@ public class ReviewService : IReviewService
 
     public async Task Delete(Guid Id, Guid IdUser, CancellationToken cancellationToken)
     {
-        if (Id == Guid.Empty)
-        {
-            throw new FieldEmptyExcepction("Id");
-        }
+        ValidateId(Id);
+        ValidateId(IdUser);
         var review = await _review.GetById(Id, cancellationToken);
         if (review is null)
         {
             throw new FieldEmptyExcepction("Review");
         }
-        if (review.IdUser == Guid.Empty)
-        {
-            throw new FieldEmptyExcepction("IdUser");
-        }
+        ValidateId(review.IdUser);
+
         if (review.IdUser != IdUser)
         {
             throw new ForbiddenException("Review");
@@ -144,5 +146,11 @@ public class ReviewService : IReviewService
 
         await _review.Delete(Id, cancellationToken);
 
+    }
+
+    private static void ValidateId(Guid id)
+    {
+        if (id == Guid.Empty)
+            throw new FieldEmptyExcepction("Id");
     }
 }
