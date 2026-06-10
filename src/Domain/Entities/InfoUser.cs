@@ -1,3 +1,5 @@
+using Domain.Exceptions;
+
 namespace Domain.Entities;
 
 public class InfoUser
@@ -26,19 +28,19 @@ public class InfoUser
     {
         if (iduser == Guid.Empty)
         {
-            throw new Exception("The user ID cannot be empty.");
+            throw new FieldEmptyExcepction("Id");
         }
         if (profilepicture is null)
         {
-            throw new Exception("The profile picture cannot be empty.");
+            throw new FieldEmptyExcepction("ProfilePicture");
         }
         if (country is null)
         {
-            throw new Exception("The country cannot be empty.");
+            throw new FieldEmptyExcepction("Country");
         }
         if (biography is null)
         {
-            throw new Exception("The biography cannot be empty.");
+            throw new FieldEmptyExcepction("Biography");
         }
     }
 }

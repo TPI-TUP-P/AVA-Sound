@@ -9,8 +9,8 @@ namespace Application.Services;
 public class InfoUserService : IInfoUserService
 {
     private readonly IInfoUserRepository _InfoUser;
-    private readonly IUserRepository _user;
-    public InfoUserService(IInfoUserRepository infouser, IUserRepository user)
+    private readonly IUserService _user;
+    public InfoUserService(IInfoUserRepository infouser, IUserService user)
     {
         _InfoUser = infouser;
         _user = user;

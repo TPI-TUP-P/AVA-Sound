@@ -10,9 +10,9 @@ namespace Application.Services;
 public class ReviewService : IReviewService
 {
     private readonly IReviewRepository _review;
-    private readonly ISongRepository _song;
+    private readonly ISongService _song;
 
-    public ReviewService(IReviewRepository review, ISongRepository song)
+    public ReviewService(IReviewRepository review, ISongService song)
     {
         _review = review;
         _song = song;
@@ -53,7 +53,7 @@ public class ReviewService : IReviewService
         }
         if (reviewDto.Comment.Length >= 800)
         {
-            throw new ArgumentException("The comment cannot exceed 800 characters.");
+            throw new FieldTooLongException("Comment", 800);
         }
         if (reviewDto.Comment.Length <= 3)
         {
@@ -111,7 +111,7 @@ public class ReviewService : IReviewService
         }
         if (existReview.IdUser != IdUser)
         {
-            throw new IdNotMatchException();
+            throw new ForbiddenException("Review");
         }
 
         await _review.Update(existReview, cancellationToken);
@@ -138,7 +138,7 @@ public class ReviewService : IReviewService
         }
         if (review.IdUser != IdUser)
         {
-            throw new IdNotMatchException();
+            throw new ForbiddenException("Review");
         }
 
 
