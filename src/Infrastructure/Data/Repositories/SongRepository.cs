@@ -47,7 +47,7 @@ public class SongRepository : ISongRepository
     public async Task<Song> Create(Song song, CancellationToken cancellationToken)
     {
         _context.Songs.Add(song);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return song;
     }
 

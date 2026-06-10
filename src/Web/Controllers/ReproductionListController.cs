@@ -4,6 +4,7 @@ using Domain.Entities;
 using Application.DTOs.ReproductionList.Request;
 using Application.DTOs.ReproductionList.Response;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Web.Controllers;
 
@@ -29,7 +30,16 @@ public class ReproductionListController : ControllerBase
     [HttpPatch("{id}")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid id,[FromBody] UpdateRequest updateRequest, CancellationToken cancellationToken)
     {
-        var result= await _reproductionListservice.Update(id, updateRequest, cancellationToken);
+        var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("id")?.Value
+            ?? User.FindFirst("sub")?.Value;
+
+        if(string.IsNullOrEmpty(idUserToken))
+            return Unauthorized("user id not found in token");
+
+        var idUser=Guid.Parse(idUserToken);
+
+        var result= await _reproductionListservice.Update(id, updateRequest, idUser, cancellationToken);
         return Ok(result);
     }
     [Authorize]
@@ -77,7 +87,16 @@ public class ReproductionListController : ControllerBase
     public async Task<ActionResult> AddSong(Guid listId, Guid songId, CancellationToken cancellationToken)
     {
 
-        await _reproductionListservice.AddSong(listId, songId, cancellationToken);
+        var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("id")?.Value
+            ?? User.FindFirst("sub")?.Value;
+
+        if(string.IsNullOrEmpty(idUserToken))
+            return Unauthorized("user id not found in token");
+
+        var idUser=Guid.Parse(idUserToken);
+
+        await _reproductionListservice.AddSong(listId, songId, idUser, cancellationToken);
         return Ok("song added to the list");
 
 
@@ -86,7 +105,18 @@ public class ReproductionListController : ControllerBase
     [HttpDelete("{listId}/remove-song/{songId}")]
     public async Task<ActionResult> RemoveSong(Guid listId, Guid songId, CancellationToken cancellationToken)
     {
-        await _reproductionListservice.RemoveSong(listId, songId, cancellationToken);
+
+        var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("id")?.Value
+            ?? User.FindFirst("sub")?.Value;
+
+        if(string.IsNullOrEmpty(idUserToken))
+            return Unauthorized("user id not found in token");
+
+        var idUser=Guid.Parse(idUserToken);
+
+
+        await _reproductionListservice.RemoveSong(listId, songId, idUser, cancellationToken);
         return Ok("song removed from the list");
 
     }
@@ -94,7 +124,16 @@ public class ReproductionListController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        await _reproductionListservice.Delete(id, cancellationToken);
+        var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("id")?.Value
+            ?? User.FindFirst("sub")?.Value;
+
+        if(string.IsNullOrEmpty(idUserToken))
+            return Unauthorized("user id not found in token");
+
+        var idUser=Guid.Parse(idUserToken);
+
+        await _reproductionListservice.Delete(id, idUser, cancellationToken);
         return Ok("deleted list");
     }
 }
