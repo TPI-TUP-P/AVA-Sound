@@ -50,25 +50,28 @@ public class ReviewService : IReviewService
         {
             throw new FieldEmptyExcepction("Comment");
         }
-        if (reviewDto.Comment.Length >= 800)
+        if (reviewDto.Comment.Length > 800)
         {
             throw new FieldTooLongException("Comment", 800);
         }
-        if (reviewDto.Comment.Length <= 3)
+        if (reviewDto.Comment.Length < 3)
         {
             throw new FieldIsNotLongException("Comment", 3);
         }
         var songExists = await _song.GetById(reviewDto.IdSong, cancellationToken);
         if (songExists is null)
         {
-            throw new NotFoundException("Song"); ;
+            throw new NotFoundException("Song");
         }
         var reviewsExist = await _review.GetBySong(reviewDto.IdSong, cancellationToken);
         if (reviewsExist.Any(x => x.IdUser == reviewDto.IdUser))
         {
             throw new AlreadyExistExcepction("Review", songExists.Title);
         }
-
+        if (reviewDto.DateCreated > DateTime.UtcNow)
+        {
+            throw new futureDateException();
+        }
 
 
 
@@ -98,7 +101,15 @@ public class ReviewService : IReviewService
             throw new FieldEmptyExcepction("Review");
         }
         var existReview = await _review.GetById(Id, cancellationToken);
-        if (reviewDto.Comment != null && reviewDto.Comment.Length >= 3)
+        if (existReview is null)
+        {
+            throw new NotFoundException("Review");
+        }
+        if (existReview.IdUser != IdUser)
+        {
+            throw new ForbiddenException("Review");
+        }
+        if (reviewDto.Comment != null && reviewDto.Comment.Length > 3)
         {
             existReview.Comment = reviewDto.Comment;
         }
@@ -106,10 +117,8 @@ public class ReviewService : IReviewService
         {
             throw new FieldIsNotLongException("Comment", 3);
         }
-        if (existReview.IdUser != IdUser)
-        {
-            throw new ForbiddenException("Review");
-        }
+
+
 
         await _review.Update(existReview, cancellationToken);
         return new UpdateResponse
