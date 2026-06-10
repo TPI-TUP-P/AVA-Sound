@@ -8,53 +8,176 @@ namespace Application.Services;
 public class StatisticService : IStatisticService
 {
     private IStatisticRepository _statistic;
-    public StatisticService(IStatisticRepository statistic)
+    private ISongRepository _song;
+
+    public StatisticService(IStatisticRepository statistic, ISongRepository song)
     {
         _statistic = statistic;
+        _song = song;
     }
 
-    public async Task<List<GetAllResponse>> GetAll()
-    {
-        var statistics = await _statistic.GetAll();
-        return statistics.Select(statistic => new GetAllResponse
-        (
-            statistic.Id,
-            statistic.IdUser,
-            statistic.SongTop,
-            statistic.FavoriteGender,
-            statistic.TotalReproductions
-        )).ToList();
+    // public async Task<List<GetAllResponse>> GetAll()
+    // {
+    //     var statistics = await _statistic.GetAll();
+    //     return statistics.Select(statistic => new GetAllResponse
+    //     (
+    //         statistic.Id,
+    //         statistic.IdUser,
+    //         statistic.SongTop,
+    //         statistic.FavoriteGender,
+    //         statistic.TotalReproductioByGender
+    //     )).ToList();
 
+    // }
+
+
+    public async Task<IEnumerable<GetTopArtistReponse>> GetTopArtists(CancellationToken cancellationToken)
+    {
+        var artists = await _statistic.GetTopArtist(cancellationToken);
+        return artists.GroupBy(s=> new {s.IdArtist,NameArtist = s.Artist.Name})
+        .Select(g=> new GetTopArtistReponse(
+            g.Key.IdArtist,
+            g.Key.NameArtist,
+            g.Count(),
+            g.Sum(s => s.Views)
+            
+        )
+        
+        ).OrderByDescending(a => a.TotalViews).Take(10);
+    
     }
 
 
-    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
+    public async Task<GetFavoriteSongResponse> GetFavoriteSong(Guid IdUser, CancellationToken cancellationToken)
     {
-        if (Id == Guid.Empty)
+        var statistic = await _statistic.GetByIdUser(IdUser, cancellationToken);
+
+
+        if(IdUser != statistic.IdUser)
         {
-            throw new Exception("The ID is empty");
+            throw new Exception("You don't have permission to access these statistics");
         }
 
-        var statistic = await _statistic.GetById(Id, cancellationToken);
+        // AuthValidator.ValidateOwner(statistic.IdUser, IdUser, "You don't have permission to access these statistics");
 
-        if (statistic == null)
+        if(statistic is null)
         {
-            throw new Exception("There are no statistics");
+            throw new NotFoundException("Statistic");
         }
-
-
-        return new GetByIdResponse
+        var idSong = statistic.GetFavoriteSong();
+        var song =await _song.GetById(idSong, cancellationToken);
+       
+       return new GetFavoriteSongResponse
         (
-            statistic.Id,
-            statistic.IdUser,
-            statistic.SongTop,
-            statistic.FavoriteGender,
-            statistic.TotalReproductions
+            song.IdArtist,
+            song.IdAlbum,
+            song.Title!,
+            song.Gender!,
+            song.Duration!
+            ,song.AudioBig!,
+            song.DateUpload,
+            song.Views
 
         );
+        
     }
 
 
+    public async Task<List<GetTopSongsResponse>> GetTopSongs(CancellationToken cancellationToken)
+    {
+        var songs = await _statistic.GetTopSongs(cancellationToken);
+        return songs.Select(song => new GetTopSongsResponse
+        (
+            song.Id,
+            song.Title,
+            song.Gender,
+            song.Duration,
+            song.Views,
+            song.IdArtist,
+            song.IdAlbum
+        )).ToList();
+    }
+
+    // public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
+    // {
+    //     if (Id == Guid.Empty)
+    //     {
+    //         throw new Exception("The ID is empty");
+    //     }
+
+    //     var statistic = await _statistic.GetById(Id, cancellationToken);
+
+    //     if (statistic == null)
+    //     {
+    //         throw new Exception("There are no statistics");
+    //     }
+
+
+    //     return new GetByIdResponse
+    //     (
+    //         statistic.Id,
+    //         statistic.IdUser,
+    //         statistic.SongTop,
+    //         statistic.FavoriteGender,
+    //         statistic.TotalReproductions
+
+    //     );
+    // }
+
+
+    public async  Task<string> GetFavoriteGender(Guid IdUser, CancellationToken cancellationToken)
+    {
+        var statistic = await _statistic.GetByIdUser(IdUser, cancellationToken);
+        
+        if(IdUser != statistic.IdUser)
+        {
+            throw new Exception("You don't have permission to access these statistics");
+        }
+
+        // AuthValidator.ValidateOwner(statistic.IdUser, IdUser, "You don't have permission to access these statistics");
+
+        if(statistic is null)
+        {
+            throw new NotFoundException("Statistic");
+        }
+
+
+
+
+
+
+        return statistic.GetFavoriteGender();
+    }
+
+
+    public async Task<CreateResponse> RegisterReproductionAsync(Guid IdSong,Guid IdUser,  CancellationToken cancellationToken)
+    {
+        var statistic = await _statistic.GetByIdUser(IdUser, cancellationToken);
+        var song = await _song.GetById(IdSong, cancellationToken);
+    
+        if(statistic is null)
+        {
+            throw new NotFoundException("Statistic");
+        }
+
+        if(song is null )
+        {
+            throw new NotFoundException("Song");
+        }
+    
+        statistic.RegisterViewGender(IdSong, song.Gender);
+        await _statistic.UpdateStatistic(statistic, cancellationToken);
+
+        return new CreateResponse
+        (
+            statistic.Id,
+            statistic.IdUser,
+            statistic.Reproductions
+        );
+    
+
+         
+    }
 
     public async Task<CreateResponse> Create(CreateRequest statisticDto, CancellationToken cancellationToken)
     {
@@ -65,12 +188,9 @@ public class StatisticService : IStatisticService
 
 
         var statisticData = new Statistic(
-            Guid.NewGuid(),
-            statisticDto.IdUser,
-            statisticDto.SongTop,
-            statisticDto.FavoriteGender,
-            statisticDto.TotalReproductions
-        );
+            statisticDto.IdUser
+           
+                    );
 
 
 
@@ -80,9 +200,7 @@ public class StatisticService : IStatisticService
         return new CreateResponse(
             statisticCreated.Id,
             statisticCreated.IdUser,
-            statisticCreated.SongTop,
-            statisticCreated.FavoriteGender,
-            statisticCreated.TotalReproductions
+            statisticCreated.Reproductions
         );
 
 
@@ -138,11 +256,6 @@ public class StatisticService : IStatisticService
         }
 
 
-        existingAlbum.SongTop = statisticDto.SongTop;
-        existingAlbum.FavoriteGender = statisticDto.FavoriteGender;
-        existingAlbum.TotalReproductions = statisticDto.TotalReproductions;
-
-
         await _statistic.Update(
 
             existingAlbum, cancellationToken
@@ -152,10 +265,8 @@ public class StatisticService : IStatisticService
         return new UpdateResponse
         (
             existingAlbum.Id,
-            existingAlbum.IdUser,
-            existingAlbum.SongTop,
-            existingAlbum.FavoriteGender,
-            existingAlbum.TotalReproductions
+            existingAlbum.IdUser, 
+            existingAlbum.Reproductions
 
         );
     }

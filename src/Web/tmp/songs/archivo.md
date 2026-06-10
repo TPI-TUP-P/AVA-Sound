@@ -1,0 +1,1 @@
+Estas carpetas son para guardar las canciones de manera local

@@ -155,6 +155,8 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasIndex("IdAlbum");
 
+                    b.HasIndex("IdArtist");
+
                     b.ToTable("Songs");
                 });
 
@@ -164,19 +166,17 @@ namespace Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("FavoriteGender")
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid>("IdUser")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("SongTop")
+                    b.Property<string>("Reproductions")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TotalReproductions")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("IdUser")
+                        .IsUnique();
 
                     b.ToTable("Statistics");
                 });
@@ -243,6 +243,23 @@ namespace Infrastructure.Data.Migrations
                     b.HasOne("Domain.Entities.Album", null)
                         .WithMany("Songs")
                         .HasForeignKey("IdAlbum");
+
+                    b.HasOne("Domain.Entities.User", "Artist")
+                        .WithMany("Songs")
+                        .HasForeignKey("IdArtist")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Artist");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Statistic", b =>
+                {
+                    b.HasOne("Domain.Entities.User", null)
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.Statistic", "IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ReproductionsListSong", b =>
@@ -261,6 +278,11 @@ namespace Infrastructure.Data.Migrations
                 });
 
             modelBuilder.Entity("Domain.Entities.Album", b =>
+                {
+                    b.Navigation("Songs");
+                });
+
+            modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.Navigation("Songs");
                 });

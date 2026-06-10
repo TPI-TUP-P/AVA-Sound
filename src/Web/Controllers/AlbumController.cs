@@ -5,6 +5,7 @@ using Application.DTOs.Album.Response;
 
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 namespace Web.Controllers;
@@ -56,8 +57,8 @@ public class AlbumController : ControllerBase
     }
 
     
-    [Authorize]
     [HttpPost]
+     [Authorize]
     [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest albumDto, CancellationToken cancellationToken)
     {   
@@ -65,6 +66,7 @@ public class AlbumController : ControllerBase
                           ?? User.FindFirst("id")?.Value 
                           ?? User.FindFirst("sub")?.Value;
 
+                          
         if (string.IsNullOrEmpty(idUserToken))
         {
             return Unauthorized("User ID not found in token.");
@@ -89,8 +91,16 @@ public class AlbumController : ControllerBase
     [HttpPost("{id}/add-song/{idSong}")]
     public async Task<ActionResult<GetByIdResponse>> AddSong(Guid id, Guid idSong, CancellationToken cancellationToken)
     {
+            var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if(string.IsNullOrEmpty(idUserToken))
+        {
+            return Unauthorized("User ID not found in token.");
+        }
+        var idUser = Guid.Parse(idUserToken);
+        
       
-            var result = await _albumService.AddSong(id, idSong, cancellationToken);
+            var result = await _albumService.AddSong(id, idSong, idUser,cancellationToken);
             return CreatedAtAction(nameof(GetById), new { id }, result
             );
 
@@ -104,7 +114,17 @@ public class AlbumController : ControllerBase
     [HttpPost("{id}/delete-song/{idSong}")]
     public async Task<ActionResult<GetByIdResponse>> DeleteSong(Guid id, Guid idSong, CancellationToken cancellationToken)
     {   
-        var result = await _albumService.DeleteSong(id, idSong, cancellationToken);
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if(string.IsNullOrEmpty(idUserToken))
+        {
+            return Unauthorized("User ID not found in token.");
+        }
+
+        var idUser = Guid.Parse(idUserToken);
+        
+
+        var result = await _albumService.DeleteSong(id, idSong,idUser, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id }, result);
     }
 

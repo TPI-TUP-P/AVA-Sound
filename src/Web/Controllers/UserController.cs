@@ -1,4 +1,5 @@
 
+using System.Security.Claims;
 using Application.DTOs.User.request;
 using Application.DTOs.User.Request;
 using Application.DTOs.User.response;
@@ -51,7 +52,18 @@ public class UserController : ControllerBase
 
     public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest userDto, CancellationToken cancellationToken)
     {
-        var user = await _userService.Update(id, userDto, cancellationToken);
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ??User.FindFirst("id")?.Value
+            ?? User.FindFirst("sub")?.Value;
+
+        if (string.IsNullOrEmpty(idUserToken))
+        {
+            return Unauthorized("User ID not found in token.");
+        }
+
+        var idUser = Guid.Parse(idUserToken);
+
+        var user = await _userService.Update(id, userDto, idUser, cancellationToken);
         return Ok(user);
     }
 
@@ -75,6 +87,6 @@ public class UserController : ControllerBase
         currentUserId,
         cancellationToken);
 
-    return Ok("Usuario actualizado a admin");
+    return Ok("User updated as administrator");
 }
 }

@@ -100,7 +100,7 @@ public class AlbumRepository : IAlbumRepository
 
         if (result is null)
         {
-            throw new Exception();
+            throw new Exception("this result is null");
         }
         return result;
 

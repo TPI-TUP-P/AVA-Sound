@@ -1,8 +1,10 @@
 // using Microsoft.AspNetCore.Components;
+using System.Security.Claims;
 using Application.DTOs.Statistic.Request;
 using Application.DTOs.Statistic.Response;
 
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
@@ -22,48 +24,59 @@ public class StatisticController : ControllerBase
         _statisticService = statisticService;
     }
 
-    [HttpGet("{id}")]
-    public ActionResult<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken)
+
+    [Authorize]
+    [HttpGet("getFavoriteGender")]
+    public async Task<ActionResult<string>> GetFavoriteGender( CancellationToken cancellationToken)
     {
-        var album = _statisticService.GetById(id, cancellationToken);
+                  var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("id")?.Value
+            ?? User.FindFirst("sub")?.Value;
 
-        return Ok(album);
-    }
+        if (string.IsNullOrEmpty(idUserToken))
+            return Unauthorized("User ID not found in token.");
 
+        var idUser = Guid.Parse(idUserToken);
+        var result = await _statisticService.GetFavoriteGender(idUser, cancellationToken);
+        return Ok(result);
 
-    [HttpGet]
-    public async Task<ActionResult<List<GetAllResponse>>> GetAll()
-    {
-
-        var albums = await _statisticService.GetAll();
-        return Ok(albums);
-    }
-
-
-    [HttpPost]
-    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest statisticDto, CancellationToken cancellationToken)
-    {
-
-        return await _statisticService.Create(statisticDto, cancellationToken);
 
     }
 
-    [HttpPut("{id}")]
-    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest statisticDto, CancellationToken cancellationToken)
+    [Authorize]
+    [HttpGet("getFavoriteSong")]
+    public async Task<ActionResult<GetFavoriteSongResponse>> GetFavoriteSong( CancellationToken cancellationToken)
     {
-        return await _statisticService.Update(id, statisticDto, cancellationToken);
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("id")?.Value
+            ?? User.FindFirst("sub")?.Value;
 
+        if (string.IsNullOrEmpty(idUserToken))
+            return Unauthorized("User ID not found in token.");
+
+        var idUser = Guid.Parse(idUserToken);
+
+        var result = await _statisticService.GetFavoriteSong(idUser, cancellationToken);
+        return Ok(result);
     }
 
 
+    [HttpGet("getTopSogs")]
+    public async Task<ActionResult<GetTopSongsResponse>> GetTopSongs(CancellationToken cancellationToken)
+    {   
+        var result = await _statisticService.GetTopSongs(cancellationToken);
+        return Ok(result);
 
-    [HttpDelete("{id}")]
-
-    public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
-    {
-
-        await _statisticService.Delete(id, cancellationToken);
-        return NoContent();
+        
     }
 
+
+    [HttpGet("getTopArtists")]
+    public async Task<ActionResult<List<GetAllResponse>>> GetTopArtists(CancellationToken cancellationToken)
+    {   
+        var result = await _statisticService.GetTopArtists(cancellationToken);
+        return Ok(result);
+
+        
+    }    
 }

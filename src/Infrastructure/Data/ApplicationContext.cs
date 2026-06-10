@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Domain.Entities;
+using Domain.Objects.Statistics;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -46,7 +47,11 @@ namespace Infrastructure.Data
                 entity.Property(e => e.DateUpload).IsRequired();
                 entity.Property(e => e.Views).IsRequired();
                 entity.Property(e => e.IdArtist).IsRequired();
-                entity.Property(e => e.IdAlbum);
+                entity.HasOne(e => e.Artist)
+                    .WithMany(u => u.Songs)
+                    .HasForeignKey(e => e.IdArtist);
+
+             
             });
 
             modelBuilder.Entity<ReproductionsList>(entity =>
@@ -76,11 +81,24 @@ namespace Infrastructure.Data
                 entity.Property(e => e.IdSong).IsRequired();
             });
 
-            modelBuilder.Entity<Statistic>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.IdUser).IsRequired();
-            });
+            modelBuilder.Entity<Statistic>().Property(s=> s.Reproductions).HasConversion(
+                v=> JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+        v => JsonSerializer.Deserialize<List<SongReproduction>>(v, (JsonSerializerOptions)null)      
+              );
+
+
+          modelBuilder.Entity<Statistic>()
+            .HasOne<User>()
+            .WithOne()
+            .HasForeignKey<Statistic>(s => s.IdUser);
+
+            // (entity =>
+            // {
+                
+            //     entity.HasKey(e => e.Id);
+            //     entity.Property(e => e.IdUser).IsRequired();
+
+            // });
 
             modelBuilder.Entity<InfoUser>(entity =>
             {

@@ -17,7 +17,7 @@ public class SongRepository : ISongRepository
     {
         var song = await _context.Songs.FindAsync(id, cancellationToken);
         if (song == null)
-            throw new KeyNotFoundException($"La cancion con el ID {id} no fue encontrado.");
+            throw new KeyNotFoundException($"The song with ID {id} was not found.");
 
         return song;
     }
@@ -41,13 +41,13 @@ public class SongRepository : ISongRepository
 
     public async Task<int> Count()
     {
-        return await _context.Users.CountAsync();
+        return await _context.Songs.CountAsync();
     }
 
     public async Task<Song> Create(Song song, CancellationToken cancellationToken)
     {
         _context.Songs.Add(song);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return song;
     }
 

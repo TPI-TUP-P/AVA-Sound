@@ -14,21 +14,21 @@ public class SongService : ISongService
 {
     private ISongRepository _song;
     private IUserRepository _user;
+    private IStatisticService  _statistic;
+
     private IStorageService _storageService;
 
-    private IStorageService _storage;
 
-    public SongService(ISongRepository song, IUserRepository user, IStorageService storage, IStorageService storageService)
+    public SongService(ISongRepository song, IUserRepository user, IStorageService storage, IStorageService storageService, IStatisticService statistic)
     {
         _song = song;
         _user = user;
-        _storage = storage;
         _storageService = storageService;
+        _statistic = statistic;
     }
 
     public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
     {
-
 
         var song = await _song.GetById(Id, cancellationToken);
 
@@ -95,6 +95,8 @@ public class SongService : ISongService
         if (user == null)
             throw new NotFoundException("User");
 
+
+
         if (string.IsNullOrWhiteSpace(songDto.Title))
             throw new FieldEmptyExcepction("Title");
         if (string.IsNullOrWhiteSpace(songDto.Gender))
@@ -108,7 +110,7 @@ public class SongService : ISongService
 
         var song = new Song(
             idUser,
-            songDto.IdAlbum,
+            songDto.IdAlbum == Guid.Empty ? null : songDto.IdAlbum,
             songDto.Title,
             songDto.Gender,
             songDto.Duration,
@@ -129,18 +131,22 @@ public class SongService : ISongService
             Views = song.Views
         };
     }
-    public async Task<UpdateResponse> Update(Guid id, UpdateRequest songDto, CancellationToken cancellationToken)
+    public async Task<UpdateResponse> Update(Guid id, UpdateRequest songDto, Guid idUser,  CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)
-            throw new Exception("Id inválido");
+            throw new FieldEmptyExcepction("Id");
 
         if (songDto == null)
-            throw new Exception("Datos inválidos");
+            throw new FieldEmptyExcepction("Dto");
 
         var song = await _song.GetById(id, cancellationToken);
 
+        if(idUser!=song.IdArtist)
+            throw new IdNotMatchException();
+
+
         if (song == null)
-            throw new Exception("La canción no existe");
+            throw new FieldEmptyExcepction("song");
 
         if (string.IsNullOrWhiteSpace(songDto.Title))
             throw new FieldEmptyExcepction("Title");
@@ -174,12 +180,16 @@ public class SongService : ISongService
     }
 
 
-    public async Task Delete(Guid Id, CancellationToken cancellationToken)
+    public async Task Delete(Guid Id, Guid idUser, CancellationToken cancellationToken)
     {
+        
         if (Id == Guid.Empty)
             throw new FieldEmptyExcepction("Id");
 
         var song = await _song.GetById(Id, cancellationToken);
+
+        if(song.Id != idUser)
+            throw new IdNotMatchException();
 
         if (song == null)
             throw new Exception("la cancion no existe");
@@ -188,7 +198,7 @@ public class SongService : ISongService
     }
 
 
-    public async Task<string> GetSongUrl(Guid songId, CancellationToken cancellationToken)
+    public async Task<string> GetSongUrl(Guid songId,Guid IdUser, CancellationToken cancellationToken)
     {
         if (songId == Guid.Empty)
             throw new FieldEmptyExcepction("songId");
@@ -197,7 +207,15 @@ public class SongService : ISongService
         if (song is null)
             throw new NotFoundException("Song");
 
+        song.AddView();
+       await _statistic.RegisterReproductionAsync(songId, IdUser,cancellationToken);
+
+        await _song.Update(song, cancellationToken);
+
+
+
         return await _storageService.GetSongUrl(song.AudioBig);
+
     }
 
 }

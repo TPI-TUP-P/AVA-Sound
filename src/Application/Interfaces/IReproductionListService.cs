@@ -8,10 +8,10 @@ public interface IReproductionListService
 {
     Task<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken);
     Task<CreateResponse> Create(CreateRequest reproductionsListDto, CancellationToken cancellationToken);
-    Task<UpdateResponse> Update(Guid id, UpdateRequest updateRequest, CancellationToken cancellationToken);
-    Task AddSong(Guid listId, Guid songId, CancellationToken cancellationToken);
-    Task RemoveSong(Guid listId, Guid songId, CancellationToken cancellationToken);
-    Task Delete(Guid id, CancellationToken cancellationToken);
+    Task<UpdateResponse> Update(Guid id, UpdateRequest updateRequest, Guid idUser, CancellationToken cancellationToken);
+    Task AddSong(Guid listId, Guid songId, Guid idUser, CancellationToken cancellationToken);
+    Task RemoveSong(Guid listId, Guid songId, Guid idUser, CancellationToken cancellationToken);
+    Task Delete(Guid id, Guid idUser, CancellationToken cancellationToken);
 
     Task<List<GetAllResponse>> GetByIdUser(Guid idUser, CancellationToken cancellationToken);
 }

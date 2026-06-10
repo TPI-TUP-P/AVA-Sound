@@ -27,7 +27,7 @@ public class SongController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<PagerSongResponse<GetByIdResponse>>> GetAll([FromBody] PagerRequest pagerRequest, CancellationToken cancellationToken)
+    public async Task<ActionResult<PagerSongResponse<GetByIdResponse>>> GetAll([FromQuery] PagerRequest pagerRequest, CancellationToken cancellationToken)
     {
         var songs = await _songService.GetAll(pagerRequest, cancellationToken);
         return Ok(songs);
@@ -73,21 +73,49 @@ public class SongController : ControllerBase
     [HttpGet("{id}/url")]
     public async Task<ActionResult<string>> GetSongUrl(Guid id, CancellationToken cancellationToken)
     {
-        var url = await _songService.GetSongUrl(id, cancellationToken);
+
+           var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("id")?.Value
+            ?? User.FindFirst("sub")?.Value;
+
+        if (string.IsNullOrEmpty(idUserToken))
+            return Unauthorized("User ID not found in token.");
+
+        var idUser = Guid.Parse(idUserToken);
+
+        var url = await _songService.GetSongUrl(id,idUser, cancellationToken);
         return Ok(url);
     }
 
     [HttpPatch("{id}")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest songDto, CancellationToken cancellationToken)
     {
-        var song = await _songService.Update(id, songDto, cancellationToken);
+        var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("id")?.Value
+            ?? User.FindFirst("sub")?.Value;
+
+        if(string.IsNullOrEmpty(idUserToken))
+            return Unauthorized("User id not found in token");
+
+        var idUser=Guid.Parse(idUserToken);
+        
+        var song = await _songService.Update(id, songDto, idUser,  cancellationToken);
         return Ok(song);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        await _songService.Delete(id, cancellationToken);
+        var idUserToken= User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("id")?.Value
+            ?? User.FindFirst("sub")?.Value;
+
+        if(string.IsNullOrEmpty(idUserToken))
+            return Unauthorized("User id not found in token");
+
+        var idUser=Guid.Parse(idUserToken);
+
+        await _songService.Delete(id, idUser, cancellationToken);
         return NoContent();
     }
 }

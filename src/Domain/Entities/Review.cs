@@ -2,6 +2,8 @@ using System.Reflection.Metadata;
 
 namespace Domain.Entities;
 
+using Domain.Exceptions;
+
 public class Review
 {
     public Guid Id { get; init; }
@@ -17,7 +19,7 @@ public class Review
     private Review() { }
 
 
-    public Review(Guid iduser, Guid idsong, string comment, DateTime datecreated) 
+    public Review(Guid iduser, Guid idsong, string comment, DateTime datecreated)
     {
         ValidateProperties(iduser, idsong, comment, datecreated);
         Id = Guid.NewGuid();
@@ -31,19 +33,19 @@ public class Review
     {
         if (iduser == Guid.Empty)
         {
-            throw new Exception("The user ID is empty.");
+            throw new FieldEmptyExcepction("Id");
         }
         if (idsong == Guid.Empty)
         {
-            throw new Exception("The song ID is empty.");
+            throw new FieldEmptyExcepction("IdSong");
         }
         if (comment is null)
         {
-            throw new Exception("The comment cannot be empty.");
+            throw new FieldEmptyExcepction("Comment"); ;
         }
         if (datecreated > DateTime.Now)
         {
-            throw new Exception("The date cannot be in the future.");
+            throw new futureDateException();
         }
     }
 }

@@ -7,12 +7,16 @@ public class Song
     public Guid Id {get; private set;}
     public Guid IdArtist {get; private set;}
     public Guid? IdAlbum {get; private set;}
+    
+    public User Artist {get; set;}
+
     public string Title {get; set;}
     public string Gender {get; set;}
     public string Duration{get; set;}
     public string AudioBig {get; set;}
     public DateTime DateUpload {get; set;}
     public int Views {get; set;}
+
 
 
 
@@ -31,6 +35,19 @@ public class Song
         Views=0;
     }
 
+
+
+
+    public void AddView()
+    {
+        Views++;
+    }
+
+    public void RemoveFromAlbum()
+    {
+        IdAlbum = null;
+    }
+
     private void ValidateProperties(Guid idArtist, Guid? idAlbum, string title, string gender, string duration, string audioBig)
     {
         if (idArtist == Guid.Empty)
@@ -40,7 +57,7 @@ public class Song
         {
             if(idAlbum.Value == Guid.Empty)
             {
-                throw new Exception("El IdAlbum no puede ser un Guid vacío si se proporciona");
+                throw new Exception("AlbumId cannot be an empty Guid if provided");
             }
             
         }
@@ -62,16 +79,16 @@ public class Song
 public void UpdateInfo(string title, string gender, string duration, string audioBig)
 {
     if (string.IsNullOrWhiteSpace(title))
-        throw new Exception("Title obligatorio");
+        throw new Exception("Title is required");
 
     if (string.IsNullOrWhiteSpace(gender))
-        throw new Exception("Gender obligatorio");
+        throw new Exception("Gender is required");
 
     if (string.IsNullOrWhiteSpace(duration))
-        throw new Exception("Duration obligatoria");
+        throw new Exception("Duration is required");
 
     if (string.IsNullOrWhiteSpace(audioBig))
-        throw new Exception("Audio obligatorio");
+        throw new Exception("Audio file is required");
 
     Title = title;
     Gender = gender;
