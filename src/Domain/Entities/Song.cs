@@ -1,12 +1,14 @@
 
+using Domain.Exceptions;
+
 namespace Domain.Entities;
 
 
 public class Song
 {
-    public Guid Id {get; private set;}
-    public Guid IdArtist {get; private set;}
-    public Guid? IdAlbum {get; private set;}
+    public Guid Id {get; init;}
+    public Guid IdArtist {get; init;}
+    public Guid? IdAlbum {get; set;}
     
     public User Artist {get; set;}
 
@@ -14,7 +16,7 @@ public class Song
     public string Gender {get; set;}
     public string Duration{get; set;}
     public string AudioBig {get; set;}
-    public DateTime DateUpload {get; set;}
+    public DateTime DateUpload {get; init;}
     public int Views {get; set;}
 
 
@@ -51,44 +53,44 @@ public class Song
     private void ValidateProperties(Guid idArtist, Guid? idAlbum, string title, string gender, string duration, string audioBig)
     {
         if (idArtist == Guid.Empty)
-            throw new Exception("artist is required");
+            throw new FieldEmptyExcepction("artist is required");
 
         if(idAlbum.HasValue)
         {
             if(idAlbum.Value == Guid.Empty)
             {
-                throw new Exception("AlbumId cannot be an empty Guid if provided");
+                throw new FieldEmptyExcepction("AlbumId");
             }
             
         }
 
         if (string.IsNullOrWhiteSpace(title))
-            throw new Exception("title is required");
+            throw new FieldEmptyExcepction("title");
 
         if (string.IsNullOrWhiteSpace(gender))
-            throw new Exception("gender is required");
+            throw new FieldEmptyExcepction("gender");
 
         if (string.IsNullOrWhiteSpace(duration))
-            throw new Exception("duration is required");
+            throw new FieldEmptyExcepction("duration");
 
         if (string.IsNullOrWhiteSpace(audioBig))
-            throw new Exception("Audio file is required");
+            throw new FieldEmptyExcepction("Audio");
 
     }
 
 public void UpdateInfo(string title, string gender, string duration, string audioBig)
 {
     if (string.IsNullOrWhiteSpace(title))
-        throw new Exception("Title is required");
+        throw new FieldEmptyExcepction("Title");
 
     if (string.IsNullOrWhiteSpace(gender))
-        throw new Exception("Gender is required");
+        throw new FieldEmptyExcepction("Gender");
 
     if (string.IsNullOrWhiteSpace(duration))
-        throw new Exception("Duration is required");
+        throw new FieldEmptyExcepction("Duration");
 
     if (string.IsNullOrWhiteSpace(audioBig))
-        throw new Exception("Audio file is required");
+        throw new FieldEmptyExcepction("Audio File");
 
     Title = title;
     Gender = gender;

@@ -86,7 +86,7 @@ public class SongService : ISongService
         CancellationToken cancellationToken)
     {
         if (songDto == null)
-            throw new Exception("Datos inválidos");
+            throw new FieldEmptyExcepction("songDto");
 
         if (idUser == Guid.Empty)
             throw new FieldEmptyExcepction("idUser");
@@ -146,7 +146,7 @@ public class SongService : ISongService
 
 
         if (song == null)
-            throw new FieldEmptyExcepction("song");
+            throw new NotFoundException("song");
 
         if (string.IsNullOrWhiteSpace(songDto.Title))
             throw new FieldEmptyExcepction("Title");
@@ -192,7 +192,7 @@ public class SongService : ISongService
             throw new IdNotMatchException();
 
         if (song == null)
-            throw new Exception("la cancion no existe");
+            throw new NotFoundException("song");
 
         await _song.Delete(Id, cancellationToken);
     }
