@@ -3,8 +3,8 @@ using Application.DTOs.ReproductionList.Response;
 
 public class GetByIdResponse
 {
-    public Guid Id { get; set; }
-        public Guid IdUser { get; set; }
+    public Guid Id { get; init; }
+        public Guid IdUser { get; init; }
         public string? Name { get; set; } 
         public string? Description { get; set; }
         public bool IsPublic { get; set; }

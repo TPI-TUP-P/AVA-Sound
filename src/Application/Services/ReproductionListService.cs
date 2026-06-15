@@ -60,7 +60,7 @@ public class ReproductionListService : IReproductionListService
         }
         if (updateRequest is null)
         {
-            throw new Exception("updateRequest is null");
+            throw new FieldEmptyExcepction("updateRequest");
         }
         if (updateRequest.Name.Length < 2 )
         {

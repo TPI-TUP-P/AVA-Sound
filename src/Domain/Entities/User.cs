@@ -1,11 +1,13 @@
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
+using Domain.Exceptions;
 
 namespace Domain.Entities;
 
 
 public class User
 {
-    public Guid Id { get; private set; }
+    public Guid Id { get; init; }
     public string Name { get; set; }
     public string Surname { get; set; }
     public string Email { get; set; }
@@ -14,7 +16,7 @@ public class User
 
     public bool IsActive { get; private set; }
 
-    public DateTime DateRegister { get; private set; }
+    public DateTime DateRegister { get; init; }
 
     public string? Role { get; private set; }
 
@@ -39,42 +41,52 @@ public class User
     private void ValidateProperties(string? name, string? surname, string? email, string? password)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new Exception("name is required");
+            throw new FieldEmptyExcepction("name");
 
         if (string.IsNullOrWhiteSpace(surname))
-            throw new Exception("surname is required");
+            throw new FieldEmptyExcepction("surname");
 
         if (string.IsNullOrWhiteSpace(email))
-            throw new Exception("email is required");
+            throw new FieldEmptyExcepction("email");
+
+        string regexEmail = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+        bool isValido=Regex.IsMatch(email, regexEmail);
+        if (!isValido)
+            throw new InvalidEmailException(email);
 
         if (string.IsNullOrWhiteSpace(password))
-            throw new Exception("password is required");
+            throw new FieldEmptyExcepction("password");
 
     }
 
-    public void Desactive()
+    public void HandleActivate()
     {
+        
         if(!IsActive)
         {
-            throw new InvalidOperationException("The user is already inactive");
+            IsActive = true;
+
+        }
+        else
+        {
+            IsActive = false;
         }
 
-        IsActive = false;
     }
 
     public void UpdateInfo(string name, string surname, string email, string password, bool isArtist)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new Exception("name is required");
+            throw new FieldEmptyExcepction("name");
 
         if (string.IsNullOrWhiteSpace(surname))
-            throw new Exception("surname is required");
+            throw new FieldEmptyExcepction("surname");
 
         if (string.IsNullOrWhiteSpace(email))
-            throw new Exception("email is required");
+            throw new FieldEmptyExcepction("email");
 
         if (string.IsNullOrWhiteSpace(password))
-            throw new Exception("password is required");
+            throw new FieldEmptyExcepction("password");
 
 
         Name = name;
@@ -84,9 +96,18 @@ public class User
         IsArtist = isArtist;
     }
 
-    public void MakeAdmin()
+    public void HandleAdmin()
     {
-        Role = "admin";
+        if(Role == "admin")
+        {
+            Role = "user";
+        }
+        else
+        {
+            Role = "admin";
+        }
     }
+
+    
 
 }
