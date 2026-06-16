@@ -187,11 +187,10 @@ public class UserService : IUserService
 
         return new UpdateResponse
         {
-            Id = id,
+            Id = userId,
             Name = user.Name,
             Surname = user.Surname,
             Email = user.Email,
-            Password = user.Password,
             IsArtist = user.IsArtist,
             DateRegister = user.DateRegister,
             Role = user.Role
@@ -208,12 +207,17 @@ public class UserService : IUserService
 
         if (user == null)
             throw new NotFoundException("user");
+        
+        if(!user.IsActive)
+        {
+            throw new UserNotActivateException();
+        }
 
-        user.Desactive();
+        user.HandleActivate();
         await _user.Update(user, cancellationToken);
     }
 
-    public async Task MakeAdmin(Guid userId, Guid currentUserId, CancellationToken cancellationToken)
+    public async Task HandleAdmin(Guid userId, Guid currentUserId, CancellationToken cancellationToken)
     {
         var currentUser = await _user.GetById(currentUserId, cancellationToken);
 
@@ -223,12 +227,12 @@ public class UserService : IUserService
         }
         if (currentUser.Role != "superadmin")
         {
-            throw new Exception("No autorizado");
+            throw new UnauthorizedAccessException("No autorizado");
         }
 
         var user = await _user.GetById(userId, cancellationToken);
 
-        user.MakeAdmin();
+        user.HandleAdmin();
 
         await _user.Update(user, cancellationToken);
     }

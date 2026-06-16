@@ -40,7 +40,7 @@ public class Statistic
     public string  GetFavoriteGender()
     {
         var gender = Reproductions.OrderByDescending(s=> s.ViewsCount).FirstOrDefault();
-        return gender!.Gender;
+        return gender?.Gender ?? "Unknown";
 
 
     } 
