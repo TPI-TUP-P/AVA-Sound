@@ -9,5 +9,5 @@ public class UpdateResponse
     public string? Password { get; set;}
     public bool IsArtist {get; set;}
     public DateTime DateRegister { get; init;}
-    public string? Role { get; init;}
+    public string? Role { get; set;}
 }

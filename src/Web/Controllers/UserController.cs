@@ -77,12 +77,12 @@ public class UserController : ControllerBase
     }
 
     [HttpPatch("{id}/make-admin")]
-    public async Task<ActionResult> MakeAdmin(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult> HandleAdmin(Guid id, CancellationToken cancellationToken)
 {
     
     Guid currentUserId = Guid.Parse(User.FindFirst("id")!.Value);
 
-    await _userService.MakeAdmin(
+    await _userService.HandleAdmin(
         id,
         currentUserId,
         cancellationToken);
