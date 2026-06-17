@@ -55,7 +55,7 @@ public class ReproductionListController : ControllerBase
             return Unauthorized("User ID not found in token.");
         }
 
-        reproductionListDto.IdUser = Guid.Parse(idUserToken);
+        // reproductionListDto.IdUser = Guid.Parse(idUserToken);
 
 
         var list = await _reproductionListservice.Create(reproductionListDto, cancellationToken);

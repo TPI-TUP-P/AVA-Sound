@@ -13,6 +13,16 @@ public class SongRepository : ISongRepository
         _context = context;
     }
 
+
+    public async Task<List<Song>> GetByIds (IEnumerable<Guid> ids, CancellationToken cancellationToken)
+    {
+        return await _context.Songs.Where(
+            s => ids.Contains(s.Id)
+        ).ToListAsync(
+            cancellationToken
+        );
+        }
+
     public async Task<Song> GetById(Guid id, CancellationToken cancellationToken)
     {
         var song = await _context.Songs.FindAsync(id, cancellationToken);
