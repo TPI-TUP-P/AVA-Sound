@@ -48,6 +48,9 @@ public class StatisticService : IStatisticService
         {
             throw new NotFoundException("Statistic");
         }
+
+        
+
         var idSong = statistic.GetFavoriteSong();
         var song =await _song.GetById(idSong, cancellationToken);
        
@@ -97,12 +100,13 @@ public class StatisticService : IStatisticService
             throw new NotFoundException("Statistic");
         }
 
+                var songs = await _song.GetByIds(statistic.Reproductions.Select(s=> s.IdSong), cancellationToken);
 
-
-
-
-
-        return statistic.GetFavoriteGender();
+        if(songs.Any() is false)
+        {
+            throw new NotFoundException("Songs");
+        }
+        return statistic.GetFavoriteGender(songs);
     }
 
 
@@ -121,7 +125,7 @@ public class StatisticService : IStatisticService
             throw new NotFoundException("Song");
         }
     
-        statistic.RegisterViewGender(IdSong, song.Gender);
+        statistic.RegisterViewGender(IdSong);
         await _statistic.UpdateStatistic(statistic, cancellationToken);
 
         return new CreateResponse
