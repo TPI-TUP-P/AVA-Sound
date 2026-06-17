@@ -15,22 +15,7 @@ public class StorageService : IStorageService
     public StorageService(HttpClient httpClient)
     // le tengo que agregar credenciales reales mi king
     {
-        // var keyLogin = "sb_secret_RFdNBdaxSoHMtbIXFYMOxA_ov3hlA6k";
-        // if (keyLogin is null)
-        // {
-        //     throw new Exception("ASDA");
-        // }
-        // _httpClient = httpClient;
-        // _httpClient.DefaultRequestHeaders.Add(
-        //     "apikey",
-        //     keyLogin
-        // );
-
-        // _httpClient.DefaultRequestHeaders.Authorization =
-        //     new AuthenticationHeaderValue(
-        //         "Bearer",
-        //         keyLogin
-        //     );
+     
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     }
 
