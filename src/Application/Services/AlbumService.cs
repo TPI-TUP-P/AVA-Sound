@@ -218,16 +218,10 @@ public class AlbumService : IAlbumService
             throw new NotFoundException("Song");
         }
 
-
-
         if(user.Id != idUser)
         {
             throw new Exception("You don't have permission to add this song");
         }
-        // AuthValidator.ValidateOwner(album.IdArtist, idUser, "You don't have permission to add this song");
-        // AuthValidator.ValidateOwner(song.IdArtist, idUser, "You don't have permission to add this song");
-
-        //
 
         if(user.Id != song.IdArtist)
         {
@@ -284,10 +278,7 @@ public class AlbumService : IAlbumService
         {
             throw new Exception("You don't have permission to delete this song");
         }
-        // AuthValidator.ValidateAdminOrOwner(album.IdArtist, idUser, user.Role!, "You don't have permission to delete this song");
         
-
-
         album.DeleteSong(song);
         song.RemoveFromAlbum();
         await _album.Update(album, cancellationToken);
