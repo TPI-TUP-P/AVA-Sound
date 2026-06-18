@@ -51,7 +51,7 @@ public class ReviewController : ControllerBase
         var idUser = Guid.Parse(idUserToken);
         await _reviewService.Delete(Id, idUser, cancellationToken);
 
-        return Ok();
+        return NoContent();
     }
     [HttpPatch]
     [EnableRateLimiting("PerUser")]
