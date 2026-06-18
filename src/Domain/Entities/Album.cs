@@ -12,17 +12,8 @@ public class Album
     public string? FrontPage { get; set; }
     public string? Description { get; set; }
 
-
-    // private readonly List<Guid> _songs = [];
-
     private readonly List<Song> _songs = [];
     public IReadOnlyCollection<Song> Songs => _songs.AsReadOnly();
-    // public List<Song> Songs {get; private set;} = new();
-
-
-
-
-
 
 
 
@@ -35,8 +26,6 @@ public class Album
         ReleasteDate = releasteDate;
         FrontPage = frontPage ;
         Description = description ;
-
-
     }
 
     public void AddSong(Song song)
@@ -60,33 +49,37 @@ public class Album
 
     }
 
-    private void ValidateProperties(Guid idArtist, string title, DateTime releasteDate, string? frontPage, string? description)
+    private static void ValidateProperties(Guid idArtist, string title, DateTime releasteDate, string? frontPage, string? description)
     {
         if (idArtist == Guid.Empty)
         {
-            throw new Exception("The IdArtist cannot be empty");
+            throw new FieldEmptyExcepction("Idartist");
         }
         if (string.IsNullOrWhiteSpace(title))
         {
-            throw new Exception("The title cannot be left blank ");
+            throw new FieldEmptyExcepction("Title");
         }
         if (releasteDate > DateTime.Now)
         {
-            throw new Exception("The release date cannot be in the future");
+            throw new FieldEmptyExcepction("Date");
+
         }
 
-
-
+        if(frontPage != null)
+        {
+            if (string.IsNullOrWhiteSpace(frontPage))
+            {
+                throw new FieldEmptyExcepction("FrontPage");
+            }
+        }
         if (description != null)
         {
             if (string.IsNullOrWhiteSpace(description))
             {
-                throw new Exception("The description cannot be empty");
+                throw new FieldEmptyExcepction("Description");
             }
         }
 
     }
-
-
 
 }

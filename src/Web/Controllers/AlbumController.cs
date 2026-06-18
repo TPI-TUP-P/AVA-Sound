@@ -2,10 +2,8 @@
 using System.Security.Claims;
 using Application.DTOs.Album.Request;
 using Application.DTOs.Album.Response;
-
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 namespace Web.Controllers;
@@ -16,16 +14,18 @@ namespace Web.Controllers;
 [Route("api/[controller]")]
 
 
-public class AlbumController : ControllerBase
+public class AlbumController(IAlbumService _albumService) : ControllerBase
 {
-    private readonly IAlbumService _albumService;
+    // private readonly IAlbumService _albumService;
 
-    public AlbumController(IAlbumService albumService)
-    {
-        _albumService = albumService;
-    }
+    // public AlbumController(IAlbumService albumService)
+    // {
+    //     _albumService = albumService;
+    // }
 
     [HttpGet("{id}")]
+    [Authorize]
+    [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<GetByIdResponse>> GetById(Guid id, CancellationToken cancellationToken)
     {
         var album = await _albumService.GetById(id, cancellationToken);
@@ -44,8 +44,6 @@ public class AlbumController : ControllerBase
     ;
     }
     
-
-
     [HttpGet]
     [Authorize(Roles = "Admin")]
     [EnableRateLimiting("HeavyEndpoint")]
@@ -78,17 +76,19 @@ public class AlbumController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = album.Id }, album);
         
     }
-
-    [Authorize]
     [HttpPut("{id}")]
+    [Authorize]
+    [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest albumDto, CancellationToken cancellationToken)
     {
         return await _albumService.Update(id, albumDto, cancellationToken);
 
     }
 
-    [Authorize]
     [HttpPost("{id}/add-song/{idSong}")]
+    [Authorize]
+    [EnableRateLimiting("HeavyEndpoint")]
+
     public async Task<ActionResult<GetByIdResponse>> AddSong(Guid id, Guid idSong, CancellationToken cancellationToken)
     {
             var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -103,15 +103,11 @@ public class AlbumController : ControllerBase
             var result = await _albumService.AddSong(id, idSong, idUser,cancellationToken);
             return CreatedAtAction(nameof(GetById), new { id }, result
             );
-
-        
-
-       
 }
 
-
-    [Authorize]
     [HttpPost("{id}/delete-song/{idSong}")]
+    [Authorize]
+    [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<GetByIdResponse>> DeleteSong(Guid id, Guid idSong, CancellationToken cancellationToken)
     {   
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -129,9 +125,9 @@ public class AlbumController : ControllerBase
     }
 
 
-    [Authorize]
     [HttpDelete("{id}")]
-
+    [Authorize]
+    [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
              var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
@@ -143,8 +139,8 @@ public class AlbumController : ControllerBase
         }
         
         var idUser = Guid.Parse(idUserToken);
-        
         await _albumService.Delete(id, idUser,cancellationToken);
+        
         return NoContent();
     }
 
