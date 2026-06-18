@@ -1,32 +1,33 @@
 // using Microsoft.AspNetCore.Components;
 using System.Security.Claims;
-using Application.DTOs.Statistic.Request;
 using Application.DTOs.Statistic.Response;
-
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Web.Controllers;
 
 
 
 
-[Route("api/statistic")]
+[Route("api/[controller]")]
 [ApiController]
 
-public class StatisticController : ControllerBase
+public class StatisticController(IStatisticService _statisticService) : ControllerBase
 {
-    private readonly IStatisticService _statisticService;
+    // private readonly IStatisticService _statisticService;
 
-    public StatisticController(IStatisticService statisticService)
-    {
-        _statisticService = statisticService;
-    }
+    // public StatisticController(IStatisticService statisticService)
+    // {
+    //     _statisticService = statisticService;
+    // }
 
 
-    [Authorize]
     [HttpGet("getFavoriteGender")]
+    [Authorize]
+    [EnableRateLimiting("HeavyEndpoint")]
+
     public async Task<ActionResult<string>> GetFavoriteGender( CancellationToken cancellationToken)
     {
                   var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
@@ -43,8 +44,10 @@ public class StatisticController : ControllerBase
 
     }
 
-    [Authorize]
     [HttpGet("getFavoriteSong")]
+    [Authorize]
+    [EnableRateLimiting("HeavyEndpoint")]
+
     public async Task<ActionResult<GetFavoriteSongResponse>> GetFavoriteSong( CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
@@ -62,6 +65,8 @@ public class StatisticController : ControllerBase
 
 
     [HttpGet("getTopSogs")]
+    [EnableRateLimiting("HeavyEndpoint")]
+
     public async Task<ActionResult<GetTopSongsResponse>> GetTopSongs(CancellationToken cancellationToken)
     {   
         var result = await _statisticService.GetTopSongs(cancellationToken);
@@ -72,6 +77,8 @@ public class StatisticController : ControllerBase
 
 
     [HttpGet("getTopArtists")]
+    [EnableRateLimiting("HeavyEndpoint")]
+
     public async Task<ActionResult<List<GetAllResponse>>> GetTopArtists(CancellationToken cancellationToken)
     {   
         var result = await _statisticService.GetTopArtists(cancellationToken);

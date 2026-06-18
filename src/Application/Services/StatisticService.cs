@@ -40,7 +40,7 @@ public class StatisticService : IStatisticService
 
         if(IdUser != statistic.IdUser)
         {
-            throw new Exception("You don't have permission to access these statistics");
+            throw new ForbiddenException();
         }
 
 
@@ -49,8 +49,7 @@ public class StatisticService : IStatisticService
             throw new NotFoundException("Statistic");
         }
 
-        
-
+    
         var idSong = statistic.GetFavoriteSong();
         var song =await _song.GetById(idSong, cancellationToken);
        
@@ -91,7 +90,7 @@ public class StatisticService : IStatisticService
         
         if(IdUser != statistic.IdUser)
         {
-            throw new Exception("You don't have permission to access these statistics");
+            throw new ForbiddenException();
         }
 
 
@@ -102,7 +101,7 @@ public class StatisticService : IStatisticService
 
                 var songs = await _song.GetByIds(statistic.Reproductions.Select(s=> s.IdSong), cancellationToken);
 
-        if(songs.Any() is false)
+        if(songs.Count == 0)
         {
             throw new NotFoundException("Songs");
         }
@@ -142,8 +141,8 @@ public class StatisticService : IStatisticService
     public async Task<CreateResponse> Create(CreateRequest statisticDto, CancellationToken cancellationToken)
     {
         if (statisticDto == null)
-        {
-            throw new Exception("The table is empty");
+        {   
+            ArgumentNullException.ThrowIfNull(statisticDto);
         }
 
         var statisticData = new Statistic(
