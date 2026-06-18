@@ -37,6 +37,7 @@ Demo Online | [Abrir Demo](https://ava-sound.onrender.com/)
 > [!WARNING]
 > El UML puede cambiar en base a futuras restricciones o cambios que se nos sugieran.
 
+ <!-- falta actualizarlo. -->
 <p align="center">
     <img src="https://github.com/TPI-TUP-P/AVA-Sound/blob/main/StaticSource/TP4.png" width="800">
 </p>
