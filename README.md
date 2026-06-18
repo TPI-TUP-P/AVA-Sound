@@ -14,6 +14,7 @@ Sosa Agustin, Volpe Andres, Barthelemy Tomás<br>
 Realizamos una API de una plataforma web enfocada en artistas independientes, permitiéndoles publicar su música, recibir feedback de la comunidad y ganar visibilidad sin depender de grandes discográficas.<br>
 **Proba Nuestra API**<br>
 Demo Online | [Abrir Demo](https://ava-sound.onrender.com/)
+Documentacion | [Abrir Documentacion](https://tpi-tup-p.github.io/AvaSoundDocumentation/)
 
 ## Funcionalidades
 
@@ -39,7 +40,7 @@ Demo Online | [Abrir Demo](https://ava-sound.onrender.com/)
 
  <!-- falta actualizarlo. -->
 <p align="center">
-    <img src="https://github.com/TPI-TUP-P/AVA-Sound/blob/main/StaticSource/TP4.png" width="800">
+    <img src="https://github.com/TPI-TUP-P/AVA-Sound/blob/develop/StaticSource/DiagramaDeClases.png?raw=true" width="800">
 </p>
 
 ## Arquitectura
