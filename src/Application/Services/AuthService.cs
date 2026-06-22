@@ -32,7 +32,7 @@ public class AuthService : IAuthService
 
         if (existingUserEmail != null)
         {
-            throw new NotFoundException("Email");
+            throw new AlreadyExistExcepction("Email");
         }
 
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password);
@@ -47,16 +47,11 @@ public class AuthService : IAuthService
             registerRequest.Role!
         );
 
-
-
-
         await _userRepository.Create(user, cancellationToken);
 
         var statistic =new Statistic(
             user.Id
         );
-
-
 
         await _statisticRepository.Create(statistic, cancellationToken);
 
@@ -109,9 +104,6 @@ public class AuthService : IAuthService
             email: user.Email!,
             role: user.Role!
         );
-
-
-
     }
 
 }
