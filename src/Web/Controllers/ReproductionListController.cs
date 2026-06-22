@@ -28,26 +28,26 @@ public class ReproductionListController : ControllerBase
     }
 
     [HttpPatch("{id}")]
-    public async Task<ActionResult<UpdateResponse>> Update(Guid id,[FromBody] UpdateRequest updateRequest, CancellationToken cancellationToken)
+    public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest updateRequest, CancellationToken cancellationToken)
     {
-        var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? User.FindFirst("id")?.Value
             ?? User.FindFirst("sub")?.Value;
 
-        if(string.IsNullOrEmpty(idUserToken))
+        if (string.IsNullOrEmpty(idUserToken))
             return Unauthorized("user id not found in token");
 
-        var idUser=Guid.Parse(idUserToken);
+        var idUser = Guid.Parse(idUserToken);
 
-        var result= await _reproductionListservice.Update(id, updateRequest, idUser, cancellationToken);
+        var result = await _reproductionListservice.Update(id, updateRequest, idUser, cancellationToken);
         return Ok(result);
     }
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest reproductionListDto, CancellationToken cancellationToken)
     {
-        var idUserToken = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value 
-                          ?? User.FindFirst("id")?.Value 
+        var idUserToken = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                          ?? User.FindFirst("id")?.Value
                           ?? User.FindFirst("sub")?.Value;
 
         if (string.IsNullOrEmpty(idUserToken))
@@ -55,7 +55,7 @@ public class ReproductionListController : ControllerBase
             return Unauthorized("User ID not found in token.");
         }
 
-        // reproductionListDto.IdUser = Guid.Parse(idUserToken);
+        //reproductionListDto.IdUser = Guid.Parse(idUserToken);
 
 
         var list = await _reproductionListservice.Create(reproductionListDto, cancellationToken);
@@ -66,8 +66,8 @@ public class ReproductionListController : ControllerBase
     [Authorize]
     public async Task<ActionResult<List<GetAllResponse>>> GetMyLists(CancellationToken cancellationToken)
     {
-        var idUserToken = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value 
-                          ?? User.FindFirst("id")?.Value 
+        var idUserToken = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                          ?? User.FindFirst("id")?.Value
                           ?? User.FindFirst("sub")?.Value;
 
         if (string.IsNullOrEmpty(idUserToken))
@@ -87,14 +87,14 @@ public class ReproductionListController : ControllerBase
     public async Task<ActionResult> AddSong(Guid listId, Guid songId, CancellationToken cancellationToken)
     {
 
-        var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? User.FindFirst("id")?.Value
             ?? User.FindFirst("sub")?.Value;
 
-        if(string.IsNullOrEmpty(idUserToken))
+        if (string.IsNullOrEmpty(idUserToken))
             return Unauthorized("user id not found in token");
 
-        var idUser=Guid.Parse(idUserToken);
+        var idUser = Guid.Parse(idUserToken);
 
         await _reproductionListservice.AddSong(listId, songId, idUser, cancellationToken);
         return Ok("song added to the list");
@@ -106,14 +106,14 @@ public class ReproductionListController : ControllerBase
     public async Task<ActionResult> RemoveSong(Guid listId, Guid songId, CancellationToken cancellationToken)
     {
 
-        var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? User.FindFirst("id")?.Value
             ?? User.FindFirst("sub")?.Value;
 
-        if(string.IsNullOrEmpty(idUserToken))
+        if (string.IsNullOrEmpty(idUserToken))
             return Unauthorized("user id not found in token");
 
-        var idUser=Guid.Parse(idUserToken);
+        var idUser = Guid.Parse(idUserToken);
 
 
         await _reproductionListservice.RemoveSong(listId, songId, idUser, cancellationToken);
@@ -124,14 +124,14 @@ public class ReproductionListController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? User.FindFirst("id")?.Value
             ?? User.FindFirst("sub")?.Value;
 
-        if(string.IsNullOrEmpty(idUserToken))
+        if (string.IsNullOrEmpty(idUserToken))
             return Unauthorized("user id not found in token");
 
-        var idUser=Guid.Parse(idUserToken);
+        var idUser = Guid.Parse(idUserToken);
 
         await _reproductionListservice.Delete(id, idUser, cancellationToken);
         return Ok("deleted list");
