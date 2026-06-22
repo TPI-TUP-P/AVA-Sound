@@ -38,7 +38,7 @@ public class StorageService : IStorageService
             new MediaTypeHeaderValue(contentType);
 
         var response =
-            await _httpClient.PostAsync(
+            await _httpClient!.PostAsync(
                 $"{url}{nombreArchivo}",
                 content
             );
@@ -67,7 +67,7 @@ public class StorageService : IStorageService
         };
 
         var response =
-            await _httpClient.PostAsJsonAsync(
+            await _httpClient!.PostAsJsonAsync(
                 $"https://etwseuwniupcpuigerkw.supabase.co/storage/v1/object/sign/{bucket}/{filePath}",
                 body
             );
