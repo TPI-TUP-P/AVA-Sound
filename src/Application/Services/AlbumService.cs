@@ -3,6 +3,7 @@ using Application.DTOs.Album.Response;
 using Application.Interfaces;
 
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Interfaces;
 
 
@@ -184,7 +185,8 @@ public class AlbumService : IAlbumService
 
         if (idUser !=  album.IdArtist || user.Role != "Admin")
         {
-            throw new Exception("You don't have permission to delete this album");
+            throw new ForbiddenException();
+
         }
 
 
@@ -218,24 +220,24 @@ public class AlbumService : IAlbumService
             throw new NotFoundException("Song");
         }
 
-        if(user.Id != idUser)
-        {
-            throw new Exception("You don't have permission to add this song");
-        }
+        // if(user.Id != idUser)
+        // {
+        //     throw new Exception("You don't have permission to add this song");
+        // }
 
         if(user.Id != song.IdArtist)
-        {
-            throw new Exception("You don't have permission to add this song");
+        {   
+            throw new ForbiddenException();
         }
 
         if(song.IdAlbum != Guid.Empty)
-        {
-            throw new Exception("The song is already in an album");
+        {   
+            throw new FieldEmptyExcepction("IdAlbum");
         }
 
         if(song.IdAlbum == album.Id)
         {
-            throw new Exception("The song is already in this album");
+            throw new AlreadyExistExcepction(song.Title);
         }
 
 
@@ -276,8 +278,14 @@ public class AlbumService : IAlbumService
 
         if(user.Id != idUser && user.Role != "Admin" )
         {
-            throw new Exception("You don't have permission to delete this song");
+            throw new ForbiddenException();
         }
+
+        if(song.IdAlbum is null)
+        {
+            throw new SongNotInAlbumException(song.Title);
+        }
+
         
         album.DeleteSong(song);
         song.RemoveFromAlbum();
