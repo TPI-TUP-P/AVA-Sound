@@ -2,6 +2,7 @@ namespace Application.DTOs.InfoUser.Response;
 
 public class GetByIdResponse
 {
+    public Guid Id { get; set; }
     public Guid IdUser { get; init; }
 
     public string? ProfilePicture { get; set; }

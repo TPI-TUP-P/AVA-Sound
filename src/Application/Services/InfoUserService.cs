@@ -21,7 +21,7 @@ public class InfoUserService : IInfoUserService
         ValidateId(Id);
 
         var infourser = await _InfoUser.GetById(Id, cancellationToken);
-        if (infourser is null || string.IsNullOrEmpty(infourser.Biography))
+        if (infourser is null)
         {
             throw new NotFoundException("InfoUser");
         }
@@ -76,6 +76,7 @@ public class InfoUserService : IInfoUserService
         var infouserCreated = await _InfoUser.Create(newInfoUser, cancellationToken);
         return new CreateResponse
         {
+            Id = infouserCreated.Id,
             IdUser = infouserCreated.IdUser,
             ProfilePicture = infouserCreated.ProfilePicture,
             Biography = infouserCreated.Biography,
