@@ -27,12 +27,13 @@ public class InfoUserService : IInfoUserService
         }
         Console.WriteLine(infourser);
         return new GetByIdResponse
-        {
-            IdUser = infourser.IdUser,
-            ProfilePicture = infourser.ProfilePicture,
-            Biography = infourser.Biography,
-            Country = infourser.Country
-        }
+        (
+            infourser.Id,
+           infourser.IdUser,
+            infourser.ProfilePicture!,
+         infourser.Biography!,
+           infourser.Country!
+        )
         ;
     }
 
@@ -75,13 +76,13 @@ public class InfoUserService : IInfoUserService
 
         var infouserCreated = await _InfoUser.Create(newInfoUser, cancellationToken);
         return new CreateResponse
-        {
-            Id = infouserCreated.Id,
-            IdUser = infouserCreated.IdUser,
-            ProfilePicture = infouserCreated.ProfilePicture,
-            Biography = infouserCreated.Biography,
-            Country = infouserCreated.Country
-        };
+        (
+            infouserCreated.Id,
+           infouserCreated.IdUser,
+            infouserCreated.ProfilePicture!,
+           infouserCreated.Biography!,
+           infouserCreated.Country!
+        );
     }
 
     public async Task<UpdateResponse> Update(Guid Id, Guid IdUser, UpdateRequest infouserDto, CancellationToken cancellationToken)
@@ -117,11 +118,12 @@ public class InfoUserService : IInfoUserService
         await _InfoUser.Update(existingInfo, cancellationToken);
 
         return new UpdateResponse
-        {
-            Biography = existingInfo.Biography,
-            Country = existingInfo.Country,
-            ProfilePicture = existingInfo.ProfilePicture
-        };
+        (
+           existingInfo.IdUser,
+            existingInfo.Biography!,
+            existingInfo.Country!,
+            existingInfo.ProfilePicture!
+       );
     }
 
     public async Task Delete(Guid Id, Guid IdUser, CancellationToken cancellationToken)
