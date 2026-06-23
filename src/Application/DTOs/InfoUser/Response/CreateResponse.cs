@@ -10,4 +10,14 @@ public class CreateResponse
     public string? Biography { get; set; }
 
     public string? Country { get; set; }
+
+    public CreateResponse(Guid id, Guid idUser, string profilePicture, string biography, string country)
+    {
+        Id = id;
+        IdUser = idUser;
+        ProfilePicture = profilePicture;
+        Biography = biography;
+        Country = country;
+
+    }
 }
