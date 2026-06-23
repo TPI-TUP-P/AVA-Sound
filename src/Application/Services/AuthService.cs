@@ -67,7 +67,7 @@ public class AuthService : IAuthService
             registerRequest.Email,
             passwordHash,
             registerRequest.IsArtist,
-            registerRequest.Role!
+            role: "user"
         );
 
         await _userRepository.Create(user, cancellationToken);

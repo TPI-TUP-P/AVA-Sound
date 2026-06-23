@@ -24,10 +24,10 @@ public class AlbumService : IAlbumService
     }
 
 
-    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
+    public async Task<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken)
     {
     
-        var album = await _album.GetById(Id, cancellationToken);
+        var album = await _album.GetById(id, cancellationToken);
 
     
 
@@ -95,7 +95,7 @@ public class AlbumService : IAlbumService
 
         var albumData = new Album(
             user.Id,
-            albumDto.Title,
+            albumDto.Title!,
             albumDto.ReleaseDate,
             albumDto.FrontPage,
             albumDto.Description
@@ -117,14 +117,19 @@ public class AlbumService : IAlbumService
         );
     }
 
-    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest albumDto, CancellationToken cancellationToken)
+    public async Task<UpdateResponse> Update(Guid id,Guid idUser, UpdateRequest albumDto, CancellationToken cancellationToken)
     {
-        var existingAlbum = await _album.GetById(Id, cancellationToken);
+        var existingAlbum = await _album.GetById(id, cancellationToken);
         var user = await _user.GetById(existingAlbum.IdArtist, cancellationToken);
         
         if (existingAlbum is null)
         {
             throw new NotFoundException("Album");
+        }
+
+        if(existingAlbum.IdArtist != idUser)
+        {
+            throw new ForbiddenException("Album");
         }
 
         if(user.IsArtist is false)
@@ -134,13 +139,11 @@ public class AlbumService : IAlbumService
     
         if (albumDto.Title != null)
         {
-
             existingAlbum.Title = albumDto.Title;
         }
 
         if (albumDto.ReleaseDate != default)
         {
-
             existingAlbum.ReleasteDate = albumDto.ReleaseDate;
         }
         if (albumDto.FrontPage != null)
@@ -152,29 +155,25 @@ public class AlbumService : IAlbumService
             existingAlbum.Description = albumDto.Description;
         }
 
-
         await _album.Update(
             existingAlbum, cancellationToken
         );
 
         return new UpdateResponse
         (
-
             existingAlbum.Id,
             existingAlbum.IdArtist,
             existingAlbum.Title,
             existingAlbum.ReleasteDate,
             existingAlbum.FrontPage,
             existingAlbum.Description
-
-
         );
     }
 
-    public async Task Delete(Guid Id, Guid idUser,CancellationToken cancellationToken)
+    public async Task Delete(Guid id, Guid idUser,CancellationToken cancellationToken)
     {
         
-        var album = await _album.GetById(Id, cancellationToken);
+        var album = await _album.GetById(id, cancellationToken);
         var user = await _user.GetById(idUser, cancellationToken);
 
 
@@ -183,7 +182,7 @@ public class AlbumService : IAlbumService
             throw new NotFoundException("Album");
         }
 
-        if (idUser !=  album.IdArtist || user.Role != "Admin")
+        if (idUser !=  album.IdArtist && user.Role != "Admin")
         {
             throw new ForbiddenException();
 
@@ -197,7 +196,7 @@ public class AlbumService : IAlbumService
             throw new UserIsNotArtistException("The user is not an artist");
         }
     
-         await _album.Delete(Id, cancellationToken);
+         await _album.Delete(id, cancellationToken);
 
     }
 

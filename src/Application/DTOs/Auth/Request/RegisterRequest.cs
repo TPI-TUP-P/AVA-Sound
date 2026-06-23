@@ -14,7 +14,5 @@ public class RegisterRequest
     [Required(ErrorMessage = "Password is required")]
     public string Password { get; set; } = string.Empty;
     public bool IsArtist { get; set; }
-
-    public string? Role { get; set; }
     
 }
