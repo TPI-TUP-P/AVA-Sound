@@ -11,7 +11,6 @@ public class Album
     public DateTime ReleasteDate { get; set; }
     public string? FrontPage { get; set; }
     public string? Description { get; set; }
-
     private readonly List<Song> _songs = [];
     public IReadOnlyCollection<Song> Songs => _songs.AsReadOnly();
 
@@ -34,7 +33,6 @@ public class Album
         {
             throw new SongAlredyExistAlbumExcepction(song.Title);
         }
-
         _songs.Add(song);
     }
 
@@ -46,7 +44,6 @@ public class Album
             throw new NotFoundException("Song");
         }
         _songs.Remove(song);
-
     }
 
     private static void ValidateProperties(Guid idArtist, string title, DateTime releasteDate, string? frontPage, string? description)
@@ -62,7 +59,6 @@ public class Album
         if (releasteDate > DateTime.Now)
         {
             throw new FieldEmptyExcepction("Date");
-
         }
 
         if(frontPage != null)
