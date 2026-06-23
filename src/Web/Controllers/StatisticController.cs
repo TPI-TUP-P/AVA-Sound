@@ -65,8 +65,9 @@ public class StatisticController(IStatisticService _statisticService) : Controll
 
 
     [HttpGet("getTopSogs")]
+    [Authorize]
     [EnableRateLimiting("HeavyEndpoint")]
-
+    
     public async Task<ActionResult<GetTopSongsResponse>> GetTopSongs(CancellationToken cancellationToken)
     {   
         var result = await _statisticService.GetTopSongs(cancellationToken);
@@ -77,6 +78,7 @@ public class StatisticController(IStatisticService _statisticService) : Controll
 
 
     [HttpGet("getTopArtists")]
+    [Authorize]
     [EnableRateLimiting("HeavyEndpoint")]
 
     public async Task<ActionResult<List<GetAllResponse>>> GetTopArtists(CancellationToken cancellationToken)

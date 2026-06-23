@@ -56,7 +56,7 @@ public class AlbumController(IAlbumService _albumService) : ControllerBase
 
     
     [HttpPost]
-     [Authorize]
+    [Authorize]
     [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest albumDto, CancellationToken cancellationToken)
     {   
