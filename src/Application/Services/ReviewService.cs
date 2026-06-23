@@ -18,7 +18,25 @@ public class ReviewService : IReviewService
         _song = song;
     }
 
+    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
+    {
+        ValidateId(Id);
+        var review = await _review.GetById(Id, cancellationToken);
 
+        if (review is null)
+        {
+            throw new NotFoundException("Review");
+        }
+
+        return new GetByIdResponse
+        {
+            Id = review.Id,
+            IdUser = review.IdUser,
+            IdSong = review.IdSong,
+            Comment = review.Comment,
+            DateCreated = review.DateCreated
+        };
+    }
     public async Task<List<GetBySongResponse>> GetBySong(Guid Id, CancellationToken cancellationToken)
     // For my future self, the id refers to the song id
     {
@@ -68,23 +86,17 @@ public class ReviewService : IReviewService
         {
             throw new AlreadyExistExcepction("Review", songExists.Title);
         }
-        if (reviewDto.DateCreated > DateTime.UtcNow)
-        {
-            throw new futureDateException();
-        }
-
-
-
         var review = new Review(
             reviewDto.IdUser,
             reviewDto.IdSong,
-            reviewDto.Comment,
-            reviewDto.DateCreated
+            reviewDto.Comment
+
         );
 
         var reviewCreated = await _review.Create(review, cancellationToken);
         return new CreateResponse
         {
+            Id = reviewCreated.Id,
             IdUser = reviewCreated.IdUser,
             IdSong = reviewCreated.IdSong,
             Comment = reviewCreated.Comment,
@@ -109,14 +121,8 @@ public class ReviewService : IReviewService
         {
             throw new ForbiddenException("Review");
         }
-        if (reviewDto.Comment != null && reviewDto.Comment.Length > 3)
-        {
-            existReview.Comment = reviewDto.Comment;
-        }
-        else
-        {
-            throw new FieldIsNotLongException("Comment", 3);
-        }
+
+        existReview.UpdateReview(reviewDto.Comment!);
 
 
 

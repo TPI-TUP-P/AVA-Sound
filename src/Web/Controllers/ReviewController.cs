@@ -1,5 +1,4 @@
 using Application.Interfaces;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Application.DTOs.Review.Request;
 using Application.DTOs.Review.Response;
@@ -24,17 +23,24 @@ public class ReviewController : ControllerBase
 
     [HttpGet("{Id}")]
 
-    public ActionResult<List<GetBySongResponse>> GetBySong([FromRoute] Guid Id, CancellationToken cancellationToken)
+    public async Task<ActionResult<List<GetBySongResponse>>> GetBySong([FromRoute] Guid Id, CancellationToken cancellationToken)
     {
-        return Ok(_reviewService.GetBySong(Id, cancellationToken));
+        return Ok(await _reviewService.GetBySong(Id, cancellationToken));
+    }
+    [HttpGet("only/{Id}")]
+
+    public async Task<ActionResult<List<GetBySongResponse>>> GetById([FromRoute] Guid Id, CancellationToken cancellationToken)
+    {
+        return Ok(await _reviewService.GetById(Id, cancellationToken));
     }
 
     [HttpPost]
     [EnableRateLimiting("PerUser")]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest reviewDto, CancellationToken cancellationToken)
     {
-        await _reviewService.Create(reviewDto, cancellationToken);
-        return Ok();
+        var response = await _reviewService.Create(reviewDto, cancellationToken);
+        return CreatedAtAction(nameof(GetById), new { id = response.Id },
+    response);
     }
 
     [HttpDelete("{Id}")]
@@ -46,7 +52,7 @@ public class ReviewController : ControllerBase
                             ?? User.FindFirst("sub")?.Value;
         if (idUserToken is null)
         {
-            throw new FieldEmptyExcepction("Id From token");
+            return Unauthorized("User ID not found in token.");
         }
         var idUser = Guid.Parse(idUserToken);
         await _reviewService.Delete(Id, idUser, cancellationToken);
@@ -62,7 +68,7 @@ public class ReviewController : ControllerBase
                         ?? User.FindFirst("sub")?.Value;
         if (idUserToken is null)
         {
-            throw new FieldEmptyExcepction("Id From token");
+            return Unauthorized("User ID not found in token.");
         }
         var idUser = Guid.Parse(idUserToken);
         await _reviewService.Update(Id, idUser, reviewDto, cancellationToken);

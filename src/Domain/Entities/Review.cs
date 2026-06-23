@@ -12,24 +12,24 @@ public class Review
 
     public Guid IdSong { get; init; }
 
-    public string? Comment { get; set; }
+    public string Comment { get; set; } = string.Empty;
 
-    public DateTime DateCreated { get; set; }
+    public DateTime DateCreated { get; init; }
 
     private Review() { }
 
 
-    public Review(Guid iduser, Guid idsong, string comment, DateTime datecreated)
+    public Review(Guid iduser, Guid idsong, string comment)
     {
-        ValidateProperties(iduser, idsong, comment, datecreated);
+        ValidateProperties(iduser, idsong, comment);
         Id = Guid.NewGuid();
         IdUser = iduser;
         IdSong = idsong;
         Comment = comment;
-        DateCreated = datecreated;
+        DateCreated = DateTime.UtcNow;
     }
 
-    private void ValidateProperties(Guid iduser, Guid idsong, string comment, DateTime datecreated)
+    private void ValidateProperties(Guid iduser, Guid idsong, string comment)
     {
         if (iduser == Guid.Empty)
         {
@@ -43,9 +43,27 @@ public class Review
         {
             throw new FieldEmptyExcepction("Comment"); ;
         }
-        if (datecreated > DateTime.Now)
+
+    }
+
+
+    public void UpdateReview(string comment)
+    {
+        if (string.IsNullOrWhiteSpace(comment))
         {
-            throw new futureDateException();
+            throw new FieldEmptyExcepction("Comment");
         }
+
+        if (comment.Length < 3)
+        {
+            throw new FieldIsNotLongException("Comment", 3);
+        }
+
+        if (comment.Length > 800)
+        {
+            throw new FieldTooLongException("Comment", 800);
+        }
+
+        Comment = comment;
     }
 }
