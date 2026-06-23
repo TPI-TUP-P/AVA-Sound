@@ -13,9 +13,10 @@ public class InfoUserRepository : IInfoUserRepository
         _context = context;
     }
 
-    public async Task<InfoUser> GetById(Guid Id, CancellationToken cancellationToken)
+    public async Task<InfoUser?> GetById(Guid id, CancellationToken cancellationToken)
     {
-        return await _context.InfoUsers.FirstAsync(i => i.IdUser == Id, cancellationToken);
+        return await _context.InfoUsers
+            .FirstOrDefaultAsync(i => i.IdUser == id, cancellationToken);
     }
 
     public async Task<InfoUser> Create(InfoUser infouser, CancellationToken cancellationToken)
