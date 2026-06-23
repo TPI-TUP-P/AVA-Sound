@@ -20,17 +20,18 @@ public class InfoUserService : IInfoUserService
     {
         ValidateId(Id);
 
-        var infouser = await _InfoUser.GetById(Id, cancellationToken);
-        if (infouser is null)
+        var infourser = await _InfoUser.GetById(Id, cancellationToken);
+        if (infourser is null || string.IsNullOrEmpty(infourser.Biography))
         {
             throw new NotFoundException("InfoUser");
         }
+        Console.WriteLine(infourser);
         return new GetByIdResponse
         {
-            IdUser = infouser.IdUser,
-            ProfilePicture = infouser.ProfilePicture,
-            Biography = infouser.Biography,
-            Country = infouser.Country
+            IdUser = infourser.IdUser,
+            ProfilePicture = infourser.ProfilePicture,
+            Biography = infourser.Biography,
+            Country = infourser.Country
         }
         ;
     }
