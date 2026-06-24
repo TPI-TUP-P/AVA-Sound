@@ -29,13 +29,13 @@ public class ReviewService : IReviewService
         }
 
         return new GetByIdResponse
-        {
-            Id = review.Id,
-            IdUser = review.IdUser,
-            IdSong = review.IdSong,
-            Comment = review.Comment,
-            DateCreated = review.DateCreated
-        };
+        (
+            review.Id,
+            review.IdUser,
+            review.IdSong,
+            review.Comment,
+            review.DateCreated
+        );
     }
     public async Task<List<GetBySongResponse>> GetBySong(Guid Id, CancellationToken cancellationToken)
     // For my future self, the id refers to the song id
@@ -47,12 +47,13 @@ public class ReviewService : IReviewService
         var review = await _review.GetBySong(Id, cancellationToken);
         // The r refers to reviews
         return review.Select(r => new GetBySongResponse
-        {
-            IdUser = r.IdUser,
-            IdSong = r.IdSong,
-            Comment = r.Comment,
-            DateCreated = r.DateCreated
-        }).ToList();
+        (
+            r.Id,
+            r.IdUser,
+            r.IdSong,
+            r.Comment,
+            r.DateCreated
+        )).ToList();
     }
 
     public async Task<CreateResponse> Create(CreateRequest reviewDto, CancellationToken cancellationToken)
@@ -95,13 +96,13 @@ public class ReviewService : IReviewService
 
         var reviewCreated = await _review.Create(review, cancellationToken);
         return new CreateResponse
-        {
-            Id = reviewCreated.Id,
-            IdUser = reviewCreated.IdUser,
-            IdSong = reviewCreated.IdSong,
-            Comment = reviewCreated.Comment,
-            DateCreated = review.DateCreated
-        };
+        (
+            reviewCreated.Id,
+            reviewCreated.IdUser,
+            reviewCreated.IdSong,
+            reviewCreated.Comment,
+            review.DateCreated
+        );
     }
 
     public async Task<UpdateResponse> Update(Guid Id, Guid IdUser, UpdateRequest reviewDto, CancellationToken cancellationToken)
@@ -128,9 +129,9 @@ public class ReviewService : IReviewService
 
         await _review.Update(existReview, cancellationToken);
         return new UpdateResponse
-        {
-            Comment = existReview.Comment
-        };
+        (
+            existReview.Comment
+        );
     }
 
     public async Task Delete(Guid Id, Guid IdUser, CancellationToken cancellationToken)

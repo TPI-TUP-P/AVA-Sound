@@ -10,4 +10,13 @@ public class GetByIdResponse
     public string? Comment { get; set; }
 
     public DateTime DateCreated { get; init; }
+
+    public GetByIdResponse(Guid id, Guid idUser, Guid idSong, string comment, DateTime dateCreated)
+    {
+        Id = id;
+        IdUser = idUser;
+        IdSong = idSong;
+        Comment = comment;
+        DateCreated = dateCreated;
+    }
 }
