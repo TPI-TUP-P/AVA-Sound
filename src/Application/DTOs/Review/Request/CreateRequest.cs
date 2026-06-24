@@ -8,6 +8,5 @@ public class CreateRequest
 
     public string? Comment { get; set; }
 
-    public DateTime DateCreated { get; set; }
 
 }

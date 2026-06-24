@@ -20,18 +20,20 @@ public class InfoUserService : IInfoUserService
     {
         ValidateId(Id);
 
-        var infouser = await _InfoUser.GetById(Id, cancellationToken);
-        if (infouser is null)
+        var infourser = await _InfoUser.GetById(Id, cancellationToken);
+        if (infourser is null)
         {
             throw new NotFoundException("InfoUser");
         }
+        Console.WriteLine(infourser);
         return new GetByIdResponse
-        {
-            IdUser = infouser.IdUser,
-            ProfilePicture = infouser.ProfilePicture,
-            Biography = infouser.Biography,
-            Country = infouser.Country
-        }
+        (
+            infourser.Id,
+           infourser.IdUser,
+            infourser.ProfilePicture!,
+         infourser.Biography!,
+           infourser.Country!
+        )
         ;
     }
 
@@ -74,12 +76,13 @@ public class InfoUserService : IInfoUserService
 
         var infouserCreated = await _InfoUser.Create(newInfoUser, cancellationToken);
         return new CreateResponse
-        {
-            IdUser = infouserCreated.IdUser,
-            ProfilePicture = infouserCreated.ProfilePicture,
-            Biography = infouserCreated.Biography,
-            Country = infouserCreated.Country
-        };
+        (
+            infouserCreated.Id,
+           infouserCreated.IdUser,
+            infouserCreated.ProfilePicture!,
+           infouserCreated.Biography!,
+           infouserCreated.Country!
+        );
     }
 
     public async Task<UpdateResponse> Update(Guid Id, Guid IdUser, UpdateRequest infouserDto, CancellationToken cancellationToken)
@@ -115,11 +118,12 @@ public class InfoUserService : IInfoUserService
         await _InfoUser.Update(existingInfo, cancellationToken);
 
         return new UpdateResponse
-        {
-            Biography = existingInfo.Biography,
-            Country = existingInfo.Country,
-            ProfilePicture = existingInfo.ProfilePicture
-        };
+        (
+           existingInfo.IdUser,
+            existingInfo.Biography!,
+            existingInfo.Country!,
+            existingInfo.ProfilePicture!
+       );
     }
 
     public async Task Delete(Guid Id, Guid IdUser, CancellationToken cancellationToken)

@@ -159,7 +159,7 @@ public class UserService : IUserService
         if (user == null)
             throw new NotFoundException("user");
 
-        if(user.Id != userId)
+        if (user.Id != userId)
             throw new IdNotMatchException();
 
         if (string.IsNullOrWhiteSpace(userDto.Name))
@@ -207,8 +207,8 @@ public class UserService : IUserService
 
         if (user == null)
             throw new NotFoundException("user");
-        
-        if(!user.IsActive)
+
+        if (!user.IsActive)
         {
             throw new UserNotActivateException();
         }
