@@ -14,6 +14,5 @@ public interface IStatisticService
 
     Task<IEnumerable<GetTopArtistReponse>> GetTopArtists(CancellationToken cancellationToken);
 
-    Task Delete(Guid Id, CancellationToken cancellationToken);
 
 }

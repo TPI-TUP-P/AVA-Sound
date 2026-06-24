@@ -3,6 +3,7 @@ using Application.DTOs.ReproductionList.Request;
 using Application.DTOs.ReproductionList.Response;
 using Application.Interfaces;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Exceptions;
 using Domain.Interfaces;
 
@@ -21,7 +22,7 @@ public class ReproductionListService : IReproductionListService
         _user = user;
     }
 
-    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
+    public async Task<GetByIdResponse> GetById(Guid Id, Guid idUser, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
         {
@@ -29,6 +30,12 @@ public class ReproductionListService : IReproductionListService
         }
 
         var reproductionsList = await _reproductionList.GetById(Id, cancellationToken);
+        var user = await _user.GetById(idUser, cancellationToken);
+
+        if (!reproductionsList.IsPublic && user.Role == UserRole.User && reproductionsList.IdUser != idUser){  
+            throw new  NotFoundException("reproduction list");
+        }
+    
 
         if (reproductionsList == null)
         {
@@ -36,20 +43,36 @@ public class ReproductionListService : IReproductionListService
         }
 
         return new GetByIdResponse
-        {
-            Id = reproductionsList.Id,
-            IdUser = reproductionsList.IdUser,
-            Name = reproductionsList.Name,
-            Description = reproductionsList.Description,
-            IsPublic = reproductionsList.IsPublic,
-            Creation = reproductionsList.Creation,
-            Songs = reproductionsList.Songs.Select(s => new SongResponse
-            {
-                Id = s.Id,
-                Title = s.Title
-            }).ToList()
-        };
+        (
+            reproductionsList.Id,
+            reproductionsList.IdUser,
+            reproductionsList.Name!,
+            reproductionsList.Description!,
+            reproductionsList.IsPublic,
+            reproductionsList.Creation,
+            reproductionsList.Songs.Select(s => new SongResponse
+            (
+                s.Id,
+                s.Title,
+                s.Artist.Id
+            )).ToList()
+        );
     }
+
+    // public async Task<List<GetAllResponse>> GetAll(CancellationToken cancellationToken)
+    // {
+    //     var reproductionsLists = await _reproductionList.GetAll(cancellationToken);
+
+    //     return reproductionsLists.Select(list => new GetAllResponse(
+    //         list.Id,
+    //         list.IdUser,
+    //         list.Name,
+    //         list.Description,
+    //         list.IsPublic,
+    //         list.Creation,
+    //         list.Songs.Count
+    //     )).ToList();
+    // }
 
 
     public async Task<UpdateResponse> Update(Guid id, UpdateRequest updateRequest, Guid idUser, CancellationToken cancellationToken)
@@ -60,9 +83,9 @@ public class ReproductionListService : IReproductionListService
         }
         if (updateRequest is null)
         {
-            throw new Exception("updateRequest is null");
+            throw new FieldEmptyExcepction("updateRequest");
         }
-        if (updateRequest.Name.Length < 2 )
+        if (updateRequest.Name!.Length < 2 )
         {
             throw new FieldIsNotLongException("Name", 2);
         }
@@ -70,7 +93,7 @@ public class ReproductionListService : IReproductionListService
         {
             throw new FieldTooLongException("Name", 50);
         }
-        if (updateRequest.Description.Length < 5)
+        if (updateRequest.Description!.Length < 5)
         {
             throw new FieldIsNotLongException("Description", 5);
         }
@@ -100,9 +123,11 @@ public class ReproductionListService : IReproductionListService
         {
             throw new NotFoundException("reproduction list");
         }
+
+        var user = await _user.GetById(idUser, cancellationToken);
         
-        if(idUser!=reproductionsList.IdUser)
-            throw new IdNotMatchException();
+        if(idUser!=reproductionsList.IdUser && user.Role == UserRole.User)
+            throw new UnauthorizedAccessException("No authorized");
 
 
         reproductionsList.UpdateInfo(
@@ -113,13 +138,13 @@ public class ReproductionListService : IReproductionListService
 
 
          var result= new UpdateResponse
-         {
-             Id=id,
-             IdUser=reproductionsList.IdUser,
-             Name=updateRequest.Name,
-             Description=updateRequest.Description,
-             IsPublic=updateRequest.IsPublic
-         };
+         (
+             id,
+             reproductionsList.IdUser,
+             reproductionsList.Name,
+             reproductionsList.Description,
+             reproductionsList.IsPublic
+         );
 
         await _reproductionList.Update(reproductionsList, cancellationToken);
 
@@ -131,14 +156,14 @@ public class ReproductionListService : IReproductionListService
 
 
 
-    public async Task<CreateResponse> Create(CreateRequest reproductionListDto, CancellationToken cancellationToken)
+    public async Task<CreateResponse> Create(Guid idUser, CreateRequest reproductionListDto, CancellationToken cancellationToken)
     {
 
         if (reproductionListDto == null)
             throw new FieldEmptyExcepction(nameof(reproductionListDto));
 
-        if (reproductionListDto.IdUser == Guid.Empty)
-            throw new FieldEmptyExcepction("IdUser");
+        // if (reproductionListDto.IdUser == Guid.Empty)
+        //     throw new FieldEmptyExcepction("IdUser");
             
 
         if (string.IsNullOrWhiteSpace(reproductionListDto.Name))
@@ -168,7 +193,7 @@ public class ReproductionListService : IReproductionListService
 
 
         var reproductionListData = new ReproductionsList(
-            reproductionListDto.IdUser,
+            idUser,
             reproductionListDto.Name,
             reproductionListDto.Description,
             reproductionListDto.IsPublic
@@ -177,13 +202,13 @@ public class ReproductionListService : IReproductionListService
         var reproductionListCreated = await _reproductionList.Create(reproductionListData, cancellationToken);
 
         return new CreateResponse
-        {
-            Id = reproductionListCreated.Id,
-            IdUser = reproductionListCreated.IdUser,
-            Name = reproductionListCreated.Name,
-            Description = reproductionListCreated.Description,
-            IsPublic = reproductionListCreated.IsPublic
-        };
+        (
+            reproductionListCreated.Id,
+            reproductionListCreated.IdUser,
+            reproductionListCreated.Name,
+            reproductionListCreated.Description,
+            reproductionListCreated.IsPublic
+        );
     }
 
     // public async Task AddSong(Guid listId, Guid songId, CancellationToken cancellationToken)
@@ -311,8 +336,8 @@ public class ReproductionListService : IReproductionListService
         return lists.Select(list => new GetAllResponse(
             list.Id,
             list.IdUser,
-            list.Name,
-            list.Description,
+            list.Name!,
+            list.Description!,
             list.IsPublic,
             list.Creation,
             list.Songs.Count
@@ -331,8 +356,10 @@ public class ReproductionListService : IReproductionListService
         if (list == null)
             throw new NotFoundException("Reproduction List");
 
-        if(idUser!=list.IdUser)
-            throw new IdNotMatchException();
+        var user = await _user.GetById(idUser, cancellationToken);
+
+        if(idUser!=list.IdUser && user.Role == UserRole.User)
+            throw new UnauthorizedAccessException("No authorized");
 
         await _reproductionList.Delete(id, cancellationToken);
     }

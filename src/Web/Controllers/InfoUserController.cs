@@ -23,9 +23,9 @@ public class InfoUserController : ControllerBase
         _infouservice = infouserservice;
     }
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<GetByIdResponse>> GetById(Guid Id, CancellationToken cancellationToken)
+    public async Task<ActionResult<GetByIdResponse>> GetById(Guid id, CancellationToken cancellationToken)
     {
-        return Ok(await _infouservice.GetById(Id, cancellationToken));
+        return Ok(await _infouservice.GetById(id, cancellationToken));
     }
 
     [HttpPatch("{id:guid}")]
@@ -44,9 +44,20 @@ public class InfoUserController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest infouserDto, CancellationToken cancellationToken)
     {
-        var created = await _infouservice.Create(infouserDto, cancellationToken);
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                       ?? User.FindFirst("id")?.Value
+                       ?? User.FindFirst("sub")?.Value;
+        if (idUserToken is null)
+        {
+            throw new FieldEmptyExcepction("Id From token");
+        }
+        var idUser = Guid.Parse(idUserToken);
+        var created = await _infouservice.Create(infouserDto, idUser, cancellationToken);
 
-        return CreatedAtAction(nameof(GetById), new { id = created.IdUser }, created);
+        return CreatedAtAction(
+    nameof(GetById),
+    new { id = created.Id },
+    created);
     }
 
     [HttpDelete("{Id}")]

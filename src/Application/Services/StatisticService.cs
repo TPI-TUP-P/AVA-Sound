@@ -16,21 +16,6 @@ public class StatisticService : IStatisticService
         _song = song;
     }
 
-    // public async Task<List<GetAllResponse>> GetAll()
-    // {
-    //     var statistics = await _statistic.GetAll();
-    //     return statistics.Select(statistic => new GetAllResponse
-    //     (
-    //         statistic.Id,
-    //         statistic.IdUser,
-    //         statistic.SongTop,
-    //         statistic.FavoriteGender,
-    //         statistic.TotalReproductioByGender
-    //     )).ToList();
-
-    // }
-
-
     public async Task<IEnumerable<GetTopArtistReponse>> GetTopArtists(CancellationToken cancellationToken)
     {
         var artists = await _statistic.GetTopArtist(cancellationToken);
@@ -55,15 +40,16 @@ public class StatisticService : IStatisticService
 
         if(IdUser != statistic.IdUser)
         {
-            throw new Exception("You don't have permission to access these statistics");
+            throw new ForbiddenException();
         }
 
-        // AuthValidator.ValidateOwner(statistic.IdUser, IdUser, "You don't have permission to access these statistics");
 
         if(statistic is null)
         {
             throw new NotFoundException("Statistic");
         }
+
+    
         var idSong = statistic.GetFavoriteSong();
         var song =await _song.GetById(idSong, cancellationToken);
        
@@ -73,8 +59,8 @@ public class StatisticService : IStatisticService
             song.IdAlbum,
             song.Title!,
             song.Gender!,
-            song.Duration!
-            ,song.AudioBig!,
+            song.Duration!,
+            song.AudioBig!,
             song.DateUpload,
             song.Views
 
@@ -98,55 +84,28 @@ public class StatisticService : IStatisticService
         )).ToList();
     }
 
-    // public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
-    // {
-    //     if (Id == Guid.Empty)
-    //     {
-    //         throw new Exception("The ID is empty");
-    //     }
-
-    //     var statistic = await _statistic.GetById(Id, cancellationToken);
-
-    //     if (statistic == null)
-    //     {
-    //         throw new Exception("There are no statistics");
-    //     }
-
-
-    //     return new GetByIdResponse
-    //     (
-    //         statistic.Id,
-    //         statistic.IdUser,
-    //         statistic.SongTop,
-    //         statistic.FavoriteGender,
-    //         statistic.TotalReproductions
-
-    //     );
-    // }
-
-
     public async  Task<string> GetFavoriteGender(Guid IdUser, CancellationToken cancellationToken)
     {
         var statistic = await _statistic.GetByIdUser(IdUser, cancellationToken);
         
         if(IdUser != statistic.IdUser)
         {
-            throw new Exception("You don't have permission to access these statistics");
+            throw new ForbiddenException();
         }
 
-        // AuthValidator.ValidateOwner(statistic.IdUser, IdUser, "You don't have permission to access these statistics");
 
         if(statistic is null)
         {
             throw new NotFoundException("Statistic");
         }
 
+                var songs = await _song.GetByIds(statistic.Reproductions.Select(s=> s.IdSong), cancellationToken);
 
-
-
-
-
-        return statistic.GetFavoriteGender();
+        if(songs.Count == 0)
+        {
+            throw new NotFoundException("Songs");
+        }
+        return statistic.GetFavoriteGender(songs);
     }
 
 
@@ -165,7 +124,7 @@ public class StatisticService : IStatisticService
             throw new NotFoundException("Song");
         }
     
-        statistic.RegisterViewGender(IdSong, song.Gender);
+        statistic.RegisterViewGender(IdSong);
         await _statistic.UpdateStatistic(statistic, cancellationToken);
 
         return new CreateResponse
@@ -182,18 +141,12 @@ public class StatisticService : IStatisticService
     public async Task<CreateResponse> Create(CreateRequest statisticDto, CancellationToken cancellationToken)
     {
         if (statisticDto == null)
-        {
-            throw new Exception("The table is empty");
+        {   
+            ArgumentNullException.ThrowIfNull(statisticDto);
         }
 
-
         var statisticData = new Statistic(
-            statisticDto.IdUser
-           
-                    );
-
-
-
+            statisticDto.IdUser);
 
         var statisticCreated = await _statistic.Create(statisticData, cancellationToken);
 
@@ -209,75 +162,4 @@ public class StatisticService : IStatisticService
 
 
 
-    // public async Task<UpdateResponse> Update(Guid id,UpdateRequest statisticDto)
-    // {
-    //     var existingStatistic = await _statistic.GetById(id);
-
-    //     if(existingStatistic== null)
-    //     {
-    //         throw new Exception("La estadistica no existe");
-    //     }
-
-    //     // existingStatistic.IdUser = statistic.IdUser;
-
-    //     existingStatistic.SongTop = statisticDto.SongTop;
-    //     existingStatistic.FavoriteGender = statisticDto.FavoriteGender;
-    //     existingStatistic.TotalReproductions = statisticDto.TotalReproductions;
-
-    //     await _statistic.Update(
-    //         existingStatistic.Id,
-    //         existingStatistic
-    //     );
-
-
-    //     return new UpdateResponse (
-    //         existingStatistic.Id,
-    //         existingStatistic.IdUser,
-    //         existingStatistic.SongTop,
-    //         existingStatistic.FavoriteGender,
-    //         existingStatistic.TotalReproductions
-    //     );
-
-
-    //     }
-
-
-    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest statisticDto, CancellationToken cancellationToken)
-    {
-        var existingAlbum = await _statistic.GetById(Id, cancellationToken);
-        if (existingAlbum == null)
-        {
-            throw new Exception("The album does not exist");
-        }
-
-        if (statisticDto == null)
-        {
-            throw new Exception("The album is empty");
-        }
-
-
-        await _statistic.Update(
-
-            existingAlbum, cancellationToken
-        );
-
-
-        return new UpdateResponse
-        (
-            existingAlbum.Id,
-            existingAlbum.IdUser, 
-            existingAlbum.Reproductions
-
-        );
-    }
-
-    public async Task Delete(Guid Id, CancellationToken cancellationToken)
-    {
-        if (Id == Guid.Empty)
-        {
-            throw new Exception("The ID is empty");
-        }
-
-        await _statistic.Delete(Id, cancellationToken);
-    }
 }

@@ -1,3 +1,5 @@
+using Domain.Enums;
+
 namespace Application.DTOs.Auth.Response;
 
 
@@ -7,10 +9,10 @@ public class RegisterResponse
     public string? Surname { get; init; }
     public string? Email { get; init; }
     public bool IsArtist { get; init; }
-    public string? Role { get; init; }
+    public UserRole? Role { get; init; }
 
 
-    public RegisterResponse(string? name, string? surname, string? email, bool isArtist, string? role)
+    public RegisterResponse(string? name, string? surname, string? email, bool isArtist, UserRole? role)
     {
         Name = name;
         Surname = surname;

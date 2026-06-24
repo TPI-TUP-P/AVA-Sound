@@ -15,22 +15,7 @@ public class StorageService : IStorageService
     public StorageService(HttpClient httpClient)
     // le tengo que agregar credenciales reales mi king
     {
-        // var keyLogin = "sb_secret_RFdNBdaxSoHMtbIXFYMOxA_ov3hlA6k";
-        // if (keyLogin is null)
-        // {
-        //     throw new Exception("ASDA");
-        // }
-        // _httpClient = httpClient;
-        // _httpClient.DefaultRequestHeaders.Add(
-        //     "apikey",
-        //     keyLogin
-        // );
-
-        // _httpClient.DefaultRequestHeaders.Authorization =
-        //     new AuthenticationHeaderValue(
-        //         "Bearer",
-        //         keyLogin
-        //     );
+     
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     }
 
@@ -53,7 +38,7 @@ public class StorageService : IStorageService
             new MediaTypeHeaderValue(contentType);
 
         var response =
-            await _httpClient.PostAsync(
+            await _httpClient!.PostAsync(
                 $"{url}{nombreArchivo}",
                 content
             );
@@ -82,7 +67,7 @@ public class StorageService : IStorageService
         };
 
         var response =
-            await _httpClient.PostAsJsonAsync(
+            await _httpClient!.PostAsJsonAsync(
                 $"https://etwseuwniupcpuigerkw.supabase.co/storage/v1/object/sign/{bucket}/{filePath}",
                 body
             );

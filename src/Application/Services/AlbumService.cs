@@ -3,6 +3,8 @@ using Application.DTOs.Album.Response;
 using Application.Interfaces;
 
 using Domain.Entities;
+using Domain.Enums;
+using Domain.Exceptions;
 using Domain.Interfaces;
 
 
@@ -23,10 +25,10 @@ public class AlbumService : IAlbumService
     }
 
 
-    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
+    public async Task<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken)
     {
     
-        var album = await _album.GetById(Id, cancellationToken);
+        var album = await _album.GetById(id, cancellationToken);
 
     
 
@@ -94,7 +96,7 @@ public class AlbumService : IAlbumService
 
         var albumData = new Album(
             user.Id,
-            albumDto.Title,
+            albumDto.Title!,
             albumDto.ReleaseDate,
             albumDto.FrontPage,
             albumDto.Description
@@ -116,14 +118,19 @@ public class AlbumService : IAlbumService
         );
     }
 
-    public async Task<UpdateResponse> Update(Guid Id, UpdateRequest albumDto, CancellationToken cancellationToken)
+    public async Task<UpdateResponse> Update(Guid id,Guid idUser, UpdateRequest albumDto, CancellationToken cancellationToken)
     {
-        var existingAlbum = await _album.GetById(Id, cancellationToken);
+        var existingAlbum = await _album.GetById(id, cancellationToken);
         var user = await _user.GetById(existingAlbum.IdArtist, cancellationToken);
         
         if (existingAlbum is null)
         {
             throw new NotFoundException("Album");
+        }
+
+        if(existingAlbum.IdArtist != idUser)
+        {
+            throw new ForbiddenException("Album");
         }
 
         if(user.IsArtist is false)
@@ -133,13 +140,11 @@ public class AlbumService : IAlbumService
     
         if (albumDto.Title != null)
         {
-
             existingAlbum.Title = albumDto.Title;
         }
 
         if (albumDto.ReleaseDate != default)
         {
-
             existingAlbum.ReleasteDate = albumDto.ReleaseDate;
         }
         if (albumDto.FrontPage != null)
@@ -151,29 +156,25 @@ public class AlbumService : IAlbumService
             existingAlbum.Description = albumDto.Description;
         }
 
-
         await _album.Update(
             existingAlbum, cancellationToken
         );
 
         return new UpdateResponse
         (
-
             existingAlbum.Id,
             existingAlbum.IdArtist,
             existingAlbum.Title,
             existingAlbum.ReleasteDate,
             existingAlbum.FrontPage,
             existingAlbum.Description
-
-
         );
     }
 
-    public async Task Delete(Guid Id, Guid idUser,CancellationToken cancellationToken)
+    public async Task Delete(Guid id, Guid idUser,CancellationToken cancellationToken)
     {
         
-        var album = await _album.GetById(Id, cancellationToken);
+        var album = await _album.GetById(id, cancellationToken);
         var user = await _user.GetById(idUser, cancellationToken);
 
 
@@ -182,20 +183,28 @@ public class AlbumService : IAlbumService
             throw new NotFoundException("Album");
         }
 
-        if (idUser !=  album.IdArtist || user.Role != "Admin")
+        if (idUser !=  album.IdArtist && user.Role == UserRole.User )
         {
-            throw new Exception("You don't have permission to delete this album");
+            throw new ForbiddenException();
+
         }
-
-
-
 
         if(user.IsArtist is false)
         {
             throw new UserIsNotArtistException("The user is not an artist");
         }
+
+        var songs = album.Songs.ToList();
+
+        foreach(var song in songs)
+        {
+            song.RemoveFromAlbum();
+           await _song.Update(song, cancellationToken);
+        }
     
-         await _album.Delete(Id, cancellationToken);
+         await _album.Delete(id, cancellationToken);
+
+
 
     }
 
@@ -218,30 +227,24 @@ public class AlbumService : IAlbumService
             throw new NotFoundException("Song");
         }
 
-
-
-        if(user.Id != idUser)
-        {
-            throw new Exception("You don't have permission to add this song");
-        }
-        // AuthValidator.ValidateOwner(album.IdArtist, idUser, "You don't have permission to add this song");
-        // AuthValidator.ValidateOwner(song.IdArtist, idUser, "You don't have permission to add this song");
-
-        //
+        // if(user.Id != idUser)
+        // {
+        //     throw new Exception("You don't have permission to add this song");
+        // }
 
         if(user.Id != song.IdArtist)
-        {
-            throw new Exception("You don't have permission to add this song");
+        {   
+            throw new ForbiddenException();
         }
 
         if(song.IdAlbum != Guid.Empty)
-        {
-            throw new Exception("The song is already in an album");
+        {   
+            throw new FieldEmptyExcepction("IdAlbum");
         }
 
         if(song.IdAlbum == album.Id)
         {
-            throw new Exception("The song is already in this album");
+            throw new AlreadyExistExcepction(song.Title);
         }
 
 
@@ -280,14 +283,17 @@ public class AlbumService : IAlbumService
             throw new NotFoundException("Song");
         }
 
-        if(user.Id != idUser && user.Role != "Admin" )
+        if(user.Id != idUser && user.Role == UserRole.User)
         {
-            throw new Exception("You don't have permission to delete this song");
+            throw new ForbiddenException();
         }
-        // AuthValidator.ValidateAdminOrOwner(album.IdArtist, idUser, user.Role!, "You don't have permission to delete this song");
+
+        if(song.IdAlbum is null)
+        {
+            throw new SongNotInAlbumException(song.Title);
+        }
+
         
-
-
         album.DeleteSong(song);
         song.RemoveFromAlbum();
         await _album.Update(album, cancellationToken);

@@ -2,8 +2,10 @@ using System.Security.Claims;
 using Application.DTOs.Song.Request;
 using Application.DTOs.Song.Response;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Web.DTOs.Song;  // ← el SongUploadRequest
+using Microsoft.AspNetCore.RateLimiting;
+using Web.DTOs.Song;
 
 namespace Web.Controllers;
 
@@ -13,13 +15,15 @@ public class SongController : ControllerBase
 {
     private readonly ISongService _songService;
 
-    // ← solo ISongService, sin el handler
+
     public SongController(ISongService songService)
     {
         _songService = songService;
     }
 
     [HttpGet("{id}")]
+    
+    [EnableRateLimiting("HardyEndpoint")]
     public async Task<ActionResult<GetByIdResponse>> GetById(Guid id, CancellationToken cancellationToken)
     {
         var response = await _songService.GetById(id, cancellationToken);
@@ -27,13 +31,17 @@ public class SongController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<PagerSongResponse<GetByIdResponse>>> GetAll([FromQuery] PagerRequest pagerRequest, CancellationToken cancellationToken)
+    [Authorize (Roles = "Admin")]
+    [EnableRateLimiting("HardyEndpoint")]
+    public async Task<ActionResult<PagerSongResponse<GetByIdResponse>>> GetAll( CancellationToken cancellationToken)
     {
-        var songs = await _songService.GetAll(pagerRequest, cancellationToken);
+        var songs = await _songService.GetAll(cancellationToken);
         return Ok(songs);
     }
 
     [HttpPost]
+    [Authorize]
+    [EnableRateLimiting("HardyEndpoint")]
     [Consumes("multipart/form-data")]
     [DisableRequestSizeLimit]
     public async Task<ActionResult<CreateResponse>> Create([FromForm] SongUploadRequest request, CancellationToken cancellationToken)
@@ -66,54 +74,59 @@ public class SongController : ControllerBase
             cancellationToken
         );
 
-        return Ok(song);
+        return CreatedAtAction(nameof(GetById), new { id = song.Id },song);
     }
 
-    // ← usa _songService directamente, sin handler
+
     [HttpGet("{id}/url")]
+    [Authorize]
+    [EnableRateLimiting("HardyEndpoint")]
     public async Task<ActionResult<string>> GetSongUrl(Guid id, CancellationToken cancellationToken)
     {
 
-           var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-            ?? User.FindFirst("id")?.Value
-            ?? User.FindFirst("sub")?.Value;
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+         ?? User.FindFirst("id")?.Value
+         ?? User.FindFirst("sub")?.Value;
 
         if (string.IsNullOrEmpty(idUserToken))
             return Unauthorized("User ID not found in token.");
 
         var idUser = Guid.Parse(idUserToken);
 
-        var url = await _songService.GetSongUrl(id,idUser, cancellationToken);
+        var url = await _songService.GetSongUrl(id, idUser, cancellationToken);
         return Ok(url);
     }
 
     [HttpPatch("{id}")]
+    [Authorize]
+    [EnableRateLimiting("HardyEndpoint")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest songDto, CancellationToken cancellationToken)
     {
-        var idUserToken=User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? User.FindFirst("id")?.Value
             ?? User.FindFirst("sub")?.Value;
 
-        if(string.IsNullOrEmpty(idUserToken))
+        if (string.IsNullOrEmpty(idUserToken))
             return Unauthorized("User id not found in token");
 
-        var idUser=Guid.Parse(idUserToken);
-        
-        var song = await _songService.Update(id, songDto, idUser,  cancellationToken);
+        var idUser = Guid.Parse(idUserToken);
+
+        var song = await _songService.Update(id, songDto, idUser, cancellationToken);
         return Ok(song);
     }
 
     [HttpDelete("{id}")]
+    [Authorize]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        var idUserToken= User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? User.FindFirst("id")?.Value
             ?? User.FindFirst("sub")?.Value;
 
-        if(string.IsNullOrEmpty(idUserToken))
+        if (string.IsNullOrEmpty(idUserToken))
             return Unauthorized("User id not found in token");
 
-        var idUser=Guid.Parse(idUserToken);
+        var idUser = Guid.Parse(idUserToken);
 
         await _songService.Delete(id, idUser, cancellationToken);
         return NoContent();

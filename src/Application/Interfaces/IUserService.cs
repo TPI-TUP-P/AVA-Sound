@@ -9,12 +9,12 @@ namespace Application.Interfaces;
 public interface IUserService
 {
     Task<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken);
-    Task<PagerResponse<GetByIdResponse>> GetAll(PagerRequest pagerRequest, CancellationToken cancellationToken);
+    Task<PagerResponse<GetAllResponse>> GetAll( CancellationToken cancellationToken);
     // Task<List<GetAllResponse>> GetAll(CancellationToken cancellationToken);
     Task<CreateResponse> Create(CreateRequest UserDto, CancellationToken cancellationToken);
     Task<UpdateResponse> Update(Guid Id, UpdateRequest UsermDto,Guid userId, CancellationToken cancellationToken);
-    Task Delete(Guid id, CancellationToken cancellationToken);
+    Task Delete(Guid id, Guid userId, CancellationToken cancellationToken);
 
-    Task MakeAdmin(Guid userId, Guid currentUserId, CancellationToken cancellationToken);
+    Task HandleAdmin(Guid userId, Guid currentUserId, CancellationToken cancellationToken);
 
 }

@@ -1,3 +1,4 @@
+using Domain.Exceptions;
 using Domain.Objects.Statistics;
 
 namespace Domain.Entities;
@@ -5,44 +6,40 @@ namespace Domain.Entities;
 
 public class Statistic
 {
-  public  Guid Id { get; init; }
-  public  Guid IdUser { get; init; }
-
-    public List<SongReproduction> Reproductions { get; set; } = new();
+    public  Guid Id { get; init; }
+    public  Guid IdUser { get; init; }
+    public List<SongReproduction> Reproductions { get; set; } = [];
 
 
     public  Statistic (Guid idUser)
     {
         
-        Id =Guid.NewGuid();
-        IdUser = idUser;
-     
-
         ValidateProperties(idUser);
 
+        Id =Guid.NewGuid();
+        IdUser = idUser;
     }
 
-    private void ValidateProperties( Guid idUser)
+    private static void ValidateProperties( Guid idUser)
     {
             if(idUser == Guid.Empty)
         {
-            throw new Exception("The Iduser cannot be empty");
+            throw new FieldEmptyExcepction("IdUser");
         }
-
-        
-   
-   
-
     }
 
 
 
-    public string  GetFavoriteGender()
+    public string  GetFavoriteGender(IEnumerable<Song>songs)
     {
-        var gender = Reproductions.OrderByDescending(s=> s.ViewsCount).FirstOrDefault();
-        return gender!.Gender;
+        var gender = this.Reproductions.Join(songs, r=> r.IdSong, s=> s.Id, (r,s)=> new {s.Gender,r.ViewsCount}).GroupBy(s=> s.Gender).Select(g=> new
+        {
+            Genre = g.Key,
+            Count = g.Sum(x=> x.ViewsCount)
+        }).OrderByDescending(x=> x.Count)
+        .FirstOrDefault();
 
-
+        return gender?.Genre ?? "Unknown";
     } 
 
 
@@ -56,7 +53,7 @@ public class Statistic
 
 
 
-    public void RegisterViewGender(Guid idSong, string gender)
+    public void RegisterViewGender(Guid idSong)
     {
         var existingSong = Reproductions.FirstOrDefault(s=> s.IdSong == idSong);
 
@@ -65,7 +62,6 @@ public class Statistic
         var songReproduction = new SongReproduction
         {
             IdSong = idSong,
-            Gender = gender,
             ViewsCount = 1
         };
         Reproductions.Add(songReproduction);

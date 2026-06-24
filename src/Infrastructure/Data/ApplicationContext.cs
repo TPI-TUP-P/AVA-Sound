@@ -8,17 +8,17 @@ namespace Infrastructure.Data
 {
     public class ApplicationContext : DbContext
     {
-        public DbSet<Album> Albums { get; set;}
+        public DbSet<Album> Albums { get; set; }
         public DbSet<Song> Songs { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<InfoUser> InfoUsers { get; set; }
         public DbSet<Review> Reviews { get; set; }
-        public DbSet<Statistic> Statistics { get; set; }    
+        public DbSet<Statistic> Statistics { get; set; }
         public DbSet<ReproductionsList> ReproductionsLists { get; set; }
 
-    public ApplicationContext(DbContextOptions<ApplicationContext> options ) : base(options)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
-            
+
 
         }
 
@@ -51,7 +51,7 @@ namespace Infrastructure.Data
                     .WithMany(u => u.Songs)
                     .HasForeignKey(e => e.IdArtist);
 
-             
+
             });
 
             modelBuilder.Entity<ReproductionsList>(entity =>
@@ -61,10 +61,10 @@ namespace Infrastructure.Data
                 entity.Property(e => e.Name).IsRequired();
                 entity.Property(e => e.Description).IsRequired();
                 entity.Property(e => e.IsPublic).IsRequired();
-                entity.Property(e => e.Creation).IsRequired();  
+                entity.Property(e => e.Creation).IsRequired();
                 entity.HasMany(e => e.Songs)
                     .WithMany()
-                 ;   
+                 ;
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -81,39 +81,33 @@ namespace Infrastructure.Data
                 entity.Property(e => e.IdSong).IsRequired();
             });
 
-            modelBuilder.Entity<Statistic>().Property(s=> s.Reproductions).HasConversion(
-                v=> JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-        v => JsonSerializer.Deserialize<List<SongReproduction>>(v, (JsonSerializerOptions)null)      
+            modelBuilder.Entity<Statistic>().Property(s => s.Reproductions).HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+        v => JsonSerializer.Deserialize<List<SongReproduction>>(v, (JsonSerializerOptions)null)
               );
 
 
-          modelBuilder.Entity<Statistic>()
-            .HasOne<User>()
-            .WithOne()
-            .HasForeignKey<Statistic>(s => s.IdUser);
+            modelBuilder.Entity<Statistic>()
+              .HasOne<User>()
+              .WithOne()
+              .HasForeignKey<Statistic>(s => s.IdUser);
 
-            // (entity =>
-            // {
-                
-            //     entity.HasKey(e => e.Id);
-            //     entity.Property(e => e.IdUser).IsRequired();
-
-            // });
 
             modelBuilder.Entity<InfoUser>(entity =>
             {
                 entity.HasKey(e => e.Id);
+
                 entity.Property(e => e.IdUser).IsRequired();
             });
-            
-            
 
-           
+
+
+
 
             base.OnModelCreating(modelBuilder);
         }
-        
-  
+
+
 
     }
 }

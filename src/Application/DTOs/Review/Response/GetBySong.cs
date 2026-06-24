@@ -2,6 +2,7 @@ namespace Application.DTOs.Review.Response;
 
 public class GetBySongResponse
 {
+    public Guid Id { get; init; }
     public Guid IdUser { get; init; }
 
     public Guid IdSong { get; init; }
@@ -9,4 +10,13 @@ public class GetBySongResponse
     public string? Comment { get; set; }
 
     public DateTime DateCreated { get; set; }
+
+    public GetBySongResponse(Guid id, Guid idUser, Guid idSong, string comment, DateTime dateCreated)
+    {
+        Id = id;
+        IdUser = idUser;
+        IdSong = idSong;
+        Comment = comment;
+        DateCreated = dateCreated;
+    }
 }

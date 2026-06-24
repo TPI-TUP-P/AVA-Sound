@@ -6,6 +6,8 @@ using Domain.Interfaces;
 using Application.Interfaces.IJwtService;
 using Application.DTOs.User.Request;
 using Domain.Exceptions;
+using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 namespace Application.Services;
 
 public class AuthService : IAuthService
@@ -24,31 +26,48 @@ public class AuthService : IAuthService
 
 
 
+    private static bool IsValidEmail(string email )
+    {
+        return new EmailAddressAttribute().IsValid(email);
+    }
+
+    private static bool IsValidPassword(string password)
+    {
+        return Regex.IsMatch(
+            password,
+            @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$"
+        );
+    }
+
     public async Task<RegisterResponse> Register(RegisterRequest registerRequest, CancellationToken cancellationToken)
     {
+        
+        if(!IsValidEmail(registerRequest.Email))
+        {
+            throw new InvalidEmailException(registerRequest.Email);
+        }
+
+        if(!IsValidPassword(registerRequest.Password))
+        {
+            throw new InvalidPasswordException();
+        }
 
         var existingUserEmail = await _userRepository.GetByEmail(registerRequest.Email, cancellationToken);
 
-
         if (existingUserEmail != null)
         {
-            throw new NotFoundException("Email");
+            throw new AlreadyExistExcepction("Email");
         }
 
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password);
-
 
         var user = new User(
             registerRequest.Name,
             registerRequest.Surname,
             registerRequest.Email,
             passwordHash,
-            registerRequest.IsArtist,
-            registerRequest.Role!
+            registerRequest.IsArtist
         );
-
-
-
 
         await _userRepository.Create(user, cancellationToken);
 
@@ -56,10 +75,7 @@ public class AuthService : IAuthService
             user.Id
         );
 
-
-
         await _statisticRepository.Create(statistic, cancellationToken);
-
 
         return new RegisterResponse(
             user.Name,
@@ -109,9 +125,6 @@ public class AuthService : IAuthService
             email: user.Email!,
             role: user.Role!
         );
-
-
-
     }
 
 }
