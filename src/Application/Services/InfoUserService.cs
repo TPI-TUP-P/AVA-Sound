@@ -37,7 +37,7 @@ public class InfoUserService : IInfoUserService
         ;
     }
 
-    public async Task<CreateResponse> Create(CreateRequest infouserDto, CancellationToken cancellationToken)
+    public async Task<CreateResponse> Create(CreateRequest infouserDto, Guid idUser, CancellationToken cancellationToken)
     {
         if (infouserDto is null)
         {
@@ -56,19 +56,19 @@ public class InfoUserService : IInfoUserService
         {
             throw new FieldEmptyExcepction(nameof(infouserDto.Country));
         }
-        var userExist = await _user.GetById(infouserDto.IdUser, cancellationToken);
+        var userExist = await _user.GetById(idUser, cancellationToken);
         if (userExist is null)
         {
             throw new NotFoundException("User");
         }
-        ValidateId(infouserDto.IdUser);
-        var existingInfoUser = await _InfoUser.GetById(infouserDto.IdUser, cancellationToken);
+        ValidateId(idUser);
+        var existingInfoUser = await _InfoUser.GetById(idUser, cancellationToken);
         if (existingInfoUser is not null)
         {
             throw new AlreadyExistExcepction("infouser", "user");
         }
         var newInfoUser = new InfoUser(
-            infouserDto.IdUser,
+            idUser,
             infouserDto.ProfilePicture,
             infouserDto.Biography,
             infouserDto.Country
@@ -87,7 +87,7 @@ public class InfoUserService : IInfoUserService
 
     public async Task<UpdateResponse> Update(Guid Id, Guid IdUser, UpdateRequest infouserDto, CancellationToken cancellationToken)
     {
-        var userExist = await _user.GetById(infouserDto.IdUser, cancellationToken);
+        var userExist = await _user.GetById(IdUser, cancellationToken);
         if (userExist is null)
         {
             throw new NotFoundException("User");
@@ -119,7 +119,7 @@ public class InfoUserService : IInfoUserService
 
         return new UpdateResponse
         (
-           existingInfo.IdUser,
+            IdUser,
             existingInfo.Biography!,
             existingInfo.Country!,
             existingInfo.ProfilePicture!

@@ -44,7 +44,15 @@ public class InfoUserController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest infouserDto, CancellationToken cancellationToken)
     {
-        var created = await _infouservice.Create(infouserDto, cancellationToken);
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                       ?? User.FindFirst("id")?.Value
+                       ?? User.FindFirst("sub")?.Value;
+        if (idUserToken is null)
+        {
+            throw new FieldEmptyExcepction("Id From token");
+        }
+        var idUser = Guid.Parse(idUserToken);
+        var created = await _infouservice.Create(infouserDto, idUser, cancellationToken);
 
         return CreatedAtAction(
     nameof(GetById),
