@@ -16,5 +16,7 @@ public interface IUserService
     Task Delete(Guid id, Guid userId, CancellationToken cancellationToken);
 
     Task HandleAdmin(Guid userId, Guid currentUserId, CancellationToken cancellationToken);
+    
+    Task<List<GetAllArtistResponse>> GetAllArtists(CancellationToken cancellationToken);
 
 }

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 namespace Web.Controllers;
 
-[Route("api/User")]
+[Route("api/[controller]")]
 [ApiController]
 
 public class UserController : ControllerBase
@@ -42,6 +42,14 @@ public class UserController : ControllerBase
     return Ok(result);
 }
 
+
+    [HttpGet("GetAllArtist")]
+    [EnableRateLimiting("HeavyEndpoint")]
+    public async Task<ActionResult<GetAllArtistResponse>> GetAllArtists(CancellationToken cancellationToken)
+    {
+        var result = await _userService.GetAllArtists(cancellationToken);
+        return Ok(result);
+    }
 
 
     [HttpPost]

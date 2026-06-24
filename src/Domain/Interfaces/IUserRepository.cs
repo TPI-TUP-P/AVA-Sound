@@ -8,5 +8,5 @@ public interface IUserRepository : IRepository<User>
     Task<int> Count();
     Task<User?> GetByEmail(string email, CancellationToken cancellationToken);
     
-
+    Task<List<User>> GetAllArtists(CancellationToken cancellationToken);
 }

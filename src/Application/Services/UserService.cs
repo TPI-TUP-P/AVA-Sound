@@ -197,6 +197,18 @@ public class UserService : IUserService
         );
     }
 
+     public async Task<List<GetAllArtistResponse>> GetAllArtists(CancellationToken cancellationToken) {
+    
+    var artists = await _user.GetAllArtists(cancellationToken);
+    
+    return artists.Select(u => new GetAllArtistResponse
+    (
+        u.Id,
+        u.Name,
+        u.Surname
+    )).ToList();
+
+}
 
     public async Task Delete(Guid Id, Guid userId, CancellationToken cancellationToken)
     {

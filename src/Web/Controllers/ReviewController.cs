@@ -8,7 +8,7 @@ using System.Security.Claims;
 using Domain.Exceptions;
 namespace Web.Controllers;
 
-[Route("api/review")]
+[Route("api/[controller]")]
 [ApiController]
 [Authorize]
 

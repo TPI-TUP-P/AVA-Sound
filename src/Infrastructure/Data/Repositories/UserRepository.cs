@@ -47,6 +47,13 @@ public class UserRepository : IUserRepository
     }
 
 
+        public async Task<List<User>> GetAllArtists(CancellationToken cancellationToken)
+        {
+            return await _context.Users
+                .Where(user => user.IsArtist)
+                .ToListAsync(cancellationToken);
+        }
+
     public async Task<User> Create(User user, CancellationToken cancellationToken)
     {
         _context.Users.Add(user);
