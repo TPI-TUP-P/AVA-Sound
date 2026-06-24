@@ -10,4 +10,16 @@ public class GetByIdResponse
         public bool IsPublic { get; set; }
         public DateTime Creation { get; set; }
         public List<SongResponse> Songs { get; set; } = new();
+
+
+    public GetByIdResponse(Guid id, Guid idUser, string name, string description, bool isPublic, DateTime creation, List<SongResponse> songs)
+    {
+        Id = id;
+        IdUser = idUser;
+        Name = name;
+        Description = description;
+        IsPublic = isPublic;
+        Creation = creation;
+        Songs = songs;
+    }
 }

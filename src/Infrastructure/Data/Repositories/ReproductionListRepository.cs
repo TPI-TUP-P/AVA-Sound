@@ -22,6 +22,13 @@ public class ReproductionsListRepository : IReproductionsListRepository
         return lista!;
     }
 
+    // public async Task<List<ReproductionsList>> GetAll(CancellationToken cancellationToken)
+    // {
+    //     return await _context.ReproductionsLists
+    //         .Include(r => r.Songs) 
+    //         .ToListAsync(cancellationToken);
+    // }
+
 
    public async Task<List<ReproductionsList>> GetByIdUser(Guid idUser, CancellationToken cancellationToken)
 {

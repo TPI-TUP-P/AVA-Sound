@@ -7,4 +7,6 @@ public class PagerSongResponse<T>
     public int SongTotal {get; set;}
     public int PageTotal {get; set;}
 
+    
+
 }

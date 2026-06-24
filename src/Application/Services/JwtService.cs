@@ -46,7 +46,7 @@ public class JwtService : IJwtService
 
         new Claim(
             ClaimTypes.Role,
-            createRequest.Role ?? "User"),
+            createRequest.Role?.ToString() ?? "User"),
 
         new Claim(
             "IsArtist",

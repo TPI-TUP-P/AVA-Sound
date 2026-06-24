@@ -5,6 +5,7 @@ using Application.DTOs.User.Request;
 using Application.DTOs.User.response;
 using Application.DTOs.User.Response;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 namespace Web.Controllers;
@@ -22,18 +23,21 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{id}")]
-
-    public ActionResult<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
+    
+    [EnableRateLimiting("HardyEndpoint")]
+    public async Task<ActionResult<GetByIdResponse>> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var user = _userService.GetById(Id, cancellationToken);
+        var user = await _userService.GetById(id, cancellationToken);
         return Ok(user);
     }
 
 
     [HttpGet]
-    public async Task<ActionResult<PagerResponse<GetByIdResponse>>> GetAll([FromQuery] PagerRequest pagerRequest, CancellationToken cancellationToken)
+    [Authorize (Roles = "Admin")]
+    [EnableRateLimiting("HardyEndpoint")]
+    public async Task<ActionResult<PagerResponse<GetByIdResponse>>> GetAll(CancellationToken cancellationToken)
 {
-    var result = await _userService.GetAll(pagerRequest, cancellationToken);
+    var result = await _userService.GetAll(cancellationToken);
 
     return Ok(result);
 }
@@ -45,11 +49,12 @@ public class UserController : ControllerBase
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest userDto, CancellationToken cancellationToken)
     {
         var user = await _userService.Create(userDto, cancellationToken);
-        return Ok(user);
+        return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
     }
 
     [HttpPatch("{id}")]
-
+    [Authorize]
+    [EnableRateLimiting("HardyEndpoint")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest userDto, CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
@@ -69,14 +74,26 @@ public class UserController : ControllerBase
 
 
     [HttpDelete("{id}")]
+    [Authorize]
+    
 
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        await _userService.Delete(id, cancellationToken);
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("id")?.Value
+            ?? User.FindFirst("sub")?.Value;
+
+        if (string.IsNullOrEmpty(idUserToken))
+            return Unauthorized("user id not found in token");
+
+        var idUser = Guid.Parse(idUserToken);
+
+        await _userService.Delete(id, idUser, cancellationToken);
         return NoContent();
     }
 
     [HttpPatch("{id}/make-admin")]
+    [Authorize(Roles = "SuperAdmin")]
     public async Task<ActionResult> HandleAdmin(Guid id, CancellationToken cancellationToken)
 {
     

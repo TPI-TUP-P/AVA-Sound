@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using Domain.Enums;
 using Domain.Exceptions;
 
 namespace Domain.Entities;
@@ -18,13 +19,13 @@ public class User
 
     public DateTime DateRegister { get; init; }
 
-    public string? Role { get; private set; }
+    public UserRole? Role { get; private set; }
 
     public ICollection<Song> Songs { get; private set; } =[];
     
 
 
-    public User(string name, string surname, string email, string password, bool isArtist, string role)
+    public User(string name, string surname, string email, string password, bool isArtist)
     {
         ValidateProperties(name, surname, email, password);
         Id = Guid.NewGuid();
@@ -34,11 +35,11 @@ public class User
         Password = password;
         IsArtist = isArtist;
         DateRegister = DateTime.Now;
-        Role = role ?? "user";
+        Role = UserRole.User;
         IsActive = true;
     }
 
-    private void ValidateProperties(string? name, string? surname, string? email, string? password)
+    private void ValidateProperties(string name, string surname, string email, string password)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new FieldEmptyExcepction("name");
@@ -98,13 +99,13 @@ public class User
 
     public void HandleAdmin()
     {
-        if(Role == "admin")
+        if(Role == UserRole.Admin)
         {
-            Role = "user";
+            Role = UserRole.User;
         }
         else
         {
-            Role = "admin";
+            Role = UserRole.Admin;
         }
     }
 

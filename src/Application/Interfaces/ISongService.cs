@@ -8,7 +8,7 @@ public interface ISongService
 {
     Task<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken);
 
-    Task<PagerSongResponse<GetByIdResponse>> GetAll(PagerRequest pagerRequest, CancellationToken cancellationToken);
+    Task<PagerSongResponse<GetByIdResponse>> GetAll(CancellationToken cancellationToken);
     Task<CreateResponse> Create(
         CreateRequest songDto,
         Stream audioStream,

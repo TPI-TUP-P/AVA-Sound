@@ -3,6 +3,7 @@ using Application.DTOs.Album.Response;
 using Application.Interfaces;
 
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Exceptions;
 using Domain.Interfaces;
 
@@ -183,7 +184,10 @@ public class AlbumService : IAlbumService
             throw new NotFoundException("Album");
         }
 
-        if (idUser !=  album.IdArtist || user.Role != "Admin")
+        if (idUser !=  album.IdArtist || user.Role != UserRole.Admin)
+        {
+            throw new ForbiddenException();
+        }
         {
             throw new ForbiddenException();
 
@@ -276,7 +280,7 @@ public class AlbumService : IAlbumService
             throw new NotFoundException("Song");
         }
 
-        if(user.Id != idUser && user.Role != "Admin" )
+        if(user.Id != idUser && user.Role != UserRole.Admin )
         {
             throw new ForbiddenException();
         }
