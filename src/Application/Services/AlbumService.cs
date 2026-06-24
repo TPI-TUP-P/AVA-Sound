@@ -183,7 +183,7 @@ public class AlbumService : IAlbumService
             throw new NotFoundException("Album");
         }
 
-        if (idUser !=  album.IdArtist && user.Role != "Admin")
+        if (idUser !=  album.IdArtist && user.Role == UserRole.User )
         {
             throw new ForbiddenException();
 
@@ -283,7 +283,7 @@ public class AlbumService : IAlbumService
             throw new NotFoundException("Song");
         }
 
-        if(user.Id != idUser && user.Role != UserRole.Admin )
+        if(user.Id != idUser && user.Role == UserRole.User)
         {
             throw new ForbiddenException();
         }
