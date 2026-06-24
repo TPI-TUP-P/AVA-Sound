@@ -11,7 +11,7 @@ namespace Web.Controllers;
 
 [ApiController]
 
-[Route("api/infoUser")]
+[Route("api/[controller]")]
 [Authorize]
 [EnableRateLimiting("HeavyEndpoint")]
 public class InfoUserController : ControllerBase

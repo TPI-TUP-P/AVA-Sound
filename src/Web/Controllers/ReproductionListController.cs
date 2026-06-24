@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace Web.Controllers;
 
 [ApiController]
-[Route("api/reproduction-list")]
+[Route("api/[controller]")]
 public class ReproductionListController : ControllerBase
 {
     private readonly IReproductionListService _reproductionListservice;
