@@ -2,7 +2,9 @@ using System.Security.Claims;
 using Application.DTOs.Song.Request;
 using Application.DTOs.Song.Response;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Web.DTOs.Song;
 
 namespace Web.Controllers;
@@ -20,6 +22,8 @@ public class SongController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    
+    [EnableRateLimiting("HardyEndpoint")]
     public async Task<ActionResult<GetByIdResponse>> GetById(Guid id, CancellationToken cancellationToken)
     {
         var response = await _songService.GetById(id, cancellationToken);
@@ -27,13 +31,17 @@ public class SongController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<PagerSongResponse<GetByIdResponse>>> GetAll([FromQuery] PagerRequest pagerRequest, CancellationToken cancellationToken)
+    [Authorize (Roles = "Admin")]
+    [EnableRateLimiting("HardyEndpoint")]
+    public async Task<ActionResult<PagerSongResponse<GetByIdResponse>>> GetAll( CancellationToken cancellationToken)
     {
-        var songs = await _songService.GetAll(pagerRequest, cancellationToken);
+        var songs = await _songService.GetAll(cancellationToken);
         return Ok(songs);
     }
 
     [HttpPost]
+    [Authorize]
+    [EnableRateLimiting("HardyEndpoint")]
     [Consumes("multipart/form-data")]
     [DisableRequestSizeLimit]
     public async Task<ActionResult<CreateResponse>> Create([FromForm] SongUploadRequest request, CancellationToken cancellationToken)
@@ -66,11 +74,13 @@ public class SongController : ControllerBase
             cancellationToken
         );
 
-        return Ok(song);
+        return CreatedAtAction(nameof(GetById), new { id = song.Id },song);
     }
 
 
     [HttpGet("{id}/url")]
+    [Authorize]
+    [EnableRateLimiting("HardyEndpoint")]
     public async Task<ActionResult<string>> GetSongUrl(Guid id, CancellationToken cancellationToken)
     {
 
@@ -88,6 +98,8 @@ public class SongController : ControllerBase
     }
 
     [HttpPatch("{id}")]
+    [Authorize]
+    [EnableRateLimiting("HardyEndpoint")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest songDto, CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
@@ -104,6 +116,7 @@ public class SongController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value

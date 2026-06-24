@@ -1,3 +1,5 @@
+using Domain.Enums;
+
 namespace Application.DTOs.User.Response;
 
 public class UpdateResponse
@@ -6,8 +8,17 @@ public class UpdateResponse
     public string? Name {get; set;}
     public string? Surname {get; set;}
     public string? Email { get; set;}
-    public string? Password { get; set;}
     public bool IsArtist {get; set;}
     public DateTime DateRegister { get; init;}
-    public string? Role { get; set;}
+    public UserRole? Role { get; set;}
+    public UpdateResponse(Guid id, string? name, string? surname, string? email, bool isArtist, DateTime dateRegister, UserRole? role)
+    {
+        Id = id;
+        Name = name;
+        Surname = surname;
+        Email = email;
+        IsArtist = isArtist;
+        DateRegister = dateRegister;
+        Role = role;
+    }
 }

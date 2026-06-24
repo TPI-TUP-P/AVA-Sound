@@ -5,6 +5,7 @@ using Application.DTOs.ReproductionList.Request;
 using Application.DTOs.ReproductionList.Response;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Web.Controllers;
 
@@ -20,14 +21,34 @@ public class ReproductionListController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [EnableRateLimiting("HeavyEndpoint")]
     public ActionResult<ReproductionsList> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var reproductionList = _reproductionListservice.GetById(id, cancellationToken);
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("id")?.Value
+            ?? User.FindFirst("sub")?.Value;
+
+        if (string.IsNullOrEmpty(idUserToken))
+            return Unauthorized("user id not found in token");
+
+        var idUser = Guid.Parse(idUserToken);
+        var reproductionList = _reproductionListservice.GetById(id, idUser, cancellationToken);
 
         return Ok(reproductionList);
     }
 
+    // [HttpGet]
+    // [Authorize(Roles = "Admin")]
+    // [EnableRateLimiting("HeavyEndpoint")]
+    // public async Task<ActionResult<List<GetAllResponse>>> GetAll(CancellationToken cancellationToken)
+    // {
+    //     var reproductionLists = await _reproductionListservice.GetAll(cancellationToken);
+    //     return Ok(reproductionLists);
+    // }
+
     [HttpPatch("{id}")]
+    [Authorize]
+    [EnableRateLimiting("HardyEndpoint")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest updateRequest, CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
@@ -42,8 +63,10 @@ public class ReproductionListController : ControllerBase
         var result = await _reproductionListservice.Update(id, updateRequest, idUser, cancellationToken);
         return Ok(result);
     }
-    [Authorize]
+    
     [HttpPost]
+    [Authorize]
+    [EnableRateLimiting("HardyEndpoint")]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest reproductionListDto, CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
@@ -54,16 +77,18 @@ public class ReproductionListController : ControllerBase
         {
             return Unauthorized("User ID not found in token.");
         }
+        var idUser = Guid.Parse(idUserToken);
 
         //reproductionListDto.IdUser = Guid.Parse(idUserToken);
 
 
-        var list = await _reproductionListservice.Create(reproductionListDto, cancellationToken);
-        return Ok(list);
+        var list = await _reproductionListservice.Create(idUser, reproductionListDto, cancellationToken);
+        return CreatedAtAction(nameof(GetById), new { id = list.Id }, list);
     }
 
     [HttpGet("/me")]
     [Authorize]
+    [EnableRateLimiting("HardyEndpoint")]
     public async Task<ActionResult<List<GetAllResponse>>> GetMyLists(CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
@@ -84,6 +109,8 @@ public class ReproductionListController : ControllerBase
 
 
     [HttpPost("{listId}/add-song/{songId}")]
+    [Authorize]
+    [EnableRateLimiting("HardyEndpoint")]
     public async Task<ActionResult> AddSong(Guid listId, Guid songId, CancellationToken cancellationToken)
     {
 
@@ -103,6 +130,8 @@ public class ReproductionListController : ControllerBase
     }
 
     [HttpDelete("{listId}/remove-song/{songId}")]
+    [Authorize]
+    
     public async Task<ActionResult> RemoveSong(Guid listId, Guid songId, CancellationToken cancellationToken)
     {
 
@@ -117,11 +146,12 @@ public class ReproductionListController : ControllerBase
 
 
         await _reproductionListservice.RemoveSong(listId, songId, idUser, cancellationToken);
-        return Ok("song removed from the list");
+        return NoContent();
 
     }
 
     [HttpDelete("{id}")]
+    [Authorize]
     public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
@@ -134,6 +164,6 @@ public class ReproductionListController : ControllerBase
         var idUser = Guid.Parse(idUserToken);
 
         await _reproductionListservice.Delete(id, idUser, cancellationToken);
-        return Ok("deleted list");
+        return NoContent();
     }
 }

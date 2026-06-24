@@ -4,8 +4,8 @@ public class GetAllResponse
 {
     public Guid Id { get; init; }
     public Guid IdUser { get; init; }
-    public string Name { get; set; } = null!;
-    public string Description { get; set; } = null!;
+    public string? Name { get; set; }
+    public string? Description { get; set; }
     public bool IsPublic { get; set; }
     public DateTime Creation { get; set; }
     public int SongCount { get; set; }

@@ -5,6 +5,7 @@ using Application.DTOs.User.response;
 using Application.DTOs.User.Response;
 using Application.Interfaces;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Exceptions;
 using Domain.Interfaces;
 
@@ -32,15 +33,15 @@ public class UserService : IUserService
             throw new NotFoundException("user");
 
         return new GetByIdResponse
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Surname = user.Surname,
-            Email = user.Email,
-            IsArtist = user.IsArtist,
-            DateRegister = user.DateRegister,
-            Role = user.Role
-        };
+        (
+            user.Id,
+            user.Name,
+            user.Surname,
+            user.Email,
+            user.IsArtist,
+            user.DateRegister,
+            user.Role
+        );
     }
 
     public async Task<GetByIdResponse> GetById(Guid id, CancellationToken cancellationToken)
@@ -54,45 +55,45 @@ public class UserService : IUserService
             throw new NotFoundException("user");
 
         return new GetByIdResponse
-        {
-            Id = id,
-            Name = user.Name,
-            Surname = user.Surname,
-            Email = user.Email,
-            IsArtist = user.IsArtist,
-            DateRegister = user.DateRegister,
-            Role = user.Role
-
-        };
+        (
+            user.Id,
+            user.Name,
+            user.Surname,
+            user.Email,
+            user.IsArtist,
+            user.DateRegister,
+            user.Role
+        );
     }
 
 
-    public async Task<PagerResponse<GetByIdResponse>> GetAll(PagerRequest pagerRequest, CancellationToken cancellationToken)
+    public async Task<PagerResponse<GetAllResponse>> GetAll( CancellationToken cancellationToken)
     {
-        var users = await _user.GetAll(pagerRequest.Page, pagerRequest.PageSize, cancellationToken);
+        var users = await _user.GetAll(1, 10, cancellationToken);
 
         var userTotal = await _user.Count();
 
-        var response = new PagerResponse<GetByIdResponse>
+        var response = new PagerResponse<GetAllResponse>
         {
-            Users = users.Select(x => new GetByIdResponse
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Surname = x.Surname,
-                Email = x.Email,
-                IsArtist = x.IsArtist,
-                Role = x.Role
-            }).ToList(),
+            Users = users.Select(x => new GetAllResponse
+            (
+                x.Id,
+                x.Name,
+                x.Surname,
+                x.Email,
+                x.IsArtist,
+                x.DateRegister,
+                x.Role
+            )).ToList(),
 
-            Page = pagerRequest.Page,
+            Page = 1,
 
-            PageSize = pagerRequest.PageSize,
+            PageSize = 10,
 
             UserTotal = userTotal,
 
             PageTotal = (int)Math.Ceiling(
-                userTotal / (double)pagerRequest.PageSize)
+                userTotal / (double)10)
         };
 
         return response;
@@ -128,22 +129,21 @@ public class UserService : IUserService
             userDto.Surname,
             userDto.Email,
             userDto.Password,
-            userDto.IsArtist,
-            userDto.Role!
+            userDto.IsArtist
         );
 
         await _user.Create(user, cancellationToken);
 
         return new CreateResponse
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Surname = user.Surname,
-            Email = user.Email,
-            IsArtist = user.IsArtist,
-            DateRegister = user.DateRegister,
-            Role = user.Role
-        };
+        (
+            user.Id,
+            user.Name,
+            user.Surname,
+            user.Email,
+            user.IsArtist,
+            user.DateRegister,
+            user.Role
+        );
     }
 
     public async Task<UpdateResponse> Update(Guid id, UpdateRequest userDto, Guid userId, CancellationToken cancellationToken)
@@ -186,19 +186,19 @@ public class UserService : IUserService
         await _user.Update(user, cancellationToken);
 
         return new UpdateResponse
-        {
-            Id = userId,
-            Name = user.Name,
-            Surname = user.Surname,
-            Email = user.Email,
-            IsArtist = user.IsArtist,
-            DateRegister = user.DateRegister,
-            Role = user.Role
-        };
+        (
+            userId,
+            user.Name,
+            user.Surname,
+            user.Email,
+            user.IsArtist,
+            user.DateRegister,
+            user.Role
+        );
     }
 
 
-    public async Task Delete(Guid Id, CancellationToken cancellationToken)
+    public async Task Delete(Guid Id, Guid userId, CancellationToken cancellationToken)
     {
         if (Id == Guid.Empty)
             throw new FieldEmptyExcepction("Id");
@@ -225,9 +225,9 @@ public class UserService : IUserService
         {
             throw new NotFoundException("current user");
         }
-        if (currentUser.Role != "superadmin")
+        if (currentUser.Role != UserRole.SuperAdmin)
         {
-            throw new UnauthorizedAccessException("No autorizado");
+            throw new UnauthorizedAccessException("No authorized");
         }
 
         var user = await _user.GetById(userId, cancellationToken);

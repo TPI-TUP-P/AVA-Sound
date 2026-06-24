@@ -2,7 +2,8 @@ namespace Application.DTOs.ReproductionList.Request;
 
 public class UpdateRequest
 {
-    public string Name {get; set;} =null!;
-    public string Description {get; set;}= null!;
+    // public int Id {get; init;}
+    public string? Name {get; set;}
+    public string? Description {get; set;}
     public bool IsPublic {get; set;}
 }
