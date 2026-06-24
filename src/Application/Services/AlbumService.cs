@@ -188,15 +188,20 @@ public class AlbumService : IAlbumService
 
         }
 
-
-
-
         if(user.IsArtist is false)
         {
             throw new UserIsNotArtistException("The user is not an artist");
         }
+
+        foreach(var song in album.Songs)
+        {
+            song.RemoveFromAlbum();
+           await _song.Update(song, cancellationToken);
+        }
     
          await _album.Delete(id, cancellationToken);
+
+
 
     }
 
