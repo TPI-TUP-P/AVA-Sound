@@ -45,7 +45,7 @@ public class AlbumController(IAlbumService _albumService) : ControllerBase
     }
     
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<List<GetAllResponse>>> GetAll()
     {
