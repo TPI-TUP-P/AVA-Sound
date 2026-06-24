@@ -193,7 +193,9 @@ public class AlbumService : IAlbumService
             throw new UserIsNotArtistException("The user is not an artist");
         }
 
-        foreach(var song in album.Songs)
+        var songs = album.Songs.ToList();
+
+        foreach(var song in songs)
         {
             song.RemoveFromAlbum();
            await _song.Update(song, cancellationToken);
