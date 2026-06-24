@@ -46,8 +46,8 @@ public class ReproductionListService : IReproductionListService
         (
             reproductionsList.Id,
             reproductionsList.IdUser,
-            reproductionsList.Name,
-            reproductionsList.Description,
+            reproductionsList.Name!,
+            reproductionsList.Description!,
             reproductionsList.IsPublic,
             reproductionsList.Creation,
             reproductionsList.Songs.Select(s => new SongResponse
@@ -85,7 +85,7 @@ public class ReproductionListService : IReproductionListService
         {
             throw new FieldEmptyExcepction("updateRequest");
         }
-        if (updateRequest.Name.Length < 2 )
+        if (updateRequest.Name!.Length < 2 )
         {
             throw new FieldIsNotLongException("Name", 2);
         }
@@ -93,7 +93,7 @@ public class ReproductionListService : IReproductionListService
         {
             throw new FieldTooLongException("Name", 50);
         }
-        if (updateRequest.Description.Length < 5)
+        if (updateRequest.Description!.Length < 5)
         {
             throw new FieldIsNotLongException("Description", 5);
         }
@@ -336,8 +336,8 @@ public class ReproductionListService : IReproductionListService
         return lists.Select(list => new GetAllResponse(
             list.Id,
             list.IdUser,
-            list.Name,
-            list.Description,
+            list.Name!,
+            list.Description!,
             list.IsPublic,
             list.Creation,
             list.Songs.Count

@@ -208,6 +208,11 @@ public class UserService : IUserService
         if (user == null)
             throw new NotFoundException("user");
 
+        var currentUser = await _user.GetById(userId, cancellationToken);
+
+        if (user.Id != userId && currentUser.Role == UserRole.User)
+            throw new UnauthorizedAccessException("No authorized");
+
         if (!user.IsActive)
         {
             throw new UserNotActivateException();
