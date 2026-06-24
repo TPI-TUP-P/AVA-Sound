@@ -207,14 +207,20 @@ public class SongService : ISongService
         if (song is null)
             throw new NotFoundException("Song");
 
+        if(song.IdArtist != IdUser)
+        {
         song.AddView();
-       await _statistic.RegisterReproductionAsync(songId, IdUser,cancellationToken);
-
+            
+        await _statistic.RegisterReproductionAsync(songId, IdUser,cancellationToken);
         await _song.Update(song, cancellationToken);
-
-
-
         return await _storageService.GetSongUrl(song.AudioBig);
+
+        } else
+        {
+        return await _storageService.GetSongUrl(song.AudioBig);
+            
+        }
+
 
     }
 
