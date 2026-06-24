@@ -142,7 +142,7 @@ public class InfoUserService : IInfoUserService
 
         await _InfoUser.Delete(Id, cancellationToken);
     }
-
+    // validate id its more simple! maldito teni.
     private static void ValidateId(Guid id)
     {
         if (id == Guid.Empty)
