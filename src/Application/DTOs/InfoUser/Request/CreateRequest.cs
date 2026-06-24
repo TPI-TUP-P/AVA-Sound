@@ -2,7 +2,6 @@ namespace Application.DTOs.InfoUser.Request;
 
 public class CreateRequest
 {
-    public Guid IdUser { get; init; }
 
     public string? ProfilePicture { get; set; }
 

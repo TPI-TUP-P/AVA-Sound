@@ -2,7 +2,7 @@ namespace Application.DTOs.Review.Request;
 
 public class CreateRequest
 {
-    public Guid IdUser { get; init; }
+
 
     public Guid IdSong { get; init; }
 
