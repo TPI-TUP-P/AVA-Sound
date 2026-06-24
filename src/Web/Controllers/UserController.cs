@@ -33,7 +33,7 @@ public class UserController : ControllerBase
 
 
     [HttpGet]
-    [Authorize (Roles = "Admin")]
+    [Authorize]
     [EnableRateLimiting("HardyEndpoint")]
     public async Task<ActionResult<PagerResponse<GetByIdResponse>>> GetAll(CancellationToken cancellationToken)
 {
