@@ -115,6 +115,7 @@ public class InfoUserService : IInfoUserService
         {
             existingInfo.ProfilePicture = infouserDto.ProfilePicture;
         }
+        existingInfo.UpdateInfoUser(infouserDto.ProfilePicture!, infouserDto.Biography!, infouserDto.Country!);
         await _InfoUser.Update(existingInfo, cancellationToken);
 
         return new UpdateResponse

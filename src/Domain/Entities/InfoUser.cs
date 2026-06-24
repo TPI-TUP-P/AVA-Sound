@@ -43,4 +43,27 @@ public class InfoUser
             throw new FieldEmptyExcepction("Biography");
         }
     }
+
+    public void UpdateInfoUser(string profilepicture, string biography, string country)
+    {
+        if (string.IsNullOrEmpty(profilepicture))
+        {
+            throw new FieldEmptyExcepction("profilepicture");
+
+        }
+        if (string.IsNullOrEmpty(biography))
+        {
+            throw new FieldEmptyExcepction("Biography");
+        }
+
+        if (string.IsNullOrEmpty(country))
+        {
+            throw new FieldEmptyExcepction("Biography");
+        }
+
+        ProfilePicture = profilepicture;
+        Biography = biography;
+        Country = country;
+
+    }
 }
