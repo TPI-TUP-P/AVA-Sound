@@ -31,7 +31,7 @@ public class ReviewRepository : IReviewRepository
 
         if (existing is null)
         {
-            throw new KeyNotFoundException($"La reseña con el ID {review.Id} no fue encontrada.");
+            throw new NotFoundException("Review");
         }
         existing.Comment = review.Comment;
         await _context.SaveChangesAsync(cancellationToken);

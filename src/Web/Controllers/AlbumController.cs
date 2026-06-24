@@ -56,7 +56,7 @@ public class AlbumController(IAlbumService _albumService) : ControllerBase
 
     
     [HttpPost]
-     [Authorize]
+    [Authorize]
     [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest albumDto, CancellationToken cancellationToken)
     {   
@@ -76,12 +76,24 @@ public class AlbumController(IAlbumService _albumService) : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = album.Id }, album);
         
     }
-    [HttpPut("{id}")]
+    [HttpPatch("{id}")]
     [Authorize]
     [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest albumDto, CancellationToken cancellationToken)
     {
-        return await _albumService.Update(id, albumDto, cancellationToken);
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                          ?? User.FindFirst("id")?.Value 
+                          ?? User.FindFirst("sub")?.Value;
+
+                          
+        if (string.IsNullOrEmpty(idUserToken))
+        {
+            return Unauthorized("User ID not found in token.");
+        }
+
+        var idUser = Guid.Parse(idUserToken);
+
+        return await _albumService.Update(id, idUser,albumDto, cancellationToken);
 
     }
 

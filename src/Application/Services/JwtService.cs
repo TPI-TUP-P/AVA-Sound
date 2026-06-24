@@ -29,24 +29,25 @@ public class JwtService : IJwtService
         [
             new Claim (
             ClaimTypes.NameIdentifier,
-            createRequest.Id.ToString() ?? string.Empty
+            createRequest.Id.ToString()
         ),
 
         new Claim(
             ClaimTypes.Name,
-            createRequest.Name ?? string.Empty),
+            createRequest.Name ),
 
         new Claim(
             ClaimTypes.Surname,
-            createRequest.Surname ?? string.Empty),
+            createRequest.Surname),
 
         new Claim(
             ClaimTypes.Email,
-            createRequest.Email ?? string.Empty),
+            createRequest.Email),
 
         new Claim(
             ClaimTypes.Role,
-            createRequest.Role?.ToString() ?? "User"),
+            createRequest.Role!
+            ),
 
         new Claim(
             "IsArtist",
@@ -92,10 +93,10 @@ public class JwtService : IJwtService
             .WriteToken(token);
     }
 
-    public bool ValidateToken(string token)
-    {
-        return !string.IsNullOrEmpty(token);
+    // public bool ValidateToken(string token)
+    // {
+    //     return !string.IsNullOrEmpty(token);
 
-    }
+    // }
 
 }

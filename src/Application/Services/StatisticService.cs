@@ -59,8 +59,8 @@ public class StatisticService : IStatisticService
             song.IdAlbum,
             song.Title!,
             song.Gender!,
-            song.Duration!
-            ,song.AudioBig!,
+            song.Duration!,
+            song.AudioBig!,
             song.DateUpload,
             song.Views
 

@@ -159,10 +159,8 @@ public class UserService : IUserService
         if (user == null)
             throw new NotFoundException("user");
 
-        var currentUser = await _user.GetById(userId, cancellationToken);
-
-        if(user.Id != userId && currentUser.Role == UserRole.User)
-            throw new UnauthorizedAccessException("No authorized");
+        if (user.Id != userId)
+            throw new IdNotMatchException();
 
         if (string.IsNullOrWhiteSpace(userDto.Name))
             throw new FieldEmptyExcepction("Name");
@@ -210,12 +208,7 @@ public class UserService : IUserService
         if (user == null)
             throw new NotFoundException("user");
 
-        var currentUser = await _user.GetById(userId, cancellationToken);
-
-        if (user.Id != userId && currentUser.Role == UserRole.User)
-            throw new UnauthorizedAccessException("No authorized");
-        
-        if(!user.IsActive)
+        if (!user.IsActive)
         {
             throw new UserNotActivateException();
         }

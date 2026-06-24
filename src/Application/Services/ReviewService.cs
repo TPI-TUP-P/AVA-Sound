@@ -18,7 +18,25 @@ public class ReviewService : IReviewService
         _song = song;
     }
 
+    public async Task<GetByIdResponse> GetById(Guid Id, CancellationToken cancellationToken)
+    {
+        ValidateId(Id);
+        var review = await _review.GetById(Id, cancellationToken);
 
+        if (review is null)
+        {
+            throw new NotFoundException("Review");
+        }
+
+        return new GetByIdResponse
+        (
+            review.Id,
+            review.IdUser,
+            review.IdSong,
+            review.Comment,
+            review.DateCreated
+        );
+    }
     public async Task<List<GetBySongResponse>> GetBySong(Guid Id, CancellationToken cancellationToken)
     // For my future self, the id refers to the song id
     {
@@ -29,21 +47,22 @@ public class ReviewService : IReviewService
         var review = await _review.GetBySong(Id, cancellationToken);
         // The r refers to reviews
         return review.Select(r => new GetBySongResponse
-        {
-            IdUser = r.IdUser,
-            IdSong = r.IdSong,
-            Comment = r.Comment,
-            DateCreated = r.DateCreated
-        }).ToList();
+        (
+            r.Id,
+            r.IdUser,
+            r.IdSong,
+            r.Comment,
+            r.DateCreated
+        )).ToList();
     }
 
-    public async Task<CreateResponse> Create(CreateRequest reviewDto, CancellationToken cancellationToken)
+    public async Task<CreateResponse> Create(CreateRequest reviewDto, Guid idUser, CancellationToken cancellationToken)
     {
         if (reviewDto is null)
         {
             throw new FieldEmptyExcepction(nameof(reviewDto));
         }
-        ValidateId(reviewDto.IdUser);
+        ValidateId(idUser);
         ValidateId(reviewDto.IdSong);
 
         if (string.IsNullOrWhiteSpace(reviewDto.Comment))
@@ -64,32 +83,26 @@ public class ReviewService : IReviewService
             throw new NotFoundException("Song");
         }
         var reviewsExist = await _review.GetBySong(reviewDto.IdSong, cancellationToken);
-        if (reviewsExist.Any(x => x.IdUser == reviewDto.IdUser))
+        if (reviewsExist.Any(x => x.IdUser == idUser))
         {
             throw new AlreadyExistExcepction("Review", songExists.Title);
         }
-        if (reviewDto.DateCreated > DateTime.UtcNow)
-        {
-            throw new futureDateException();
-        }
-
-
-
         var review = new Review(
-            reviewDto.IdUser,
+            idUser,
             reviewDto.IdSong,
-            reviewDto.Comment,
-            reviewDto.DateCreated
+            reviewDto.Comment
+
         );
 
         var reviewCreated = await _review.Create(review, cancellationToken);
         return new CreateResponse
-        {
-            IdUser = reviewCreated.IdUser,
-            IdSong = reviewCreated.IdSong,
-            Comment = reviewCreated.Comment,
-            DateCreated = review.DateCreated
-        };
+        (
+            reviewCreated.Id,
+            idUser,
+            reviewCreated.IdSong,
+            reviewCreated.Comment,
+            review.DateCreated
+        );
     }
 
     public async Task<UpdateResponse> Update(Guid Id, Guid IdUser, UpdateRequest reviewDto, CancellationToken cancellationToken)
@@ -109,22 +122,16 @@ public class ReviewService : IReviewService
         {
             throw new ForbiddenException("Review");
         }
-        if (reviewDto.Comment != null && reviewDto.Comment.Length > 3)
-        {
-            existReview.Comment = reviewDto.Comment;
-        }
-        else
-        {
-            throw new FieldIsNotLongException("Comment", 3);
-        }
+
+        existReview.UpdateReview(reviewDto.Comment!);
 
 
 
         await _review.Update(existReview, cancellationToken);
         return new UpdateResponse
-        {
-            Comment = existReview.Comment
-        };
+        (
+            existReview.Comment
+        );
     }
 
     public async Task Delete(Guid Id, Guid IdUser, CancellationToken cancellationToken)
