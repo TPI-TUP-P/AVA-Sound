@@ -56,13 +56,13 @@ public class ReviewService : IReviewService
         )).ToList();
     }
 
-    public async Task<CreateResponse> Create(CreateRequest reviewDto, CancellationToken cancellationToken)
+    public async Task<CreateResponse> Create(CreateRequest reviewDto, Guid idUser, CancellationToken cancellationToken)
     {
         if (reviewDto is null)
         {
             throw new FieldEmptyExcepction(nameof(reviewDto));
         }
-        ValidateId(reviewDto.IdUser);
+        ValidateId(idUser);
         ValidateId(reviewDto.IdSong);
 
         if (string.IsNullOrWhiteSpace(reviewDto.Comment))
@@ -83,12 +83,12 @@ public class ReviewService : IReviewService
             throw new NotFoundException("Song");
         }
         var reviewsExist = await _review.GetBySong(reviewDto.IdSong, cancellationToken);
-        if (reviewsExist.Any(x => x.IdUser == reviewDto.IdUser))
+        if (reviewsExist.Any(x => x.IdUser == idUser))
         {
             throw new AlreadyExistExcepction("Review", songExists.Title);
         }
         var review = new Review(
-            reviewDto.IdUser,
+            idUser,
             reviewDto.IdSong,
             reviewDto.Comment
 
@@ -98,7 +98,7 @@ public class ReviewService : IReviewService
         return new CreateResponse
         (
             reviewCreated.Id,
-            reviewCreated.IdUser,
+            idUser,
             reviewCreated.IdSong,
             reviewCreated.Comment,
             review.DateCreated
