@@ -13,11 +13,11 @@ public class StatisticRepository : IStatisticRepository
         _context = context;
     }
 
-    public async Task<List<Song>> GetTopSongs(CancellationToken cancellationToken)
-    {
-        return await _context.Songs.OrderByDescending(s=> s.Views).Take(10).ToListAsync(cancellationToken);
+    // public async Task<List<Song>> GetTopSongs(CancellationToken cancellationToken)
+    // {
+    //     return await _context.Songs.OrderByDescending(s=> s.Views).Take(10).ToListAsync(cancellationToken);
         
-    }
+    // }
 
 
 
@@ -33,11 +33,11 @@ public class StatisticRepository : IStatisticRepository
     }
 
 
-    public async Task<IEnumerable<Song>> GetTopArtist(CancellationToken cancellationToken)
-    {
+    // public async Task<IEnumerable<Song>> GetTopArtist(CancellationToken cancellationToken)
+    // {
     
-        return await _context.Songs.Include(s=> s.Artist).ToListAsync(cancellationToken);
-        }
+    //     return await _context.Songs.Include(s=> s.Artist).ToListAsync(cancellationToken);
+    //     }
 
 
     public async Task<List<Statistic>> GetAll()

@@ -18,7 +18,7 @@ public class StatisticService : IStatisticService
 
     public async Task<IEnumerable<GetTopArtistReponse>> GetTopArtists(CancellationToken cancellationToken)
     {
-        var artists = await _statistic.GetTopArtist(cancellationToken);
+        var artists = await _song.GetTopArtists(cancellationToken);
         return artists.GroupBy(s=> new {s.IdArtist,NameArtist = s.Artist.Name})
         .Select(g=> new GetTopArtistReponse(
             g.Key.IdArtist,
@@ -37,6 +37,10 @@ public class StatisticService : IStatisticService
     {
         var statistic = await _statistic.GetByIdUser(IdUser, cancellationToken);
 
+        if(statistic is null)
+        {
+            throw new NotFoundException("Statistic");
+        }
 
         if(IdUser != statistic.IdUser)
         {
@@ -44,10 +48,6 @@ public class StatisticService : IStatisticService
         }
 
 
-        if(statistic is null)
-        {
-            throw new NotFoundException("Statistic");
-        }
 
     
         var idSong = statistic.GetFavoriteSong();
@@ -71,7 +71,7 @@ public class StatisticService : IStatisticService
 
     public async Task<List<GetTopSongsResponse>> GetTopSongs(CancellationToken cancellationToken)
     {
-        var songs = await _statistic.GetTopSongs(cancellationToken);
+        var songs = await _song.GetTopSongs(cancellationToken);
         return songs.Select(song => new GetTopSongsResponse
         (
             song.Id,
@@ -88,23 +88,23 @@ public class StatisticService : IStatisticService
     {
         var statistic = await _statistic.GetByIdUser(IdUser, cancellationToken);
         
-        if(IdUser != statistic.IdUser)
-        {
-            throw new ForbiddenException();
-        }
-
-
         if(statistic is null)
-        {
-            throw new NotFoundException("Statistic");
-        }
+        throw new NotFoundException("Statistic");
 
-                var songs = await _song.GetByIds(statistic.Reproductions.Select(s=> s.IdSong), cancellationToken);
+        var songs = await _song.GetByIds(statistic.Reproductions.Select(s=> s.IdSong), cancellationToken);
 
         if(songs.Count == 0)
         {
             throw new NotFoundException("Songs");
         }
+
+          if(IdUser != statistic.IdUser)
+        {
+            throw new ForbiddenException();
+        }
+
+
+        
         return statistic.GetFavoriteGender(songs);
     }
 

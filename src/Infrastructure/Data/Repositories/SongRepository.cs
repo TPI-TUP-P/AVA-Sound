@@ -38,6 +38,20 @@ public class SongRepository : ISongRepository
         await _context.SaveChangesAsync();
     }
 
+        public async Task<List<Song>> GetTopSongs(CancellationToken cancellationToken)
+        {
+        return await _context.Songs
+            .OrderByDescending(s => s.Views)
+            .Take(10)
+            .ToListAsync(cancellationToken);
+         }
+
+    public async Task<IEnumerable<Song>> GetTopArtists(CancellationToken cancellationToken)
+    {
+        return await _context.Songs
+            .Include(s => s.Artist)
+            .ToListAsync(cancellationToken);
+    }
 
 
     public async Task<List<Song>> GetAll(int Page,int PageSize,CancellationToken cancellationToken)
