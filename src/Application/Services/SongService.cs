@@ -19,12 +19,14 @@ public class SongService : ISongService
 
     private IStorageService _storageService;
 
+    private IAlbumService _album;
 
-    public SongService(ISongRepository song, IUserRepository user, IStorageService storage, IStorageService storageService, IStatisticService statistic)
+    public SongService(ISongRepository song, IUserRepository user, IStorageService storage, IStorageService storageService, IStatisticService statistic, IAlbumService album)
     {
         _song = song;
         _user = user;
         _storageService = storageService;
+        _album= album;
         _statistic = statistic;
     }
 
@@ -88,16 +90,23 @@ public class SongService : ISongService
         Guid idUser,
         CancellationToken cancellationToken)
     {
-        if (songDto == null)
-            throw new FieldEmptyExcepction("songDto");
+        // if (songDto == null)
+        //     throw new FieldEmptyExcepction("songDto");
+
 
         if (idUser == Guid.Empty)
             throw new FieldEmptyExcepction("idUser");
 
         var user = await _user.GetById(idUser, cancellationToken);
+        var album = await _album.GetById(songDto.IdAlbum, cancellationToken);
+
         if (user == null)
             throw new NotFoundException("User");
 
+        if(idUser != album.IdArtist)
+        {
+            throw new ForbiddenException();
+        }
 
 
         if (string.IsNullOrWhiteSpace(songDto.Title))
@@ -126,7 +135,7 @@ public class SongService : ISongService
         (
             song.Id,
             song.IdArtist,
-            song.IdAlbum,
+            song.IdAlbum ?? Guid.Empty,
             song.Title,
             song.Gender,
             song.Duration,

@@ -21,13 +21,13 @@ public class ReviewController : ControllerBase
         _reviewService = reviewService;
     }
 
-    [HttpGet("{Id}")]
+    [HttpGet("bysong/{Id}")]
 
     public async Task<ActionResult<List<GetBySongResponse>>> GetBySong([FromRoute] Guid Id, CancellationToken cancellationToken)
     {
         return Ok(await _reviewService.GetBySong(Id, cancellationToken));
     }
-    [HttpGet("only/{Id}")]
+    [HttpGet("detail/{Id}")]
 
     public async Task<ActionResult<List<GetBySongResponse>>> GetById([FromRoute] Guid Id, CancellationToken cancellationToken)
     {
@@ -39,8 +39,7 @@ public class ReviewController : ControllerBase
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest reviewDto, CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                            ?? User.FindFirst("id")?.Value
-                            ?? User.FindFirst("sub")?.Value;
+                            ?? User.FindFirst("id")?.Value;
         if (idUserToken is null)
         {
             return Unauthorized("User ID not found in token.");
@@ -56,8 +55,7 @@ public class ReviewController : ControllerBase
     public async Task<ActionResult> Delete(Guid Id, CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                            ?? User.FindFirst("id")?.Value
-                            ?? User.FindFirst("sub")?.Value;
+                            ?? User.FindFirst("id")?.Value;
         if (idUserToken is null)
         {
             return Unauthorized("User ID not found in token.");
@@ -72,8 +70,7 @@ public class ReviewController : ControllerBase
     public async Task<ActionResult<UpdateResponse>> Update(Guid Id, [FromBody] UpdateRequest reviewDto, CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                        ?? User.FindFirst("id")?.Value
-                        ?? User.FindFirst("sub")?.Value;
+                        ?? User.FindFirst("id")?.Value;
         if (idUserToken is null)
         {
             return Unauthorized("User ID not found in token.");

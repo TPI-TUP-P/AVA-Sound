@@ -31,8 +31,8 @@ public class StatisticController(IStatisticService _statisticService) : Controll
     public async Task<ActionResult<string>> GetFavoriteGender( CancellationToken cancellationToken)
     {
                   var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-            ?? User.FindFirst("id")?.Value
-            ?? User.FindFirst("sub")?.Value;
+             ?? User.FindFirst("id")?.Value;
+            
 
         if (string.IsNullOrEmpty(idUserToken))
             return Unauthorized("User ID not found in token.");
@@ -51,8 +51,8 @@ public class StatisticController(IStatisticService _statisticService) : Controll
     public async Task<ActionResult<GetFavoriteSongResponse>> GetFavoriteSong( CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-            ?? User.FindFirst("id")?.Value
-            ?? User.FindFirst("sub")?.Value;
+             ?? User.FindFirst("id")?.Value;
+            
 
         if (string.IsNullOrEmpty(idUserToken))
             return Unauthorized("User ID not found in token.");
@@ -65,7 +65,7 @@ public class StatisticController(IStatisticService _statisticService) : Controll
 
 
     [HttpGet("getTopSogs")]
-    [Authorize]
+    // [Authorize]
     [EnableRateLimiting("HeavyEndpoint")]
     
     public async Task<ActionResult<GetTopSongsResponse>> GetTopSongs(CancellationToken cancellationToken)
@@ -78,7 +78,7 @@ public class StatisticController(IStatisticService _statisticService) : Controll
 
 
     [HttpGet("getTopArtists")]
-    [Authorize]
+    // [Authorize]
     [EnableRateLimiting("HeavyEndpoint")]
 
     public async Task<ActionResult<List<GetAllResponse>>> GetTopArtists(CancellationToken cancellationToken)

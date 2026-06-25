@@ -5,6 +5,7 @@ using Application.DTOs.User.Request;
 using Application.DTOs.User.response;
 using Application.DTOs.User.Response;
 using Application.Interfaces;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -33,7 +34,7 @@ public class UserController : ControllerBase
 
 
     [HttpGet]
-    [Authorize]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [EnableRateLimiting("HardyEndpoint")]
     public async Task<ActionResult<PagerResponse<GetByIdResponse>>> GetAll(CancellationToken cancellationToken)
 {
@@ -51,14 +52,6 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
-
-    [HttpPost]
-    [EnableRateLimiting("HeavyEndpoint")]
-    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest userDto, CancellationToken cancellationToken)
-    {
-        var user = await _userService.Create(userDto, cancellationToken);
-        return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
-    }
 
     [HttpPatch("{id}")]
     [Authorize]
@@ -114,4 +107,8 @@ public class UserController : ControllerBase
 
     return Ok("User updated as administrator");
 }
+
+
+
+
 }
