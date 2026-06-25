@@ -53,14 +53,6 @@ public class UserController : ControllerBase
     }
 
 
-    [HttpPost]
-    [EnableRateLimiting("HeavyEndpoint")]
-    public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest userDto, CancellationToken cancellationToken)
-    {
-        var user = await _userService.Create(userDto, cancellationToken);
-        return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
-    }
-
     [HttpPatch("{id}")]
     [Authorize]
     [EnableRateLimiting("HardyEndpoint")]
