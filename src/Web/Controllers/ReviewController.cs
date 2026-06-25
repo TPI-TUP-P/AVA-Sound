@@ -21,13 +21,13 @@ public class ReviewController : ControllerBase
         _reviewService = reviewService;
     }
 
-    [HttpGet("{Id}")]
+    [HttpGet("bysong/{Id}")]
 
     public async Task<ActionResult<List<GetBySongResponse>>> GetBySong([FromRoute] Guid Id, CancellationToken cancellationToken)
     {
         return Ok(await _reviewService.GetBySong(Id, cancellationToken));
     }
-    [HttpGet("only/{Id}")]
+    [HttpGet("detail/{Id}")]
 
     public async Task<ActionResult<List<GetBySongResponse>>> GetById([FromRoute] Guid Id, CancellationToken cancellationToken)
     {

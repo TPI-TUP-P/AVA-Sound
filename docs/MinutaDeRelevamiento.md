@@ -62,7 +62,7 @@ Desarrollar una plataforma web que permita:
 - **RN3:** Una canción puede pertenecer a una o más listas de reproduccion
 - **RN4:** Una canción puede pertenecer a un unico album
 - **RN5:** Las reseñas deben estar asociadas a un usuario y deben ser una por cancion.
-- **RN6** Los usuarios no pueden cambiar a artista, tienen que ser artista al momento de crearlo.
+- **RN6** Los usuarios no pueden cambiar a artista, tienen que ser artista al momento de crear la cuenta.
 
 ## Entidades Identificadas
 
