@@ -6,5 +6,8 @@ public interface ISongRepository : IRepository<Song>
     Task <int> Count();
     Task Add(Song song);
 
+    Task<List<Song>> GetTopSongs(CancellationToken cancellationToken);
+    Task<IEnumerable<Song>> GetTopArtists(CancellationToken cancellationToken);
+
     Task<List<Song>> GetByIds (IEnumerable<Guid> ids, CancellationToken cancellationToken);
 }

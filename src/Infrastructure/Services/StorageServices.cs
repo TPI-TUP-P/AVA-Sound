@@ -27,7 +27,7 @@ public class StorageService : IStorageService
         var url =
             "https://etwseuwniupcpuigerkw.supabase.co/storage/v1/object/Ava-Sound/";
 
-        var nombreArchivo =
+        var filename =
             $"{Guid.NewGuid()}{Path.GetExtension(fileName)}";
         // el getextension es para obtener la extension del archivo
 
@@ -39,7 +39,7 @@ public class StorageService : IStorageService
 
         var response =
             await _httpClient!.PostAsync(
-                $"{url}{nombreArchivo}",
+                $"{url}{filename}",
                 content
             );
 
@@ -51,9 +51,9 @@ public class StorageService : IStorageService
         }
 
         response.EnsureSuccessStatusCode();
-        var filePath = $"{url}{nombreArchivo}";
+        var filePath = $"{url}{filename}";
 
-        return nombreArchivo;
+        return filename;
     }
 
     public async Task<string> GetSongUrl(
