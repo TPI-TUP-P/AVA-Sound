@@ -51,8 +51,16 @@ public class StatisticService : IStatisticService
 
     
         var idSong = statistic.GetFavoriteSong();
+
+
         var song =await _song.GetById(idSong, cancellationToken);
-       
+
+        if(song == null)
+        {
+            throw new NotFoundException("song");
+        }
+
+
        return new GetFavoriteSongResponse
         (
             song.IdArtist,

@@ -24,7 +24,7 @@ public class AlbumController(IAlbumService _albumService) : ControllerBase
     // }
 
     [HttpGet("{id}")]
-    [Authorize]
+    // [Authorize]
     [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<GetByIdResponse>> GetById(Guid id, CancellationToken cancellationToken)
     {
@@ -35,7 +35,7 @@ public class AlbumController(IAlbumService _albumService) : ControllerBase
 
 
     [HttpGet("artist/{idArtist}")]
-    [Authorize]
+    // [Authorize]
     [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<List<GetAllResponse>>> GetAllBydArtist (Guid idArtist, CancellationToken cancellationToken)
     {
@@ -45,7 +45,7 @@ public class AlbumController(IAlbumService _albumService) : ControllerBase
     }
     
     [HttpGet]
-    [Authorize]
+    // [Authorize]
     [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<List<GetAllResponse>>> GetAll()
     {
@@ -60,8 +60,7 @@ public class AlbumController(IAlbumService _albumService) : ControllerBase
     [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult<CreateResponse>> Create([FromBody] CreateRequest albumDto, CancellationToken cancellationToken)
     {   
-        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
-                          ?? User.FindFirst("id")?.Value 
+        var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                           ?? User.FindFirst("sub")?.Value;
 
                           
@@ -82,8 +81,7 @@ public class AlbumController(IAlbumService _albumService) : ControllerBase
     public async Task<ActionResult<UpdateResponse>> Update(Guid id, [FromBody] UpdateRequest albumDto, CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
-                          ?? User.FindFirst("id")?.Value 
-                          ?? User.FindFirst("sub")?.Value;
+                         ?? User.FindFirst("id")?.Value; 
 
                           
         if (string.IsNullOrEmpty(idUserToken))
@@ -142,9 +140,9 @@ public class AlbumController(IAlbumService _albumService) : ControllerBase
     [EnableRateLimiting("HeavyEndpoint")]
     public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-             var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
-                  ?? User.FindFirst("id")?.Value 
-                  ?? User.FindFirst("sub")?.Value;
+             var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                   ?? User.FindFirst("id")?.Value ;
+               
         if (string.IsNullOrEmpty(idUserToken))
         {
             return Unauthorized("User ID not found in token.");
