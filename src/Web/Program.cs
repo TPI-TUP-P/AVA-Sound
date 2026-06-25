@@ -19,23 +19,6 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Net.Http.Headers;
 
-// using System.Text;
-// using Application.Interfaces;
-// using Application.Interfaces.IJwtService;
-// using Application.Services;
-// using Core.Middlewares;
-// using Domain.Interfaces;
-// using Infrastructure.Data;
-// using Infrastructure.Data.Repositories;
-// using Infrastructure.Data.Services;
-// using Infrastructure.Interfaces;
-// using Microsoft.AspNetCore.Authentication.JwtBearer;
-// using Microsoft.AspNetCore.Http.Features;
-// using Microsoft.Data.Sqlite;
-// using Microsoft.EntityFrameworkCore;
-// using Microsoft.IdentityModel.Tokens;
-// using Microsoft.OpenApi;
-// using Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -214,7 +197,7 @@ else
 builder.Services.Configure<FormOptions>(options =>
 {
     options.ValueCountLimit = int.MaxValue;
-    options.MultipartBodyLengthLimit = long.MaxValue; // permite archivos grandes
+    options.MultipartBodyLengthLimit = long.MaxValue;
 });
 
 builder.Services.AddAuthentication(
@@ -244,10 +227,7 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// app.UseDeveloperExceptionPage();
-// // Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
+
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint(
@@ -258,7 +238,7 @@ app.UseSwaggerUI(options =>
 });
 
 app.MapOpenApi();
-// }
+
 
 app.UseRateLimiter();
 
