@@ -16,9 +16,9 @@ public class ReproductionsListRepository : IReproductionsListRepository
 
     public async Task<ReproductionsList> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var lista = await _context.ReproductionsLists.Include(r => r.Songs)
+        var lista = await _context.ReproductionsLists.Include(r => r.Songs).ThenInclude(a => a.Artist)
             .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
-            
+
         return lista!;
     }
 
@@ -30,14 +30,14 @@ public class ReproductionsListRepository : IReproductionsListRepository
     // }
 
 
-   public async Task<List<ReproductionsList>> GetByIdUser(Guid idUser, CancellationToken cancellationToken)
-{
-    return await _context.ReproductionsLists
-            .Where(r => r.IdUser == idUser)
+    public async Task<List<ReproductionsList>> GetByIdUser(Guid idUser, CancellationToken cancellationToken)
+    {
+        return await _context.ReproductionsLists
+                .Where(r => r.IdUser == idUser)
 
-        .Include(r => r.Songs) 
-        .ToListAsync(cancellationToken);
-}
+            .Include(r => r.Songs)
+            .ToListAsync(cancellationToken);
+    }
     public async Task<ReproductionsList> Create(ReproductionsList list, CancellationToken cancellationToken)
     {
         _context.ReproductionsLists.Add(list);
@@ -85,7 +85,7 @@ public class ReproductionsListRepository : IReproductionsListRepository
         await _context.SaveChangesAsync();
 
         return list;
-        
+
 
     }
 

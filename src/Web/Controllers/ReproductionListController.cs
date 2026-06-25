@@ -22,7 +22,7 @@ public class ReproductionListController : ControllerBase
 
     [HttpGet("{id}")]
     [EnableRateLimiting("HeavyEndpoint")]
-    public ActionResult<ReproductionsList> GetById(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<ReproductionsList>> GetById(Guid id, CancellationToken cancellationToken)
     {
         var idUserToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? User.FindFirst("id")?.Value
@@ -32,7 +32,7 @@ public class ReproductionListController : ControllerBase
             return Unauthorized("user id not found in token");
 
         var idUser = Guid.Parse(idUserToken);
-        var reproductionList = _reproductionListservice.GetById(id, idUser, cancellationToken);
+        var reproductionList = await _reproductionListservice.GetById(id, idUser, cancellationToken);
 
         return Ok(reproductionList);
     }
@@ -63,7 +63,7 @@ public class ReproductionListController : ControllerBase
         var result = await _reproductionListservice.Update(id, updateRequest, idUser, cancellationToken);
         return Ok(result);
     }
-    
+
     [HttpPost]
     [Authorize]
     [EnableRateLimiting("HardyEndpoint")]
@@ -131,7 +131,7 @@ public class ReproductionListController : ControllerBase
 
     [HttpDelete("{listId}/remove-song/{songId}")]
     [Authorize]
-    
+
     public async Task<ActionResult> RemoveSong(Guid listId, Guid songId, CancellationToken cancellationToken)
     {
 
